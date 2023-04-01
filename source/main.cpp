@@ -22,7 +22,7 @@ int main()
         window.display();
     }
 
-    int number = 10;
+    int number = 20;
     print(number);
     cout << check(number * 3) << '\n';
 }
