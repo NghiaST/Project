@@ -1,0 +1,35 @@
+CC = g++
+SOURCEDIR = source
+OBJSDIR = obj
+INCLUDEDIR = graphics/include
+BINDIR = bin
+FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system
+SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
+OBJS = $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
+
+REBUILDABLES = $(OBJSDIR) $(BINDIR) 
+
+TARGET = DataVisual
+DEPS = $(OBJS:(OBJSDIR)/%.o=(OBJSDIR)/%.d) 
+
+pre:
+	echo ${OBJS}
+
+all: build
+
+test: run
+
+link:
+	g++ ./code/*.o -o *.exe -L ${FLAGS}
+
+build: ${OBJS}
+
+${OBJSDIR}/%.o: ${SOURCEDIR}/%.cpp
+	echo $< $@
+	g++ -I ${INCLUDEDIR} -c $< -o $@
+
+clean:
+	del *.o
+
+run:
+	main.exe
