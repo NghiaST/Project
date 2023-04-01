@@ -24,5 +24,5 @@ int main()
 
     int number = 10;
     print(number);
-    cout << check(number) << '\n';
+    cout << check(number * 3) << '\n';
 }
