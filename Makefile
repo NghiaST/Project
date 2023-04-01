@@ -4,7 +4,7 @@ SOURCEDIR = source
 OBJDIR = obj
 INCLUDEDIR = graphics/include
 BINDIR = bin
-FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system
+FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system -Wall
 SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
 OBJS = $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
 DEPS = $(OBJS:(OBJDIR)/%.o=(OBJDIR)/%.d) 
@@ -19,11 +19,10 @@ link: ${OBJS}
 build: ${OBJS}
 
 ${OBJDIR}/%.o: ${SOURCEDIR}/%.cpp
-	${CXX} -I ${INCLUDEDIR} -c $< -o $@
+	${CXX} -I ${INCLUDEDIR} -c $< -o $@ -L ${SOURCEDIR}
 
 clean:
-	del *.o
-	del ${OBJS}
+	@echo sorry, I can't
 
 run:
 	${NAME}.exe
