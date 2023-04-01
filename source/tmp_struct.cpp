@@ -70,9 +70,6 @@ void DataVisualization::CommonView() {
     float xVelocity = 0.1;
     float yVelocity = 0.1;
 
-    // debug
-    window.close();
-
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -94,38 +91,7 @@ void DataVisualization::CommonView() {
         window.draw(rect);
         window.display();
     }
-
-    //text
-    window.create(sf::VideoMode(sf::VideoMode::getDesktopMode().width - 20, sf::VideoMode::getDesktopMode().height - 80, 30), "Window");
-    window.setPosition(sf::Vector2i(0, 0));
-
-    sf::Font open_font;
-    if (!open_font.loadFromFile("./dat/roboto/Roboto-Black.ttf"))
-    {
-        cout << "ERROR";
-        return;
-    }
-    sf::Text my_text;
-    my_text.setFont(open_font);
-    my_text.setString("HENOWORLD");
-    my_text.setCharacterSize(24);
-    my_text.setFillColor(sf::Color::Green);
-    my_text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-    
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) window.close();
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
-        }
-        //render
-        window.clear();
-        window.draw(my_text);
-        window.display();
-    }
-
     return;
-
     window.create(sf::VideoMode(sf::VideoMode::getDesktopMode().width - 20, sf::VideoMode::getDesktopMode().height - 80, 30), "Window");
     window.setPosition(sf::Vector2i(0, 0));
 
@@ -133,6 +99,20 @@ void DataVisualization::CommonView() {
 
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear();
+        window.draw(shape);
+        window.display();
+    }
 }
 void DataVisualization::StaticArray() {}
 void DataVisualization::DynamicArray() {}

@@ -5,7 +5,8 @@ OBJDIR = obj
 INCLUDEDIR = graphics/include
 BINDIR = bin
 FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system -Wall
-SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
+# SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
+SOURCES = source/main.cpp source/struct.cpp
 OBJS = $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
 DEPS = $(OBJS:(OBJDIR)/%.o=(OBJDIR)/%.d) 
 
