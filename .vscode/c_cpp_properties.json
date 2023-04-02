@@ -15,10 +15,9 @@
             "cppStandard": "c++20",
             "intelliSenseMode": "windows-gcc-x64",
             "compilerPath": "C:/Program Files/CodeBlocks/MinGW/bin/g++.exe",
-            "compilerArgs": [
-                "-lsfml-graphics",
-                "-lsfml-window",
-                "-lsfml-system"
+            "compilerArgs": ["./graphics/lib -lsfml-graphics",
+                "./graphics/lib -lsfml-window",
+                "./graphics/lib -lsfml-system"
             ]
         }
     ],

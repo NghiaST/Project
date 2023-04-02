@@ -4,28 +4,37 @@
 #include <windows.h>
 using namespace std;
 
-struct coord {
-    int x, y;
-};
-struct color {
-    int r, g, b;
-    sf::Color getcolor() {
-        return sf::Color(r, g, b);
+struct ViewSquaNode {
+    sf::Vector2f coord;
+    int length = 10;
+    sf::Color Vcolor;
+    sf::RectangleShape shape;
+    ViewSquaNode(int _x = 0, int _y = 0, int _l = 10) {
+        coord.x = _x;
+        coord.y = _y;
+        length = _l;
+    }
+    void setup() {
+        shape = sf::RectangleShape(sf::Vector2f(length, length));
+        shape.setFillColor(Vcolor);
+        shape.setOutlineThickness(5);
+        shape.setOutlineColor(sf::Color(0, 0, 0));
     }
 };
+
 struct ViewNode {
-    coord point;
+    sf::Vector2f coord;
     int radius = 10;
-    color Vcolor;
+    sf::Color Vcolor;
     sf::CircleShape shape;
     ViewNode(int _x = 0, int _y = 0, int _r = 10) {
-        point.x = _x;
-        point.y = _y;
+        coord.x = _x;
+        coord.y = _y;
         radius = _r;
     }
     void setup() {
         shape = sf::CircleShape(radius);
-        shape.setFillColor(Vcolor.getcolor());
+        shape.setFillColor(Vcolor);
         shape.setOutlineThickness(5);
         shape.setOutlineColor(sf::Color(0, 0, 0));
     }
@@ -52,9 +61,9 @@ public:
 };
 
 void DataVisualization::CommonView() {
-    float windowsizex = sf::VideoMode::getDesktopMode().width - 20;
-    float windowsizey = sf::VideoMode::getDesktopMode().height - 80;
-    sf::RenderWindow window(sf::VideoMode(windowsizex, windowsizey, 30), "SFML works!", sf::Style::Default);
+    sf::Vector2f windowsize = sf::Vector2f(sf::VideoMode::getDesktopMode().width - 20,
+                              sf::VideoMode::getDesktopMode().height - 80);
+    sf::RenderWindow window(sf::VideoMode(windowsize.x, windowsize.y, 30), "SFML works!", sf::Style::Default);
     window.setPosition(sf::Vector2i(0, 0));
     // window.setFramerateLimit(60);
     // ::ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
@@ -80,8 +89,8 @@ void DataVisualization::CommonView() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) window.close();
         }
         // physics
-        if (rectanglePosition.x < 0 || rectanglePosition.x + rect.getSize().x > windowsizex) xVelocity *= -1, xAcceleration *= -1;
-        if (rectanglePosition.y < 0 || rectanglePosition.y + rect.getSize().y > windowsizey) yVelocity *= -1, yAcceleration *= -1;
+        if (rectanglePosition.x < 0 || rectanglePosition.x + rect.getSize().x > windowsize.x) xVelocity *= -1, xAcceleration *= -1;
+        if (rectanglePosition.y < 0 || rectanglePosition.y + rect.getSize().y > windowsize.y) yVelocity *= -1, yAcceleration *= -1;
 
         xVelocity += xAcceleration;
         yVelocity += yAcceleration;

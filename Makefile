@@ -4,9 +4,11 @@ SOURCEDIR = source
 OBJDIR = obj
 INCLUDEDIR = graphics/include
 BINDIR = bin
-FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system -Wall
+FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system
 # SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
-SOURCES = source/main.cpp source/struct.cpp
+LIST = main graphics_func struct_support structure
+SOURCES = $(LIST:%=$(SOURCEDIR)/%.cpp)
+#   source/main.cpp source/struct.cpp source/struct_support.cpp
 OBJS = $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
 DEPS = $(OBJS:(OBJDIR)/%.o=(OBJDIR)/%.d) 
 
@@ -27,3 +29,11 @@ clean:
 
 run:
 	${NAME}.exe
+
+
+
+link2:
+	g++.exe -LC:\SFML-2.5.1\lib -o DataVisual.exe obj/main.o obj/graphics_func.o obj/structure.o obj/struct_support.o -lsfml-graphics -lsfml-window -lsfml-system
+
+link3:
+	g++.exe -LC:\SFML-2.5.1\lib -o Datavisual.exe obj/main.o obj/graphics_func.o obj/structure.o obj/struct_support.o -lsfml-graphics-d -lsfml-window-d -lsfml-system-d

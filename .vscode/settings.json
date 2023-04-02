@@ -8,6 +8,11 @@
         "unordered_map": "cpp",
         "unordered_set": "cpp",
         "vector": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "new": "cpp",
+        "iostream": "cpp",
+        "string_view": "cpp",
+        "regex": "cpp",
+        "fstream": "cpp"
     }
 }
