@@ -11,8 +11,11 @@ void StructStaticArray::Update() {}
 void StructStaticArray::SearchData() {}
 
 StructStaticArray::StructStaticArray(sf::RenderWindow& _window) {
-    //window = &_window;
-    window.setActive(true);
+    sf::Vector2f windowsize = sf::Vector2f(sf::VideoMode::getDesktopMode().width - 10, sf::VideoMode::getDesktopMode().height - 180);
+    window.create(sf::VideoMode(windowsize.x, windowsize.y, 30), "SFML works!", sf::Style::Default);
+    window.setPosition(sf::Vector2i(0, 0));
+
+    _window.close();
 }
 
 void StructStaticArray::run() {

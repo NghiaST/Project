@@ -1,10 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <bits/stdc++.h>
-#include <unistd.h>
-#include <windows.h>
 #include "structure.hpp"
 #include "struct_support.hpp"
 #include "graphics_func.hpp"
+#include "staticarray.hpp"
 using namespace std;
 
 //void DataVisualization::StaticArray() {}
@@ -46,7 +45,9 @@ void DataVisualization::CommonView() {
 void DataVisualization::run() {
     Open();
     // CommonView();
-    StaticArray();
+    // StaticArray();
+    StructStaticArray stat(window);
+    stat.run();
 }
 
 void DataVisualization::StaticArray() {

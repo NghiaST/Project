@@ -6,7 +6,7 @@ INCLUDEDIR = graphics/include
 BINDIR = bin
 FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system
 # SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
-LIST = main graphics_func struct_support structure
+LIST = main graphics_func struct_support structure staticarray
 SOURCES = $(LIST:%=$(SOURCEDIR)/%.cpp)
 #   source/main.cpp source/struct.cpp source/struct_support.cpp
 OBJS = $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
