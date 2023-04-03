@@ -2,13 +2,7 @@
 #include <iostream>
 #include "graphics_func.hpp"
 #include "struct_support.hpp"
-/*ViewSquareNode::ViewSquareNode(int _x = 0, int _y = 0, int _l = 10, char* _str = "") {
-    coord = sf::Vector2f(_x, _y);
-    length = _l;
-    str = _str + '\0';
-    Vcolor = sf::Color::Black;
-    setup();
-}*/
+
 void ViewSquareNode::initialize(int _x = 0, int _y = 0, int _l = 10, char* _str = "") {
     coord = sf::Vector2f(_x, _y);
     length = _l;
@@ -46,6 +40,11 @@ void ViewSquareNode::print(sf::RenderWindow& window) {
     window.draw(text);
 }
 
+void ViewSquareNode::print(sf::RenderWindow *window)
+{
+    window->draw(shape);
+    window->draw(text);
+}
 
 ViewNode::ViewNode(int _x = 0, int _y = 0, int _r = 10) {
     coord.x = _x;

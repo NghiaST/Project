@@ -21,6 +21,7 @@ struct ViewSquareNode {
     //ViewSquareNode(int _x = 0, int _y = 0, int _l = 0, char* _str = "");
     void initialize(int _x, int _y, int _l, char* _str);
     void setup();
+    void print(sf::RenderWindow* window);
     void print(sf::RenderWindow& window);
 };
 

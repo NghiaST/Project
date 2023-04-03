@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cstring>
+#include <bits/stdc++.h>
 sf::Vector2f operator / (const sf::Vector2f& vector, const int& div) {
     return sf::Vector2f(vector.x / div, vector.y / div);
 }
@@ -36,4 +37,9 @@ char* strtochar(std::string str) {
     char *cstr = new char[str.length() + 1];
     strcpy(cstr, str.c_str());
     return cstr;
+}
+
+int Rand(int l, int r) {
+    if (l > r) return l;
+    return rand() % (r - l + 1) + l;
 }

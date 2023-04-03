@@ -1,13 +1,15 @@
-#ifndef __structure_hpp__
-#define __structure_hpp__
+#ifndef __data_visual_hpp__
+#define __data_visual_hpp__
 #include <SFML/Graphics.hpp>
 
 struct DataVisualization {
 private:
-    sf::RenderWindow window;
+    // Varibles
+    sf::RenderWindow* window;
     bool running = true;
-    void Open();
-    void CommonView();
+
+    // Functions
+    void InitWindow();
     void StaticArray();
     void DynamicArray();
     void LinkedList();
@@ -21,6 +23,14 @@ private:
         search data
     */
 public:
+    // Constructors/Destructors
+    DataVisualization();
+    virtual ~DataVisualization();
+
+    // Functions
+    void updateSFMLEvents();
+    void update();
+    void render();
     void run();
 };
 

@@ -8,5 +8,6 @@ void settextrectangle(sf::Text& text, sf::Vector2f coord, sf::Vector2f rectsize)
 char* inttochar(int number);
 void addwhitescreen(sf::RenderWindow& window);
 char* strtochar(std::string str);
+int Rand(int l, int r);
 
 #endif

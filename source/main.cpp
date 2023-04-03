@@ -1,4 +1,4 @@
-#include "structure.hpp"
+#include "data_visual.hpp"
 using namespace std;
 int main()
 {
