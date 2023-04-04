@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include "graphics_func.hpp"
 
+enum PRESENT {INIT = 0, ADD = 1, DELETE, UPDATE, SEARCH};
+
 class StructStaticArray {
 private:
     sf::RenderWindow* window;
@@ -10,13 +12,16 @@ private:
     int sizearray;
     int arr[10];
     ViewSquareNode *staticarr;
+    PRESENT type;
+    bool active;
+public:
     void Initialize();
     void Add();
     void Delete();
     void Update();
     void SearchData();
-public:
+
     StructStaticArray(sf::RenderWindow* window);
-    void run();
+    void print();
 };
 #endif

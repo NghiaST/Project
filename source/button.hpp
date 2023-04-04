@@ -8,6 +8,7 @@ enum button_states{BTN_IDLE = 0, BTN_HOVER, BTN_ACTIVE};
 
 class Button {
 private:
+
     short unsigned buttonState;
 
     sf::RectangleShape shape;

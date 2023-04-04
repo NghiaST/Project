@@ -6,7 +6,7 @@ INCLUDEDIR = graphics/include
 BINDIR = bin
 FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system
 # SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
-LIST = main data_visual graphics_func struct_support staticarray button
+LIST = main data_visual graphics_func struct_support staticarray button state
 SOURCES = $(LIST:%=$(SOURCEDIR)/%.cpp)
 #   source/main.cpp source/struct.cpp source/struct_support.cpp
 OBJS = $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
@@ -25,7 +25,7 @@ ${OBJDIR}/%.o: ${SOURCEDIR}/%.cpp
 	${CXX} -I ${INCLUDEDIR} -c $< -o $@ -L ${SOURCEDIR}
 
 clean:
-	@echo sorry, I can't
+	del obj\*.o
 
 run:
 	${NAME}.exe

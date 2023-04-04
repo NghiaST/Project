@@ -1,8 +1,9 @@
 #include "button.hpp"
+#include <iostream>
 
 Button::Button(float x, float y, float width, float height, 
         sf::Font* font, std::string text, 
-        sf::Color idleColor, sf::Color hovercOlor, sf::Color activeColor)
+        sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
 {
     this->buttonState = BTN_IDLE;
 
@@ -53,6 +54,7 @@ void Button::update(sf::Vector2f mousePos) {
     {
         this->buttonState = BTN_ACTIVE;
     }
+    std::cout << this->buttonState << '\n';
 
     switch (this->buttonState)
     {

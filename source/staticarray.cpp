@@ -13,23 +13,8 @@ void StructStaticArray::SearchData() {}
 
 StructStaticArray::StructStaticArray(sf::RenderWindow* window) {
     this->window = window;
-}
-
-void StructStaticArray::run() {
-    Initialize();
-    while (this->window->isOpen()) {
-        sf::Event event;
-        while (this->window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed) this->window->close();
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) this->window->close();
-            //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) Initialize();
-        }
-        this->window->clear(sf::Color(235, 235, 235));
-        for(int i = 0; i < maxsize; i++) {
-            staticarr[i].print(window);
-        }
-        this->window->display();
-    }
+    type = INIT;
+    active = false;
     Initialize();
 }
 
@@ -49,4 +34,9 @@ void StructStaticArray::Initialize() {
         staticarr[i].initialize(coord.x, coord.y, 30, "");
         coord += velocity;
     }
+}
+
+void StructStaticArray::print() {
+    for(int i = 0; i < maxsize; i++)
+        staticarr[i].print(window);
 }
