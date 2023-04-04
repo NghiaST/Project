@@ -30,20 +30,20 @@ void DataVisualization::Initialize()
 }
 
 void DataVisualization::StaticArray() {
-    int sizearray = 10;
+    /*int sizearray = 10;
     ViewSquareNode *staticarr = new ViewSquareNode[sizearray] ();
 
     sf::Vector2f coord = sf::Vector2f(250, 200);
     sf::Vector2f velocity = sf::Vector2f(32, 0);
 
     for(int i = 0; i < sizearray; i++) {
-        staticarr[i].initialize(coord.x, coord.y, 30, inttochar(i));
+        staticarr[i].initialize(font, coord.x, coord.y, 30, std::to_string(i));
         coord += velocity;
     }
     addwhitescreen(*this->window);
     for(int i = 0; i < sizearray; i++) {
         staticarr[i].print(window);
-    }
+    }*/
 }
 
 void DataVisualization::DynamicArray() {}
@@ -74,10 +74,13 @@ int cnt;
 // Functions
 void DataVisualization::processEvents()
 {
+    mouseType = NOCLICK;
+    keyboardType = 0;
     while (this->window->pollEvent(sfEvent)) {
         if (sfEvent.type == sf::Event::Closed) this->window->close();
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) this->window->close();
-        // std::cout << "Events " << ++cnt << '\n';
+        if (sfEvent.type == sf::Event::TextEntered)
+            keyboardType = sfEvent.text.unicode;
     }
 }
 
@@ -85,12 +88,26 @@ void DataVisualization::update()
 {   
     if (!window->isOpen()) return;
     if (!this->states.empty()) {
+        if (keyboardType)
+            this->states.top()->box->update(keyboardType);
         // Code here
         if (this->states.top()->listbutton[iSTATIC].isPressed()) {
             stat->run();
         }
         if (this->states.top()->listbutton[iINIT].isPressed()) {
             stat->Initialize();
+        }
+        if (this->states.top()->listbutton[iADD].isPressed()) {
+            stat->Add();
+        }
+        if (this->states.top()->listbutton[iDELETE].isPressed()) {
+            stat->Delete();
+        }
+        if (this->states.top()->listbutton[iUPDATE].isPressed()) {
+            stat->Update();
+        }
+        if (this->states.top()->listbutton[iSEARCH].isPressed()) {
+            stat->Search();
         }
 
         this->states.top()->update();

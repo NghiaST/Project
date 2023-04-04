@@ -5,9 +5,10 @@
 
 enum PRESENT {INIT = 0, ADD = 1, DELETE, UPDATE, SEARCH};
 
-class StructStaticArray {
+struct StructStaticArray {
 private:
     sf::RenderWindow* window;
+    sf::Font font;
     const static int maxsize = 10;
     int sizearray;
     int arr[10];
@@ -15,16 +16,22 @@ private:
     PRESENT type;
     bool active;
 public:
+    void turn_off();
+    void turn_on();
     void Initialize();
     void Add();
     void Delete();
     void Update();
-    void SearchData();
+    void Search();
+    void run(/*int manipulate, int way*/); /// Ex: Add - Insert to the last
 
     const bool& isActive() const;
 
     StructStaticArray(sf::RenderWindow* window, bool active);
-    void run();
+    ~StructStaticArray();
+
+    // render
+    void refreshrender();
     void print();
 };
 #endif

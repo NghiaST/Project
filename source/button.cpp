@@ -2,7 +2,7 @@
 #include <iostream>
 
 Button::Button(float x, float y, float width, float height, 
-        sf::Font* font, std::string text, 
+        sf::Font* font, std::string str, 
         sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
 {
     this->buttonState = BTN_IDLE;
@@ -12,7 +12,7 @@ Button::Button(float x, float y, float width, float height,
 
     this->font = font;
     this->text.setFont(*this->font);
-    this->text.setString(text);
+    this->text.setString(str);
     this->text.setFillColor(sf::Color::White);
     this->text.setCharacterSize(16);
     this->text.setPosition(
@@ -48,19 +48,34 @@ const bool Button::isPressed() const {
 void Button::update(sf::Vector2f mousePos) {
     /* update the booleans for hover and pressed */
 
-    //Idle
-    this->buttonState = BTN_IDLE;
-    
-    //Hover
-    if (this->shape.getGlobalBounds().contains(mousePos)) 
+    //Hold - 3
+    if (this->canEnable == true && sf::Mouse::isButtonPressed(sf::Mouse::Left) && (this->buttonState == BTN_ACTIVE || this->buttonState == BTN_HOLD))
     {
-        this->buttonState = BTN_HOVER;
+        this->buttonState = BTN_HOLD;
     }
-    
-    //Pressed
-    if (this->shape.getGlobalBounds().contains(mousePos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+
+    //Pressed - 2
+    else if (this->canEnable == true && this->shape.getGlobalBounds().contains(mousePos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         this->buttonState = BTN_ACTIVE;
+    }
+
+    //Hover - 1
+    else if (canEnable == false && this->shape.getGlobalBounds().contains(mousePos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        this->canEnable = false;
+        this->buttonState = BTN_HOVER;
+    }
+    else if (this->shape.getGlobalBounds().contains(mousePos)) 
+    {
+        this->canEnable = true;
+        this->buttonState = BTN_HOVER;
+    }
+    //Idle - 0
+    else 
+    {
+        this->canEnable = false;
+        this->buttonState = BTN_IDLE;
     }
 
     switch (this->buttonState)
@@ -73,7 +88,7 @@ void Button::update(sf::Vector2f mousePos) {
             this->shape.setFillColor(this->hoverColor);
             break;
 
-        case BTN_ACTIVE:
+        case BTN_ACTIVE: case BTN_HOLD:
             this->shape.setFillColor(this->activeColor);
             break;
 

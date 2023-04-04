@@ -3,11 +3,13 @@
 #include "graphics_func.hpp"
 #include "struct_support.hpp"
 
-void ViewSquareNode::initialize(int _x = 0, int _y = 0, int _l = 10, char* _str = "") {
-    coord = sf::Vector2f(_x, _y);
-    length = _l;
-    str = _str + '\0';
-    Vcolor = sf::Color::Black;
+void ViewSquareNode::initialize(sf::Font& font, int x, int y, int length, std::string str) {
+    coord = sf::Vector2f(x, y);
+    this->length = length;
+    this->str = str;
+    idleColor = sf::Color::Black;
+    open_font = font;
+
     setup();
 }
 void ViewSquareNode::setup() {
@@ -18,19 +20,12 @@ void ViewSquareNode::setup() {
     shape.setOutlineThickness(2);
     shape.setOutlineColor(sf::Color::Black);
     // shape.setOutlineColor(sf::Color(0, 0, 0));
-
-    // text
-    if (!open_font.loadFromFile("./dat/roboto/Roboto-Black.ttf"))
-    {
-        std::cout << "ERROR";
-    }
-// cout << "DEBUG 1\n";
+    
     text.setFont(open_font);
     text.setString(str);
     text.setCharacterSize(16);
     text.setFillColor(sf::Color::Red);
     settextrectangle(text, coord, sf::Vector2f(length, length));
-    //tt(text);
     // text.setStyle(sf::Text::Italic);
     
 // cout << "DEBUG 2\n";
@@ -46,10 +41,10 @@ void ViewSquareNode::print(sf::RenderWindow *window)
     window->draw(text);
 }
 
-ViewNode::ViewNode(int _x = 0, int _y = 0, int _r = 10) {
-    coord.x = _x;
-    coord.y = _y;
-    radius = _r;
+ViewNode::ViewNode(int x = 0, int y = 0, int radius = 10) {
+    coord.x = x;
+    coord.y = y;
+    this->radius = radius;
 }
 void ViewNode::setup() {
     shape = sf::CircleShape(radius);

@@ -5,8 +5,9 @@
 #include <iostream>
 #include <vector>
 #include "button.hpp"
+#include "inputbox.hpp"
 
-class State {
+struct State {
 private:
     sf::RenderWindow* window;
     sf::Font font;
@@ -19,6 +20,8 @@ private:
 
 public:
     std::vector<Button> listbutton;
+    std::vector<Button> childbutton[5];
+    InputBox* box;
     
 public:
     // Init

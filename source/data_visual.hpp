@@ -7,6 +7,8 @@
 #include "staticarray.hpp"
 
 enum PAGE{STATIC_ARRAY = 0, DYNAMIC_ARRAY, LINKED_LIST, STACK, QUEUE};
+enum MOUSE{NOCLICK = 0, LEFTCLICK = 1, RIGHTCLICK = 2};
+
 const int iSTATIC = 0;
 const int iDYNAMIC = 1;
 const int iLINKEDLIST = 2;
@@ -24,6 +26,8 @@ private:
     sf::RenderWindow* window;
     sf::Event sfEvent;
     bool running = true;
+    MOUSE mouseType;
+    int keyboardType;
 
     std::stack<State*> states;
     PAGE page_present;

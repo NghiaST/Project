@@ -7,7 +7,6 @@ int main()
 }
 /* 
 categories:
-    void CommonView();
     void StaticArray();
     void DynamicArray();
     void LinkedList(); // simply, doubly, circular

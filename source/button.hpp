@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-enum button_states{BTN_IDLE = 0, BTN_HOVER, BTN_ACTIVE};
+enum button_states{BTN_IDLE = 0, BTN_HOVER, BTN_ACTIVE, BTN_HOLD};
 
 class Button {
 private:
@@ -19,10 +19,12 @@ private:
     
     int thickness;
     sf::Color idleOutlineColor;
+    
+    bool canEnable = false; // check if mouse to be pressed inside or outside the button
 
 public:
     Button(float x, float y, float width, float height, 
-        sf::Font* font, std::string text, 
+        sf::Font* font, std::string str, 
         sf::Color idleColor, sf::Color hovercOlor, sf::Color activeColor);
     ~Button();
 
