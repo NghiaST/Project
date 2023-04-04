@@ -2,20 +2,23 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include "staticarray.hpp"
-#include "graphics_func.hpp"
 #include "struct_support.hpp"
 
-//void StructStaticArray::Initialize() {}
 void StructStaticArray::Add() {}
 void StructStaticArray::Delete() {}
 void StructStaticArray::Update() {}
 void StructStaticArray::SearchData() {}
 
-StructStaticArray::StructStaticArray(sf::RenderWindow* window) {
+StructStaticArray::StructStaticArray(sf::RenderWindow* window, bool active) {
     this->window = window;
-    type = INIT;
-    active = false;
+    this->type = INIT;
+    this->active = active;
     Initialize();
+}
+
+const bool &StructStaticArray::isActive() const
+{
+    return this->active;
 }
 
 void StructStaticArray::Initialize() {
@@ -36,7 +39,14 @@ void StructStaticArray::Initialize() {
     }
 }
 
+void StructStaticArray::run() {
+    if (this->isActive()) return;
+    this->active = true;
+    Initialize();
+}
+
 void StructStaticArray::print() {
+    if (!this->isActive()) return;
     for(int i = 0; i < maxsize; i++)
         staticarr[i].print(window);
 }

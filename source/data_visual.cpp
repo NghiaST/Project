@@ -5,9 +5,6 @@
 #include "data_visual.hpp"
 #include "struct_support.hpp"
 #include "graphics_func.hpp"
-#include "staticarray.hpp"
-#include "state.hpp"
-#include "button.hpp"
 
 // Initializations
 void DataVisualization::InitWindow() 
@@ -24,20 +21,12 @@ void DataVisualization::InitStates()
     this->states.push(new State(this->window));
 }
 
-void DataVisualization::InitButton()
-{
-    listbutton.push_back(Button(100, 200, 250, 250, &this->font, "Hello", sf::Color::Blue, sf::Color::Green, sf::Color::Yellow));
-}
-
 void DataVisualization::Initialize()
 {
-    if (!this->font.loadFromFile("dat/roboto/Roboto-Black.ttf")) {
-        std::cout << "Error Load Font\n";
-    }
-
     this->InitWindow();
     this->InitStates();
-    this->InitButton();
+    page_present = STATIC_ARRAY;
+    stat = new StructStaticArray(window, true);
 }
 
 void DataVisualization::StaticArray() {
@@ -77,32 +66,33 @@ DataVisualization::~DataVisualization()
         delete this->states.top();
         this->states.pop();
     }
+    if (stat != nullptr)
+        delete stat;
 }
 
-void DataVisualization::updateMousePositions()
-{
-    this->mousePosScreen = sf::Mouse::getPosition();
-    this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-    this->mousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
-}
-
+int cnt;
 // Functions
 void DataVisualization::processEvents()
 {
     while (this->window->pollEvent(sfEvent)) {
         if (sfEvent.type == sf::Event::Closed) this->window->close();
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) this->window->close();
+        // std::cout << "Events " << ++cnt << '\n';
     }
 }
 
 void DataVisualization::update()
 {   
     if (!window->isOpen()) return;
-    this->updateMousePositions();
-    for(Button& but : listbutton) {
-        but.update(this->mousePosView);
-    }
-    /*if (!this->states.empty()) {
+    if (!this->states.empty()) {
+        // Code here
+        if (this->states.top()->listbutton[iSTATIC].isPressed()) {
+            stat->run();
+        }
+        if (this->states.top()->listbutton[iINIT].isPressed()) {
+            stat->Initialize();
+        }
+
         this->states.top()->update();
 
         if (this->states.top()->getQuit())
@@ -113,35 +103,27 @@ void DataVisualization::update()
     }
     else {
         this->window->close();
-    }*/
+    }
 }
 
 void DataVisualization::render()
 {
     if (!window->isOpen()) return;
     this->window->clear(sf::Color(235, 235, 235));
-    for(Button but : listbutton) {
-        but.render(window);
-    }
-
-    /*if (!this->states.empty())
-        this->states.top()->render();*/
-    // Render items
-    /*for(int i = 0; i < maxsize; i++) {
-        staticarr[i].print(window);
-    }*/
+    
+    this->stat->print();
+    
+    if (!this->states.empty())
+        this->states.top()->render();
     this->window->display();
 
 }
 
-void DataVisualization::run() 
+void DataVisualization::run()
 {
-    //Initialize();
     while (this->window->isOpen()) {
         processEvents();
         update();
         render();
     }
-    /*StructStaticArray stat(window);
-    stat.run();*/
 }

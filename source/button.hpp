@@ -2,7 +2,6 @@
 #define __button_h__
 
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 
 enum button_states{BTN_IDLE = 0, BTN_HOVER, BTN_ACTIVE};
 
@@ -17,6 +16,9 @@ private:
     sf::Color idleColor;
     sf::Color hoverColor;
     sf::Color activeColor;
+    
+    int thickness;
+    sf::Color idleOutlineColor;
 
 public:
     Button(float x, float y, float width, float height, 

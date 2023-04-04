@@ -16,8 +16,8 @@ Button::Button(float x, float y, float width, float height,
     this->text.setFillColor(sf::Color::White);
     this->text.setCharacterSize(16);
     this->text.setPosition(
-        this->shape.getPosition().x / 2.f - this->text.getGlobalBounds().width / 2.f, 
-        this->shape.getPosition().y / 2.f - this->text.getGlobalBounds().height / 2.f
+        this->shape.getPosition().x + this->shape.getSize().x / 2.f - this->text.getGlobalBounds().width / 2.f, 
+        this->shape.getPosition().y + this->shape.getSize().y / 2.f - this->text.getGlobalBounds().height / 2.f - 2
     );
 
     this->idleColor = idleColor;
@@ -25,6 +25,14 @@ Button::Button(float x, float y, float width, float height,
     this->activeColor = activeColor;
 
     this->shape.setFillColor(this->idleColor);
+
+// Init
+    this->thickness = 2;
+    this->idleOutlineColor = sf::Color::Black;
+
+    this->text.setFillColor(sf::Color::Black);
+    this->shape.setOutlineThickness(this->thickness);
+    this->shape.setOutlineColor(this->idleOutlineColor);
 }
 
 Button::~Button() {
@@ -50,11 +58,10 @@ void Button::update(sf::Vector2f mousePos) {
     }
     
     //Pressed
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (this->shape.getGlobalBounds().contains(mousePos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         this->buttonState = BTN_ACTIVE;
     }
-    std::cout << this->buttonState << '\n';
 
     switch (this->buttonState)
     {
@@ -78,4 +85,5 @@ void Button::update(sf::Vector2f mousePos) {
 
 void Button::render(sf::RenderTarget* target) {
     target->draw(this->shape);
+    target->draw(this->text);
 }

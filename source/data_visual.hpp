@@ -4,27 +4,34 @@
 #include <stack>
 #include <vector>
 #include "state.hpp"
-#include "button.hpp"
+#include "staticarray.hpp"
+
+enum PAGE{STATIC_ARRAY = 0, DYNAMIC_ARRAY, LINKED_LIST, STACK, QUEUE};
+const int iSTATIC = 0;
+const int iDYNAMIC = 1;
+const int iLINKEDLIST = 2;
+const int iSTACK = 3;
+const int iQUEUE = 4;
+const int iINIT = 5;
+const int iADD = 6;
+const int iDELETE = 7;
+const int iUPDATE = 8;
+const int iSEARCH = 9;
 
 struct DataVisualization {
 private:
     // Varibles
     sf::RenderWindow* window;
     sf::Event sfEvent;
-    sf::Font font;
     bool running = true;
-    sf::Vector2i mousePosScreen;
-    sf::Vector2i mousePosWindow;
-    sf::Vector2f mousePosView;
 
     std::stack<State*> states;
-
-    std::vector<Button> listbutton;
+    PAGE page_present;
+    StructStaticArray* stat;
 
     // Initializations
     void InitWindow();
     void InitStates();
-    void InitButton();
 
     //Functions
     void StaticArray();
@@ -43,9 +50,6 @@ public:
     // Constructors/Destructors
     DataVisualization();
     virtual ~DataVisualization();
-
-    // Mouse
-    void updateMousePositions();
 
     // Functions
     void Initialize();

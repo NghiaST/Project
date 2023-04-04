@@ -21,7 +21,10 @@ public:
     void Update();
     void SearchData();
 
-    StructStaticArray(sf::RenderWindow* window);
+    const bool& isActive() const;
+
+    StructStaticArray(sf::RenderWindow* window, bool active);
+    void run();
     void print();
 };
 #endif
