@@ -18,63 +18,40 @@ void DataVisualization::InitWindow()
 
 void DataVisualization::InitStates()
 {
-    this->states.push(new State(this->window));
+    this->states = new State(this->window);
 }
-
-void DataVisualization::Initialize()
-{
-    this->InitWindow();
-    this->InitStates();
-    page_present = STATIC_ARRAY;
-    stat = new StructStaticArray(window, true);
-}
-
-void DataVisualization::StaticArray() {
-    /*int sizearray = 10;
-    ViewSquareNode *staticarr = new ViewSquareNode[sizearray] ();
-
-    sf::Vector2f coord = sf::Vector2f(250, 200);
-    sf::Vector2f velocity = sf::Vector2f(32, 0);
-
-    for(int i = 0; i < sizearray; i++) {
-        staticarr[i].initialize(font, coord.x, coord.y, 30, std::to_string(i));
-        coord += velocity;
-    }
-    addwhitescreen(*this->window);
-    for(int i = 0; i < sizearray; i++) {
-        staticarr[i].print(window);
-    }*/
-}
-
-void DataVisualization::DynamicArray() {}
-void DataVisualization::LinkedList() {}
-void DataVisualization::Stack() {}
-void DataVisualization::Queue() {}
 
 //// Initializations functions
 
 // Constructors/Destructors
 DataVisualization::DataVisualization()
 {
-    Initialize();
+    this->running = true;
+    this->InitWindow();
+    this->InitStates();
+    this->page_present = STATIC_ARRAY;
+    this->StaticArray  = new StructStaticArray(window, true);
+    this->DynamicArray = new StructStaticArray(window, false);
+    this->LinkedList   = new StructStaticArray(window, false);
+    this->Stack        = new StructStaticArray(window, false);
+    this->Queue        = new StructStaticArray(window, false);
 }
 
 DataVisualization::~DataVisualization()
 {
     delete this->window;
-    while (!this->states.empty()) {
-        delete this->states.top();
-        this->states.pop();
-    }
-    if (stat != nullptr)
-        delete stat;
+    delete this->states;
+    delete this->StaticArray;
+    delete this->DynamicArray;
+    delete this->LinkedList;
+    delete this->Stack;
+    delete this->Queue;
 }
 
 int cnt;
 // Functions
 void DataVisualization::processEvents()
 {
-    mouseType = NOCLICK;
     keyboardType = 0;
     while (this->window->pollEvent(sfEvent)) {
         if (sfEvent.type == sf::Event::Closed) this->window->close();
@@ -87,24 +64,32 @@ void DataVisualization::processEvents()
 void DataVisualization::update()
 {   
     if (!window->isOpen()) return;
-    if (!this->states.empty()) {
-        if (keyboardType)
-            this->states.top()->box->update(keyboardType);
-        // Code here
-        sf::Vector2i typeButton = this->states.top()->update();
-        if (typeButton.x != -1) {
-            std::cout << "Press " << typeButton.x << ' ' << typeButton.y << '\n';
-            if (typeButton.x > 4)
-                stat->run(typeButton.x - 5, typeButton.y);
+    sf::Vector2i typeButton = this->states->update(keyboardType);
+    // Code here
+    if (typeButton.x != -1) {
+        std::cout << "Press " << typeButton.x << ' ' << typeButton.y << '\n';
+        if (typeButton.x < 5) {
+            if (page_present == STATIC_ARRAY)  StaticArray->turn_off();
+            if (page_present == DYNAMIC_ARRAY) DynamicArray->turn_off();
+            if (page_present == LINKED_LIST)   LinkedList->turn_off();
+            if (page_present == STACK)         Stack->turn_off();
+            if (page_present == QUEUE)         Queue->turn_off();
+
+            page_present = static_cast<PAGE>(typeButton.x);
+            
+            if (page_present == STATIC_ARRAY)  StaticArray->turn_on();
+            if (page_present == DYNAMIC_ARRAY) DynamicArray->turn_on();
+            if (page_present == LINKED_LIST)   LinkedList->turn_on();
+            if (page_present == STACK)         Stack->turn_on();
+            if (page_present == QUEUE)         Queue->turn_on();
         }
-        if (this->states.top()->getQuit())
-        {
-            delete this->states.top();
-            this->states.pop();
+        if (typeButton.x > 4) {
+            if (page_present == STATIC_ARRAY)  StaticArray->run(typeButton.x - 5, typeButton.y);
+            if (page_present == DYNAMIC_ARRAY) DynamicArray->run(typeButton.x - 5, typeButton.y);
+            if (page_present == LINKED_LIST)   LinkedList->run(typeButton.x - 5, typeButton.y);
+            if (page_present == STACK)         Stack->run(typeButton.x - 5, typeButton.y);
+            if (page_present == QUEUE)         Queue->run(typeButton.x - 5, typeButton.y);
         }
-    }
-    else {
-        this->window->close();
     }
 }
 
@@ -112,13 +97,15 @@ void DataVisualization::render()
 {
     if (!window->isOpen()) return;
     this->window->clear(sf::Color(235, 235, 235));
-    
-    this->stat->print();
-    
-    if (!this->states.empty())
-        this->states.top()->render();
-    this->window->display();
 
+    if (page_present == STATIC_ARRAY)  StaticArray->print();
+    if (page_present == DYNAMIC_ARRAY) DynamicArray->print();
+    if (page_present == LINKED_LIST)   LinkedList->print();
+    if (page_present == STACK)         Stack->print();
+    if (page_present == QUEUE)         Queue->print();
+
+    this->states->render();
+    this->window->display();
 }
 
 void DataVisualization::run()

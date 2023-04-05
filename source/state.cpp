@@ -53,9 +53,6 @@ State::State(sf::RenderWindow *window)
     this->typeCategory = 0; // StaticArray
     this->typeManipulate = -1;
     this->typesubManipulate = -1;
-
-    // Box
-   // box = new InputBox(800, 500, 100, 100, &font);
 }
 
 State::~State()
@@ -85,8 +82,9 @@ void State::endState()
     std::cout << "End State\n";
 }
 
-sf::Vector2i State::update()
+sf::Vector2i State::update(int keyboardType)
 {
+    this->keyboardType = keyboardType;
     this->updateMousePositions();
     this->checkforQuit();
     if (this->getQuit()) return sf::Vector2i(-1, -1);
@@ -156,7 +154,7 @@ sf::Vector2i State::update()
         }
     }
     
-    std::cout << ret.x << ' ' << ret.y << " W2\n";
+    if (this->keyboardType) this->box->update(this->keyboardType);
     return ret;
 }
 

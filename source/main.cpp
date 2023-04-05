@@ -2,8 +2,9 @@
 using namespace std;
 int main()
 {
-    DataVisualization NewVisual;
-    NewVisual.run();
+    DataVisualization* NewVisual = new DataVisualization();
+    NewVisual->run();
+    delete NewVisual;
 }
 /* 
 categories:

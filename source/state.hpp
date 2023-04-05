@@ -21,9 +21,13 @@ private:
     bool quit;
     
     // mouse
+    int mouseType;
     sf::Vector2i mousePosScreen;
     sf::Vector2i mousePosWindow;
     sf::Vector2f mousePosView;
+
+    // keyboard
+    int keyboardType;
 
     // state of button
     int typeCategory;
@@ -55,7 +59,7 @@ public:
     void updateMousePositions();
 
     void endState();
-    sf::Vector2i update();
+    sf::Vector2i update(int keyboardType);
     void render();
 
     // Box
