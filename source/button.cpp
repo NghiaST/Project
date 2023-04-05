@@ -2,7 +2,7 @@
 #include <iostream>
 
 Button::Button(float x, float y, float width, float height, 
-        sf::Font* font, std::string str, 
+        sf::Font* font, std::string str, int strsize,
         sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
 {
     this->buttonState = BTN_IDLE;
@@ -14,7 +14,7 @@ Button::Button(float x, float y, float width, float height,
     this->text.setFont(*this->font);
     this->text.setString(str);
     this->text.setFillColor(sf::Color::White);
-    this->text.setCharacterSize(16);
+    this->text.setCharacterSize(strsize);
     this->text.setPosition(
         this->shape.getPosition().x + this->shape.getSize().x / 2.f - this->text.getGlobalBounds().width / 2.f, 
         this->shape.getPosition().y + this->shape.getSize().y / 2.f - this->text.getGlobalBounds().height / 2.f - 2
@@ -47,7 +47,6 @@ const bool Button::isPressed() const {
 
 void Button::update(sf::Vector2f mousePos) {
     /* update the booleans for hover and pressed */
-
     //Hold - 3
     if (this->canEnable == true && sf::Mouse::isButtonPressed(sf::Mouse::Left) && (this->buttonState == BTN_ACTIVE || this->buttonState == BTN_HOLD))
     {

@@ -91,27 +91,12 @@ void DataVisualization::update()
         if (keyboardType)
             this->states.top()->box->update(keyboardType);
         // Code here
-        if (this->states.top()->listbutton[iSTATIC].isPressed()) {
-            stat->run();
+        sf::Vector2i typeButton = this->states.top()->update();
+        if (typeButton.x != -1) {
+            std::cout << "Press " << typeButton.x << ' ' << typeButton.y << '\n';
+            if (typeButton.x > 4)
+                stat->run(typeButton.x - 5, typeButton.y);
         }
-        if (this->states.top()->listbutton[iINIT].isPressed()) {
-            stat->Initialize();
-        }
-        if (this->states.top()->listbutton[iADD].isPressed()) {
-            stat->Add();
-        }
-        if (this->states.top()->listbutton[iDELETE].isPressed()) {
-            stat->Delete();
-        }
-        if (this->states.top()->listbutton[iUPDATE].isPressed()) {
-            stat->Update();
-        }
-        if (this->states.top()->listbutton[iSEARCH].isPressed()) {
-            stat->Search();
-        }
-
-        this->states.top()->update();
-
         if (this->states.top()->getQuit())
         {
             delete this->states.top();

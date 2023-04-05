@@ -6,21 +6,41 @@
 #include <vector>
 #include "button.hpp"
 #include "inputbox.hpp"
+#include <iterator>
 
 struct State {
 private:
+    // constant 
+    // enum PRESENT {NONE = -1, INIT, ADD, DELETE, UPDATE, SEARCH};
+    const int NONE = -1, INIT = 0, ADD = 1, DELETE = 2, UPDATE = 3, SEARCH = 4;
+    
+    // value
     sf::RenderWindow* window;
     sf::Font font;
     std::vector<sf::Texture> textures;
     bool quit;
     
+    // mouse
     sf::Vector2i mousePosScreen;
     sf::Vector2i mousePosWindow;
     sf::Vector2f mousePosView;
 
+    // state of button
+    int typeCategory;
+    int typeManipulate;
+    int typesubManipulate;
+    bool activeManipulate[5];
+
+    std::vector<Button> buttonCategory;
+    std::vector<Button> buttonManipulate;
+    std::vector<Button> subbuttonManipulate[5];
+
+    // InputBox* boxInit;
+    // InputBox* boxAdd;
+    // InputBox* boxDel;
+    // InputBox* boxUpd;
+    // InputBox* boxSearch;
 public:
-    std::vector<Button> listbutton;
-    std::vector<Button> childbutton[5];
     InputBox* box;
     
 public:
@@ -35,8 +55,15 @@ public:
     void updateMousePositions();
 
     void endState();
-    void update();
+    sf::Vector2i update();
     void render();
+
+    // Box
+    // void Input_Add_InsertTheMiddle();
+    // void Input_Delete_DeleteAtTheMiddle();
+    // void Input_Update_Update();
+    // void Input_Search_Search();
+    // void Build_Input();
 };
 
 #endif

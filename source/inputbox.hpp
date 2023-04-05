@@ -11,6 +11,11 @@ private:
     std::string str;
     sf::Font* font;
     sf::Text text;
+    bool active;
+
+    sf::Color idleOutlineColor;
+    sf::Color activeOutlineColor;
+
 public:
     InputBox(float x, float y, float width, float height, sf::Font* font);
     ~InputBox();

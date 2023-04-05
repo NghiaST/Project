@@ -2,11 +2,15 @@
 
 InputBox::InputBox(float x, float y, float width, float height, sf::Font* font)
 {
+    // setup
+    this->idleOutlineColor = sf::Color::Black;
+    this->activeOutlineColor = sf::Color::Yellow;
+
     this->shape.setPosition(sf::Vector2f(x, y));
     this->shape.setSize(sf::Vector2f(width, height));
     this->shape.setFillColor(sf::Color::White);
-    this->shape.setOutlineThickness(1);
-    this->shape.setOutlineColor(sf::Color::Black);
+    this->shape.setOutlineThickness(2);
+    this->shape.setOutlineColor(this->idleOutlineColor);
 
     this->font = font;
     this->text.setFont(*this->font);

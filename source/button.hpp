@@ -7,8 +7,7 @@ enum button_states{BTN_IDLE = 0, BTN_HOVER, BTN_ACTIVE, BTN_HOLD};
 
 class Button {
 private:
-
-    short unsigned buttonState;
+    button_states buttonState;
 
     sf::RectangleShape shape;
     sf::Font* font;
@@ -19,12 +18,14 @@ private:
     
     int thickness;
     sf::Color idleOutlineColor;
+    sf::Color hoverOutlineColor;
+    sf::Color activeOutlineColor;
     
     bool canEnable = false; // check if mouse to be pressed inside or outside the button
 
 public:
     Button(float x, float y, float width, float height, 
-        sf::Font* font, std::string str, 
+        sf::Font* font, std::string str, int strsize,
         sf::Color idleColor, sf::Color hovercOlor, sf::Color activeColor);
     ~Button();
 
