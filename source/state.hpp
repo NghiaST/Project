@@ -17,7 +17,7 @@ private:
     // value
     sf::RenderWindow* window;
     sf::Font font;
-    std::vector<sf::Texture> textures;
+    // std::vector<sf::Texture> textures;
     bool quit;
     
     // mouse
@@ -39,13 +39,13 @@ private:
     std::vector<Button> buttonManipulate;
     std::vector<Button> subbuttonManipulate[5];
 
+    std::vector<std::vector<InputBox>> boxarr; // (5, std::vector<int>);
     // InputBox* boxInit;
     // InputBox* boxAdd;
     // InputBox* boxDel;
     // InputBox* boxUpd;
     // InputBox* boxSearch;
 public:
-    InputBox* box;
     
 public:
     // Init

@@ -110,6 +110,7 @@ void DataVisualization::render()
 
 void DataVisualization::run()
 {
+    std::cout << "D1\n";
     while (this->window->isOpen()) {
         processEvents();
         update();

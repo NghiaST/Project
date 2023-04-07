@@ -3,14 +3,18 @@
 
 Button::Button(float x, float y, float width, float height, 
         sf::Font* font, std::string str, int strsize,
-        sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor)
+        sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor, sf::Color runningColor)
 {
-    this->buttonState = BTN_IDLE;
+    // Default
+    this->shapeState = SHAPE_IDLE;
+    this->active = false;
 
+    // Assign
     this->shape.setPosition(sf::Vector2f(x, y));
     this->shape.setSize(sf::Vector2f(width, height));
 
     this->font = font;
+
     this->text.setFont(*this->font);
     this->text.setString(str);
     this->text.setFillColor(sf::Color::White);
@@ -23,10 +27,11 @@ Button::Button(float x, float y, float width, float height,
     this->idleColor = idleColor;
     this->hoverColor = hoverColor;
     this->activeColor = activeColor;
+    this->runningColor = runningColor;
 
     this->shape.setFillColor(this->idleColor);
 
-// Init
+    // Init
     this->thickness = 2;
     this->idleOutlineColor = sf::Color::Black;
 
@@ -39,55 +44,31 @@ Button::~Button() {
 }
 
 const bool Button::isPressed() const {
-    if (this->buttonState == BTN_ACTIVE)
+    if (this->shapeState == SHAPE_ACTIVE)
         return true;
 
     return false;
 }
 
 void Button::update(sf::Vector2f mousePos) {
-    /* update the booleans for hover and pressed */
-    //Hold - 3
-    if (this->canEnable == true && sf::Mouse::isButtonPressed(sf::Mouse::Left) && (this->buttonState == BTN_ACTIVE || this->buttonState == BTN_HOLD))
-    {
-        this->buttonState = BTN_HOLD;
-    }
+    int mouseType = 0;
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        mouseType = 1;
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+        mouseType = 2;
+    this->updateStatus(mousePos, mouseType, this->shape.getGlobalBounds().contains(mousePos));
 
-    //Pressed - 2
-    else if (this->canEnable == true && this->shape.getGlobalBounds().contains(mousePos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    switch (this->shapeState)
     {
-        this->buttonState = BTN_ACTIVE;
-    }
-
-    //Hover - 1
-    else if (canEnable == false && this->shape.getGlobalBounds().contains(mousePos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        this->canEnable = false;
-        this->buttonState = BTN_HOVER;
-    }
-    else if (this->shape.getGlobalBounds().contains(mousePos)) 
-    {
-        this->canEnable = true;
-        this->buttonState = BTN_HOVER;
-    }
-    //Idle - 0
-    else 
-    {
-        this->canEnable = false;
-        this->buttonState = BTN_IDLE;
-    }
-
-    switch (this->buttonState)
-    {
-        case BTN_IDLE:
+        case SHAPE_IDLE:
             this->shape.setFillColor(this->idleColor);
             break;
 
-        case BTN_HOVER:
+        case SHAPE_HOVER:
             this->shape.setFillColor(this->hoverColor);
             break;
 
-        case BTN_ACTIVE: case BTN_HOLD:
+        case SHAPE_ACTIVE: case SHAPE_HOLD:
             this->shape.setFillColor(this->activeColor);
             break;
 

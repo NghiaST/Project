@@ -3,16 +3,17 @@
 #include "graphics_func.hpp"
 #include "struct_support.hpp"
 
-void ViewSquareNode::initialize(sf::Font& font, int x, int y, int length, std::string str) {
+void ViewSquareNode::initialize(sf::Font* font, int x, int y, int length, std::string str) 
+{
     coord = sf::Vector2f(x, y);
+    idleColor = sf::Color::Black;
     this->length = length;
     this->str = str;
-    idleColor = sf::Color::Black;
-    open_font = font;
-
+    this->font = font;
     setup();
 }
-void ViewSquareNode::setup() {
+void ViewSquareNode::setup() 
+{
     // square
     shape.setSize(sf::Vector2f(length, length));
     shape.setPosition(coord);
@@ -21,7 +22,7 @@ void ViewSquareNode::setup() {
     shape.setOutlineColor(sf::Color::Black);
     // shape.setOutlineColor(sf::Color(0, 0, 0));
     
-    text.setFont(open_font);
+    text.setFont(*this->font);
     text.setString(str);
     text.setCharacterSize(16);
     text.setFillColor(sf::Color::Red);

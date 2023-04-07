@@ -207,13 +207,14 @@ void StructStaticArray::refreshrender() {
     sf::Vector2f coord = sf::Vector2f(250, 100);
     sf::Vector2f velocity = sf::Vector2f(52, 0);
     for(int i = 0; i < sizearray; i++) {
-        staticarr[i].initialize(font, coord.x, coord.y, velocity.x - 2, std::to_string(arr[i]));
+        staticarr[i].initialize(&this->font, coord.x, coord.y, velocity.x - 2, std::to_string(arr[i]));
         coord += velocity;
     }
     for(int i = sizearray; i < maxsize; i++) {
-        staticarr[i].initialize(font, coord.x, coord.y, velocity.x - 2, "");
+        staticarr[i].initialize(&this->font, coord.x, coord.y, velocity.x - 2, "");
         coord += velocity;
     }
+    std::cout << "W\n";
 }
 
 void StructStaticArray::turn_off() {
@@ -235,8 +236,6 @@ void StructStaticArray::run(int manipulate, int way) {
     if (manipulate == 3) this->Update(way);
     if (manipulate == 4) this->Search(way);
 }
-
-
 
 void StructStaticArray::print() {
     if (!this->isActive()) return;

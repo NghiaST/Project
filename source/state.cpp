@@ -14,7 +14,7 @@ State::State(sf::RenderWindow *window)
     sf::Vector2f velocity = sf::Vector2f(150, 0);
 
     for(std::string strname : strarray) {
-        buttonCategory.push_back(Button(coord.x, coord.y, velocity.x - 2, 50, &this->font, strname, 15, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow));
+        buttonCategory.push_back(Button(coord.x, coord.y, velocity.x - 5, 50, &this->font, strname, 15, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
         coord += velocity;
     }
 
@@ -23,11 +23,11 @@ State::State(sf::RenderWindow *window)
     velocity = sf::Vector2f(0, 50);
 
     for(std::string strname : strarray) {
-        buttonManipulate.push_back(Button(coord.x, coord.y, 100, velocity.y - 2, &this->font, strname, 15, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow));
+        buttonManipulate.push_back(Button(coord.x, coord.y, 100, velocity.y - 5, &this->font, strname, 15, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
         coord += velocity;
     }
 
-    // setup std::vector<Button> childbutton[5]
+    // setup std::vector<Button> subbuttonManipulate[5]
     std::vector<std::vector<std::string>> vec2dstr = {
         {"Empty", "Random", "User Defined List", "External File"},
         {"Insert to the first", "Insert to the last", "Insert to the middle"},
@@ -40,14 +40,34 @@ State::State(sf::RenderWindow *window)
     for(int i = 0; i < 5; i++) {
         sf::Vector2f coord2 = coord;
         for(std::string strname : vec2dstr[i]) {
-            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, velocity.x - 2, 30, &this->font, strname, 12, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow));
+            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, velocity.x - 5, 30, &this->font, strname, 12, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+            coord2.x += velocity.x;
+        }
+        coord.y += velocity.y;
+    }
+
+    // std::vector<std::vector<InputBox>>
+    std::vector<std::vector<std::string>> nameInputBox = {
+        {"Array : "},
+        {"Pos : ", "Value : "},
+        {"Pos : "},
+        {"Pos : ", "New value : "},
+        {"Value : "}
+    };
+    boxarr.resize(5);
+    coord = sf::Vector2f(1000, 410);
+    velocity = sf::Vector2f(150, 50);
+    for(int i = 0; i < 5; i++) {
+        sf::Vector2f coord2 = coord;
+        for(std::string nameBox : nameInputBox[i]) {
+            boxarr[i].push_back(InputBox(coord2.x, coord2.y, velocity.x - 5, 30, &this->font, nameBox));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
     }
 
     // debug
-    box = new InputBox(800, 500, 100, 100, &font);
+    //box = new InputBox(800, 500, 100, 100, &font, "text = ");
 
     // state of button
     this->typeCategory = 0; // StaticArray
@@ -90,7 +110,6 @@ sf::Vector2i State::update(int keyboardType)
     if (this->getQuit()) return sf::Vector2i(-1, -1);
 
     sf::Vector2i ret = sf::Vector2i(-1, -1);
-
     int cnt = 0;
     for(Button& butt : this->buttonCategory) {
         butt.update(this->mousePosView);
@@ -124,6 +143,8 @@ sf::Vector2i State::update(int keyboardType)
             }
             cnt2++;
         }
+        for(InputBox& box : boxarr[i])
+            box.update(this->mousePosView, this->keyboardType);
     }
     // update state of button
     if (ret.x != -1 && ret.y == -1) {
@@ -142,19 +163,13 @@ sf::Vector2i State::update(int keyboardType)
         }
     }
     else if (ret.y != -1) {
-        if (ret.x - 5 == this->typeManipulate && ret.y == this->typesubManipulate) {
-            /*ret.x = -1;
-            ret.y = -1;
-            this->typeManipulate = -1;
-            this->typesubManipulate = -1;*/
-        }
+        if (ret.x - 5 == this->typeManipulate && ret.y == this->typesubManipulate) ;
         else {
             this->typeManipulate = ret.x - 5;
             this->typesubManipulate = ret.y;
         }
     }
     
-    if (this->keyboardType) this->box->update(this->keyboardType);
     return ret;
 }
 
@@ -169,10 +184,10 @@ void State::render()
         if (this->activeManipulate[i] == true) {
             for(Button& butt : subbuttonManipulate[i])
                 butt.render(window);
+            for(InputBox& box : boxarr[i])
+                box.render(window);
         }
     }
-    
-    box->render(window);
 }
 
 // void State::Input_Add_InsertTheMiddle() {}

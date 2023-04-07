@@ -3,11 +3,13 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cstring>
+#include "statusshape.hpp"
 
-struct InputBox {
+struct InputBox : StatusShape {
 private:
     sf::RectangleShape shape;
 
+    std::string str_const;
     std::string str;
     sf::Font* font;
     sf::Text text;
@@ -17,11 +19,11 @@ private:
     sf::Color activeOutlineColor;
 
 public:
-    InputBox(float x, float y, float width, float height, sf::Font* font);
+    InputBox(float x, float y, float width, float height, sf::Font* font, std::string str_const);
     ~InputBox();
     void Add(int unicode);
     void Del();
-    void update(int unicode);
+    void update(sf::Vector2f mousePos, int unicode);
     void render(sf::RenderTarget* target);
 
     std::string getString();
