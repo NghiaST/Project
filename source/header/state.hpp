@@ -8,6 +8,8 @@
 #include "inputbox.hpp"
 #include <iterator>
 
+enum MOUSE{MSE_NONE = 0, MSE_LEFTCLICK, MSE_RIGHTCLICK, MSE_LEFTHOLD, MSE_RIGHTHOLD};
+
 struct State {
 private:
     // constant 
@@ -21,31 +23,20 @@ private:
     bool quit;
     
     // mouse
-    int mouseType;
     sf::Vector2i mousePosScreen;
     sf::Vector2i mousePosWindow;
     sf::Vector2f mousePosView;
-
-    // keyboard
-    int keyboardType;
 
     // state of button
     int typeCategory;
     int typeManipulate;
     int typesubManipulate;
-    bool activeManipulate[5];
 
     std::vector<Button> buttonCategory;
     std::vector<Button> buttonManipulate;
     std::vector<Button> subbuttonManipulate[5];
 
     std::vector<std::vector<InputBox>> boxarr; // (5, std::vector<int>);
-    // InputBox* boxInit;
-    // InputBox* boxAdd;
-    // InputBox* boxDel;
-    // InputBox* boxUpd;
-    // InputBox* boxSearch;
-public:
     
 public:
     // Init
@@ -59,7 +50,7 @@ public:
     void updateMousePositions();
 
     void endState();
-    sf::Vector2i update(int keyboardType);
+    sf::Vector2i update(int mouseType, int keyboardType);
     void render();
 
     // Box

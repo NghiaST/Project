@@ -1,7 +1,7 @@
-#ifndef __statusshape_hpp__
-#define __statusshape_hpp__
+#ifndef __statusbox_hpp__
+#define __statusbox_hpp__
 #include <SFML/Graphics.hpp>
-struct StatusShape {
+struct StatusBox {
 protected:
     enum rectangle_states{SHAPE_IDLE = 0, SHAPE_HOVER, SHAPE_ACTIVE, SHAPE_HOLD};
     rectangle_states shapeState;
@@ -11,18 +11,6 @@ public:
     void updateStatus(sf::Vector2f mousePos, int mouseType, bool isMouseWithin);
     // mouseType 0, 1, 2 -> NONE, LEFTCLICK, RIGHTCLICK
 };
-/*
-struct ColorShapex4 {
-protected:
-    sf::Color 
-}
 
-
-template <typename sfShape>
-struct Shape : StatusShape {
-protected:
-    sfShape Shape;
-public:
-};*/
 
 #endif

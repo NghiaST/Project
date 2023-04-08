@@ -14,33 +14,34 @@ State::State(sf::RenderWindow *window)
     sf::Vector2f velocity = sf::Vector2f(150, 0);
 
     for(std::string strname : strarray) {
-        buttonCategory.push_back(Button(coord.x, coord.y, velocity.x - 5, 50, &this->font, strname, 15, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+        buttonCategory.push_back(Button(coord.x, coord.y, velocity.x - 5, 50, &this->font, true, true, strname, 15, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
         coord += velocity;
     }
+    buttonCategory[0].setStatus(3);
 
     strarray = {"Init", "Add", "Delete", "Update", "Search"};
     coord = sf::Vector2f(5, 400);
     velocity = sf::Vector2f(0, 50);
 
     for(std::string strname : strarray) {
-        buttonManipulate.push_back(Button(coord.x, coord.y, 100, velocity.y - 5, &this->font, strname, 15, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+        buttonManipulate.push_back(Button(coord.x, coord.y, 100, velocity.y - 5, &this->font, true, false, strname, 15, sf::Color(220, 220, 220, 255), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
         coord += velocity;
     }
 
     // setup std::vector<Button> subbuttonManipulate[5]
     std::vector<std::vector<std::string>> vec2dstr = {
-        {"Empty", "Random", "User Defined List", "External File"},
-        {"Insert to the first", "Insert to the last", "Insert to the middle"},
-        {"Delete at the first", "Delete at the last", "Delete at the middle"},
-        {"Update"},
-        {"Search"}
+        {"Empty", "Random", "Manual", "External File"},
+        {"First", "Last", "Manual"},
+        {"First", "Last", "Manual"},
+        {"Manual"},
+        {"Manual"}
     };
     coord = sf::Vector2f(155, 410);
-    velocity = sf::Vector2f(200, 50);
+    velocity = sf::Vector2f(120, 50);
     for(int i = 0; i < 5; i++) {
         sf::Vector2f coord2 = coord;
         for(std::string strname : vec2dstr[i]) {
-            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, velocity.x - 5, 30, &this->font, strname, 12, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, velocity.x - 5, 30, &this->font, false, false, strname, 12, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
@@ -48,19 +49,19 @@ State::State(sf::RenderWindow *window)
 
     // std::vector<std::vector<InputBox>>
     std::vector<std::vector<std::string>> nameInputBox = {
-        {"Array : "},
-        {"Pos : ", "Value : "},
-        {"Pos : "},
-        {"Pos : ", "New value : "},
-        {"Value : "}
+        {"Array="},
+        {"Pos=", "Value="},
+        {"Pos="},
+        {"Pos=", "Value="},
+        {"Value="}
     };
     boxarr.resize(5);
-    coord = sf::Vector2f(1000, 410);
+    coord = sf::Vector2f(750, 410);
     velocity = sf::Vector2f(150, 50);
     for(int i = 0; i < 5; i++) {
         sf::Vector2f coord2 = coord;
         for(std::string nameBox : nameInputBox[i]) {
-            boxarr[i].push_back(InputBox(coord2.x, coord2.y, velocity.x - 5, 30, &this->font, nameBox));
+            boxarr[i].push_back(InputBox(coord2.x, coord2.y, velocity.x - 5, 30, &this->font, false, nameBox));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
@@ -102,30 +103,25 @@ void State::endState()
     std::cout << "End State\n";
 }
 
-sf::Vector2i State::update(int keyboardType)
+sf::Vector2i State::update(int mouseType, int keyboardType)
 {
-    this->keyboardType = keyboardType;
     this->updateMousePositions();
-    this->checkforQuit();
     if (this->getQuit()) return sf::Vector2i(-1, -1);
 
     sf::Vector2i ret = sf::Vector2i(-1, -1);
     int cnt = 0;
-    for(Button& butt : this->buttonCategory) {
-        butt.update(this->mousePosView);
-        if (butt.isPressed()) {
+    for(Button& btn : this->buttonCategory) {
+        btn.update(this->mousePosView, mouseType);
+        if (btn.isPressed()) {
             ret.x = cnt;
             ret.y = -1;
-
-            // update state of button
-            // this->typeManipulate = NONE;
-            // this->typesubManipulate = -1;
         }
         cnt++;
     }
-    for(Button& butt : this->buttonManipulate) {
-        butt.update(this->mousePosView);
-        if (butt.isPressed()) {
+    
+    for(Button& btn : this->buttonManipulate) {
+        btn.update(this->mousePosView, mouseType);
+        if (btn.isPressed()) {
             ret.x = cnt;
             ret.y = -1;
         }
@@ -133,23 +129,24 @@ sf::Vector2i State::update(int keyboardType)
     }
     for(int i = 0; i < 5; i++)
     {
-        if (this->activeManipulate[i] == false) continue;
         int cnt2 = 0;
-        for(Button& butt : subbuttonManipulate[i]) {
-            butt.update(this->mousePosView);
-            if (butt.isPressed()) {
+        for(Button& btn : subbuttonManipulate[i]) {
+            btn.update(this->mousePosView, mouseType);
+            if (btn.isPressed()) {
                 ret.x = i + 5;
                 ret.y = cnt2;
             }
             cnt2++;
         }
         for(InputBox& box : boxarr[i])
-            box.update(this->mousePosView, this->keyboardType);
+            box.update(this->mousePosView, mouseType, keyboardType);
     }
     // update state of button
+    if (mouseType != MSE_LEFTCLICK) ret = sf::Vector2i(-1, -1);
     if (ret.x != -1 && ret.y == -1) {
         if (ret.x < 5) {
             if (ret.x != this->typeCategory) {
+                this->buttonCategory[this->typeCategory].setStatus(0);
                 this->typeCategory = ret.x;
                 this->typeManipulate = -1;
                 this->typesubManipulate = -1;
@@ -159,15 +156,16 @@ sf::Vector2i State::update(int keyboardType)
             }
         }
         else {
-            this->activeManipulate[ret.x - 5] ^= 1;
+            for(Button& btn : subbuttonManipulate[ret.x - 5])
+                btn.changeView();
+            for(InputBox& box : boxarr[ret.x - 5])
+                box.changeView();
         }
+        ret = sf::Vector2i(-1, -1);
     }
     else if (ret.y != -1) {
-        if (ret.x - 5 == this->typeManipulate && ret.y == this->typesubManipulate) ;
-        else {
-            this->typeManipulate = ret.x - 5;
-            this->typesubManipulate = ret.y;
-        }
+        this->typeManipulate = ret.x - 5;
+        this->typesubManipulate = ret.y;
     }
     
     return ret;
@@ -181,12 +179,10 @@ void State::render()
     for(Button& butt : buttonManipulate)
         butt.render(window);
     for(int i = 0; i < 5; i++) {
-        if (this->activeManipulate[i] == true) {
-            for(Button& butt : subbuttonManipulate[i])
-                butt.render(window);
-            for(InputBox& box : boxarr[i])
-                box.render(window);
-        }
+        for(Button& butt : subbuttonManipulate[i])
+            butt.render(window);
+        for(InputBox& box : boxarr[i])
+            box.render(window);
     }
 }
 

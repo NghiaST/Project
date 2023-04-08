@@ -58,6 +58,6 @@ public:
 
     // render
     void refreshrender();
-    void print();
+    void render();
 };
 #endif

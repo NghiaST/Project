@@ -1,6 +1,6 @@
-#include "statusshape.hpp"
+#include "statusbox.hpp"
 
-void StatusShape::updateStatus(sf::Vector2f mousePos, int mouseType, bool isMouseWithin)
+void StatusBox::updateStatus(sf::Vector2f mousePos, int mouseType, bool isMouseWithin)
 {
     //Hold - 3
     if (this->canEnable == true && mouseType == 1 && (this->shapeState == SHAPE_ACTIVE || this->shapeState == SHAPE_HOLD))

@@ -6,7 +6,7 @@
 #include "state.hpp"
 #include "staticarray.hpp"
 
-enum PAGE{STATIC_ARRAY = 0, DYNAMIC_ARRAY, LINKED_LIST, STACK, QUEUE};
+enum PAGE{PAGE_STATICARRAY = 0, PAGE_DYNAMICARRAY, PAGE_LINKEDLIST, PAGE_STACK, PAGE_QUEUE};
 
 const int iSTATIC = 0;
 const int iDYNAMIC = 1;
@@ -23,9 +23,9 @@ struct DataVisualization {
 private:
     // Varibles
     sf::RenderWindow* window;
-    sf::Event sfEvent;
-    bool running;
+    bool active;
     int keyboardType;
+    int mouseType;
 
     State* states;
     PAGE page_present;

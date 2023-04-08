@@ -28,20 +28,14 @@ void ViewSquareNode::setup()
     text.setFillColor(sf::Color::Red);
     settextrectangle(text, coord, sf::Vector2f(length, length));
     // text.setStyle(sf::Text::Italic);
-    
-// cout << "DEBUG 2\n";
-}
-void ViewSquareNode::print(sf::RenderWindow& window) {
-    window.draw(shape);
-    window.draw(text);
 }
 
-void ViewSquareNode::print(sf::RenderWindow *window)
+void ViewSquareNode::render(sf::RenderWindow *window)
 {
     window->draw(shape);
     window->draw(text);
 }
-
+/*
 ViewNode::ViewNode(int x = 0, int y = 0, int radius = 10) {
     coord.x = x;
     coord.y = y;
@@ -52,4 +46,4 @@ void ViewNode::setup() {
     shape.setFillColor(Vcolor);
     shape.setOutlineThickness(5);
     shape.setOutlineColor(sf::Color(0, 0, 0));
-}
+}*/

@@ -1,31 +1,46 @@
 #include "inputbox.hpp"
 
-InputBox::InputBox(float x, float y, float width, float height, sf::Font* font, std::string str_const)
+InputBox::InputBox(float x, float y, float width, float height, sf::Font* font, bool view, std::string str_const)
 {
-    // Default
-    this->idleOutlineColor = sf::Color::Black;
-    this->activeOutlineColor = sf::Color::Yellow;
     this->active = false;
-    this->shape.setFillColor(sf::Color::White);
-    this->shape.setOutlineThickness(2);
-    this->text.setFillColor(sf::Color::Black);
-    this->text.setCharacterSize(12);
+    this->status = 0;
+    this->view = view;
 
-    // assign
+    // string
     this->str_const = str_const;
+    this->str = "";
+
+    // font
+    this->font = font;
+
+    // text
+    this->strsize = 12;
+
+    // shape
+    this->thickness = 2;
+
+    // color
+    this->defaultTextColor = sf::Color::White;
+    this->defaultFillColor = sf::Color::Black;
+    this->idleOutlineColor = sf::Color(30, 30, 30, 255);
+    this->activeOutlineColor = sf::Color::Yellow;
+    
+    // render
 
     this->shape.setPosition(sf::Vector2f(x, y));
+    this->shape.setFillColor(this->defaultFillColor);
     this->shape.setSize(sf::Vector2f(width, height));
+    this->shape.setOutlineThickness(this->thickness);
     this->shape.setOutlineColor(this->idleOutlineColor);
-
-    this->font = font;
+    
+    this->text.setString(this->str_const);
+    this->text.setFillColor(this->defaultTextColor);
+    this->text.setCharacterSize(this->strsize);
     this->text.setFont(*this->font);
     this->text.setPosition(
-        this->shape.getPosition().x + this->shape.getSize().x / 2.f - this->text.getGlobalBounds().width / 2.f, 
+        this->shape.getPosition().x + 10, 
         this->shape.getPosition().y + this->shape.getSize().y / 2.f - this->text.getGlobalBounds().height / 2.f - 2
     );
-
-    this->text.setString(this->str_const);
 }
 
 InputBox::~InputBox()
@@ -33,9 +48,24 @@ InputBox::~InputBox()
 
 }
 
-void InputBox::Add(int unicode)
+void InputBox::setView(bool view)
 {
-    this->str += (char) unicode;
+    this->view = view;
+}
+void InputBox::changeView()
+{
+    this->view ^= 1;
+}
+
+std::string InputBox::getString()
+{
+    return this->str;
+}
+
+
+void InputBox::Add(int keyboardType)
+{
+    this->str += (char) keyboardType;
 }
 
 void InputBox::Del()
@@ -45,14 +75,9 @@ void InputBox::Del()
     }
 }
 
-void InputBox::update(sf::Vector2f mousePos, int unicode)
+void InputBox::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
 {
-    int mouseType = 0;
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        mouseType = 1;
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-        mouseType = 2;
-    this->updateStatus(mousePos, mouseType, this->shape.getGlobalBounds().contains(mousePos));
+    this->updateStatus(mousePos, mouseType, keyboardType);
 
     if (mouseType == 1)
     {
@@ -63,19 +88,23 @@ void InputBox::update(sf::Vector2f mousePos, int unicode)
     }
 
     if (this->active == true) {
-        if (unicode == 0) ;
-        else if (unicode == 8) this->Del();
-        else if ('0' <= unicode && unicode <= '9') this->Add(unicode);
-        else if (unicode == 13 || unicode == 10) {
+        if (keyboardType == 0) ;
+        else if (keyboardType == 8) this->Del();
+        else if ('0' <= keyboardType && keyboardType <= '9') this->Add(keyboardType);
+        else if (keyboardType == 13 || keyboardType == 10) {
             // return;
         }
-        else this->Add(unicode);
+        else this->Add(keyboardType);
     }
 
-    // freshrender
+    refreshrender();
+}
+
+void InputBox::refreshrender()
+{
     this->text.setString(this->str_const + this->str);
     this->text.setPosition(
-        this->shape.getPosition().x + this->shape.getSize().x / 2.f - this->text.getGlobalBounds().width / 2.f, 
+        this->shape.getPosition().x + 10, 
         this->shape.getPosition().y + this->shape.getSize().y / 2.f - this->text.getGlobalBounds().height / 2.f - 2
     );
     if (this->active == false) {
@@ -86,14 +115,9 @@ void InputBox::update(sf::Vector2f mousePos, int unicode)
     }
 }
 
-std::string InputBox::getString()
-{
-    std::string str = this->str;
-    this->str = "";
-    return str;
-}
-
 void InputBox::render(sf::RenderTarget* target) {
+    if (this->view == false) return;
+    refreshrender();
     target->draw(this->shape);
     target->draw(this->text);
 }

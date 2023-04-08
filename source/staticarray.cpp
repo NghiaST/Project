@@ -214,7 +214,6 @@ void StructStaticArray::refreshrender() {
         staticarr[i].initialize(&this->font, coord.x, coord.y, velocity.x - 2, "");
         coord += velocity;
     }
-    std::cout << "W\n";
 }
 
 void StructStaticArray::turn_off() {
@@ -237,10 +236,10 @@ void StructStaticArray::run(int manipulate, int way) {
     if (manipulate == 4) this->Search(way);
 }
 
-void StructStaticArray::print() {
+void StructStaticArray::render() {
     if (!this->isActive()) return;
     for(int i = 0; i < maxsize; i++)
-        staticarr[i].print(window);
+        staticarr[i].render(window);
 }
 
 const bool &StructStaticArray::isActive() const

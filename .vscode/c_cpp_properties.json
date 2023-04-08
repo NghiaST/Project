@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "D:\\APCS\\CS162\\Project\\graphics\\include"
+                "D:\\APCS\\CS162\\Project\\graphics\\include",
+                "source\\header"
             ],
             "defines": [
                 "_DEBUG",
