@@ -4,7 +4,6 @@
 
 #include "data_visual.hpp"
 #include "struct_support.hpp"
-#include "graphics_func.hpp"
 
 // Initializations
 void DataVisualization::InitWindow() 

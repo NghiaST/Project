@@ -16,10 +16,12 @@
             "cppStandard": "c++20",
             "intelliSenseMode": "windows-gcc-x64",
             "compilerPath": "C:/Program Files/CodeBlocks/MinGW/bin/g++.exe",
-            "compilerArgs": ["./graphics/lib -lsfml-graphics",
+            "compilerArgs": [
+                "./graphics/lib -lsfml-graphics",
                 "./graphics/lib -lsfml-window",
                 "./graphics/lib -lsfml-system"
-            ]
+            ],
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4

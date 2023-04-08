@@ -3,8 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include <cstring>
-#include "graphics_func.hpp"
-
+#include "circlenode.hpp"
 
 struct StructStaticArray {
 private:
@@ -17,7 +16,7 @@ private:
     const static int maxsize = 10;
     int sizearray;
     int arr[10];
-    ViewSquareNode *staticarr;
+    std::vector<RectangleNode> staticarr;
 
     // value check which case is activated
     PRESENT type1;

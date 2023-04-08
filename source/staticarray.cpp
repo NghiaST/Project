@@ -12,13 +12,13 @@ StructStaticArray::StructStaticArray(sf::RenderWindow* window, bool active)
     if (!this->font.loadFromFile("dat/roboto/Roboto-Black.ttf")) {
         std::cout << "Error Load Font\n";
     }
-    staticarr = new ViewSquareNode[maxsize] ();
+    for(int i = 0; i < maxsize; i++)
+        staticarr.push_back(RectangleNode());
     Initialize_Random();
 }
 
 StructStaticArray::~StructStaticArray()
 {
-    delete[] staticarr;
 }
 
 // Initialize
@@ -207,11 +207,11 @@ void StructStaticArray::refreshrender() {
     sf::Vector2f coord = sf::Vector2f(250, 100);
     sf::Vector2f velocity = sf::Vector2f(52, 0);
     for(int i = 0; i < sizearray; i++) {
-        staticarr[i].initialize(&this->font, coord.x, coord.y, velocity.x - 2, std::to_string(arr[i]));
+        staticarr[i] = RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, &this->font, std::to_string(arr[i]), sf::Color::White, sf::Color::Cyan, sf::Color::Green);
         coord += velocity;
     }
     for(int i = sizearray; i < maxsize; i++) {
-        staticarr[i].initialize(&this->font, coord.x, coord.y, velocity.x - 2, "");
+        staticarr[i] = RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, &this->font, "", sf::Color::White, sf::Color::Cyan, sf::Color::Green);
         coord += velocity;
     }
 }
