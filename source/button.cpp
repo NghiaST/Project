@@ -82,14 +82,14 @@ void Button::update(sf::Vector2f mousePos, int mouseType)
     if (this->view == false) return;
     const static int MSE_LEFTCLICK = 1;
     const static int MSE_LEFTHOLD = 3;
-    bool isInside = this->shape.getGlobalBounds().contains(mousePos);
+    bool isMouseInside = this->shape.getGlobalBounds().contains(mousePos);
     switch (this->status)
     {
         case 0 : 
-            this->status = isInside;
+            this->status = isMouseInside;
             break;
         case 1 :
-            this->status = isInside;
+            this->status = isMouseInside;
             if (this->status == 1 && mouseType == MSE_LEFTCLICK)
                 this->status = 2;
             break;
@@ -99,10 +99,10 @@ void Button::update(sf::Vector2f mousePos, int mouseType)
             else if (this->keepActive == true)
                 this->status = 3;
             else 
-                this->status = isInside;
+                this->status = isMouseInside;
             break;
         case 3 :
-            if (mouseType == MSE_LEFTCLICK && isInside)
+            if (mouseType == MSE_LEFTCLICK && isMouseInside)
                 this->status = 2;
             break;
         default :

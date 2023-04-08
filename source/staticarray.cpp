@@ -1,20 +1,28 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
+#include <fstream>
 #include "staticarray.hpp"
 #include "struct_support.hpp"
 
 StructStaticArray::StructStaticArray(sf::RenderWindow* window, bool active) 
 {
     this->window = window;
+    this->centerVisual = sf::Vector2f(this->window->getSize().x / 2, 300);
     this->type1 = NONE;
     this->type2 = -1;
     this->active = active;
-    if (!this->font.loadFromFile("dat/roboto/Roboto-Black.ttf")) {
+    if (!this->font.loadFromFile("dat/roboto/Roboto-Regular.ttf")) {
         std::cout << "Error Load Font\n";
     }
-    for(int i = 0; i < maxsize; i++)
-        staticarr.push_back(RectangleNode());
+    arr.resize(maxsize);
+
+    sf::Vector2f coord = sf::Vector2f(250, 100);
+    sf::Vector2f velocity = sf::Vector2f(52, 0);
+    for(int i = 0; i < maxsize; i++) {
+        staticarr.push_back(RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, &this->font, "", sf::Color::White, sf::Color::Cyan, sf::Color::Green));
+        coord += velocity;
+    }
     Initialize_Random();
+    this->refreshrender();
 }
 
 StructStaticArray::~StructStaticArray()
@@ -25,25 +33,22 @@ StructStaticArray::~StructStaticArray()
 void StructStaticArray::Initialize_Empty() 
 {
     this->sizearray = 0;
-    this->refreshrender();
 }
-void StructStaticArray::Initialize_Random() 
+void StructStaticArray::Initialize_Random()
 {
-    this->sizearray = Rand(0, this->maxsize);
-    for(int i = 0; i < this->sizearray; i++) arr[i] = Rand(0, 99);
-    this->refreshrender();
+    this->sizearray = Rand(1, this->maxsize);
+    for(int i = 0; i < this->sizearray; i++) arr[i] = Rand(0, 999);
 }
-void StructStaticArray::Initialize_UserDefinedList() 
+void StructStaticArray::Initialize_Manual(std::vector<int> arr) 
 {
-    // haven't know
-    this->sizearray = Rand(0, this->maxsize);
-    for(int i = 0; i < this->sizearray; i++) arr[i] = Rand(0, 99);
-    this->refreshrender();
+    sizearray = (arr.size() < this->maxsize ? arr.size() : this->maxsize);
+    for(int i = 0; i < this->sizearray; i++) 
+        this->arr[i] = arr[i];
 }
-void StructStaticArray::Initialize_ExternalFile() 
+void StructStaticArray::Initialize_ExternalFile(std::string filename) 
 {
     // haven't know
-    std::ifstream file("fileinput.txt");
+    std::ifstream file(filename);
     if (!file.is_open()) {
         std::cout << "Failed to open file\n";
         return;
@@ -53,32 +58,17 @@ void StructStaticArray::Initialize_ExternalFile()
 
     while (std::getline(file, line))
     {
-        content += line;
+        content += line + ' ';
     }
+    file.close();
+    // debug
     std::cout << "Debug External file\n";
 
-    this->sizearray = Rand(0, this->maxsize);
-    for(int i = 0; i < this->sizearray; i++) arr[i] = Rand(0, 99);
-    this->refreshrender();
-}
-void StructStaticArray::Initialize(int way) 
-{
-    if (way == 0) {
-        this->Initialize_Empty();
-    }
-    if (way == 1) {
-        this->Initialize_Random();
-    }
-    if (way == 2) {
-        this->Initialize_UserDefinedList();
-    }
-    if (way == 3) {
-        this->Initialize_ExternalFile();
-    }
+    this->Initialize_Manual(string_to_array(content));
 }
 
 // Add
-void StructStaticArray::Add_FromTheFirst() 
+void StructStaticArray::Add_First(int value) 
 {
     if (sizearray == maxsize) {
         std::cout << "The array has full of elements. Can't add new elements\n";
@@ -87,40 +77,32 @@ void StructStaticArray::Add_FromTheFirst()
     for(int i = sizearray - 1; i >= 0; i--) {
         arr[i + 1] = arr[i];
     }
-    arr[0] = Rand(0, 99);
+    arr[0] = value;
     sizearray++;
 }
-void StructStaticArray::Add_FromTheLast() 
+void StructStaticArray::Add_Last(int value) 
 {
     if (sizearray == maxsize) {
         std::cout << "The array has full of elements. Can't add new elements\n";
         return;
     }
-    arr[sizearray++] = Rand(0, 99);
+    arr[sizearray++] = value;
 }
-void StructStaticArray::Add_FromTheMiddle() 
+void StructStaticArray::Add_Manual(int pos, int value) 
 {
     if (sizearray == maxsize) {
         std::cout << "The array has full of elements. Can't add new elements\n";
         return;
     }
-    int pos = Rand(0, sizearray);
-    for(int i = sizearray - 1; i >= pos; i--) {
+    sizearray++;
+    for(int i = sizearray - 2; i >= pos; i--) {
         arr[i + 1] = arr[i];
     }
-    arr[pos] = Rand(0, 99);
-    sizearray++;
-}
-void StructStaticArray::Add(int way) 
-{
-    if (way == 0) this->Add_FromTheFirst();
-    if (way == 1) this->Add_FromTheLast();
-    if (way == 2) this->Add_FromTheMiddle();
-    refreshrender();
+    arr[pos] = value;
 }
 
 // Delete
-void StructStaticArray::Del_AtTheFirst()
+void StructStaticArray::Del_First()
 {
     if (sizearray == 0) {
         std::cout << "The array has no elements. Can't delete elements\n";
@@ -130,7 +112,7 @@ void StructStaticArray::Del_AtTheFirst()
         this->arr[i - 1] = this->arr[i];
     sizearray--;
 }
-void StructStaticArray::Del_AtTheLast()
+void StructStaticArray::Del_Last()
 {
     if (sizearray == 0) {
         std::cout << "The array has no elements. Can't delete elements\n";
@@ -138,51 +120,36 @@ void StructStaticArray::Del_AtTheLast()
     }
     sizearray--;
 }
-void StructStaticArray::Del_AtTheMiddle()
+void StructStaticArray::Del_Manual(int pos)
 {
     if (sizearray == 0) {
         std::cout << "The array has no elements. Can't delete elements\n";
         return;
     }
-    int pos = Rand(0, sizearray - 1);
     for(int i = pos + 1; i < sizearray; i++)
         this->arr[i - 1] = this->arr[i];
     sizearray--;
 }
-void StructStaticArray::Delete(int way) 
-{
-    if (way == 0) this->Del_AtTheFirst();
-    if (way == 1) this->Del_AtTheLast();
-    if (way == 2) this->Del_AtTheMiddle();
-    refreshrender();
-}
 
 // Update
-void StructStaticArray::Update() 
+void StructStaticArray::Update(int pos, int value) 
 {
     if (sizearray == 0) {
         std::cout << "The array has no elements. Can't update elements\n";
         return;
     }
-    int pos = Rand(0, sizearray - 1);
-    this->arr[pos] = Rand(0, 99);
-}
-void StructStaticArray::Update(int way) 
-{
-    if (way == 0) {
-        this->Update();
-    }
-    refreshrender();
+    if (pos < 0) pos = 0;
+    if (pos >= maxsize) pos = maxsize - 1;
+    this->arr[pos] = value;
 }
 
 // Search
-void StructStaticArray::Search() 
+void StructStaticArray::Search(int value) 
 {
     bool found = false;
-    int val = Rand(0, 99);
     for(int i = 0; i < sizearray; i++)
     {
-        if (this->arr[i] == val)
+        if (this->arr[i] == value)
         {
             // Debug
             std::cout << "Find value at element " << i << '\n';
@@ -193,26 +160,6 @@ void StructStaticArray::Search()
     if (found == false)
     {
         std::cout << "Can't find value\n";
-    }
-}
-void StructStaticArray::Search(int way) 
-{
-    if (way == 0) {
-        this->Search();
-    }
-    refreshrender();
-}
-
-void StructStaticArray::refreshrender() {
-    sf::Vector2f coord = sf::Vector2f(250, 100);
-    sf::Vector2f velocity = sf::Vector2f(52, 0);
-    for(int i = 0; i < sizearray; i++) {
-        staticarr[i] = RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, &this->font, std::to_string(arr[i]), sf::Color::White, sf::Color::Cyan, sf::Color::Green);
-        coord += velocity;
-    }
-    for(int i = sizearray; i < maxsize; i++) {
-        staticarr[i] = RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, &this->font, "", sf::Color::White, sf::Color::Cyan, sf::Color::Green);
-        coord += velocity;
     }
 }
 
@@ -226,23 +173,64 @@ void StructStaticArray::turn_on() {
     this->Initialize_Random();
 }
 
-void StructStaticArray::run(int manipulate, int way) {
-    if (!this->active) return;
-    if (manipulate == -1) return;
-    if (manipulate == 0) this->Initialize(way);
-    if (manipulate == 1) this->Add(way);
-    if (manipulate == 2) this->Delete(way);
-    if (manipulate == 3) this->Update(way);
-    if (manipulate == 4) this->Search(way);
-}
-
-void StructStaticArray::render() {
-    if (!this->isActive()) return;
-    for(int i = 0; i < maxsize; i++)
-        staticarr[i].render(window);
-}
-
 const bool &StructStaticArray::isActive() const
 {
     return this->active;
+}
+
+void StructStaticArray::run(int manipulate, int way, std::string str1, std::string str2) {
+    if (!this->active) 
+        exit(2);
+    if (manipulate == -1) return;
+    if (manipulate == 0) {
+        if (way == 0) this->Initialize_Empty();
+        if (way == 1) this->Initialize_Random();
+        if (way == 2) this->Initialize_Manual(string_to_array(str1));
+        if (way == 3) this->Initialize_ExternalFile(str2);
+    }
+    if (manipulate == 1) {
+        if (way == 0) this->Add_First(string_to_int(str2));
+        if (way == 1) this->Add_Last(string_to_int(str2));
+        if (way == 2) this->Add_Manual(string_to_int(str1), string_to_int(str2));
+    }
+    if (manipulate == 2) {
+        if (way == 0) this->Del_First();
+        if (way == 1) this->Del_Last();
+        if (way == 2) this->Del_Manual(string_to_int(str1));
+    }
+    if (manipulate == 3) {
+        this->Update(string_to_int(str1), string_to_int(str2));
+    }
+    if (manipulate == 4) {
+        this->Search(string_to_int(str1));
+    }
+}
+
+sf::Vector2i StructStaticArray::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
+{
+    sf::Vector2i ret(-1, -1);
+    for(int i = 0; i < this->maxsize; i++) {
+        staticarr[i].update(mousePos, mouseType, keyboardType);
+        if (i < this->sizearray && staticarr[i].getStatus() == 2) 
+            ret = sf::Vector2i(i, this->arr[i]);
+    }
+    return ret;
+}
+
+void StructStaticArray::refreshrender()
+{
+    sf::Vector2f coord = sf::Vector2f(250, 100);
+    sf::Vector2f velocity = sf::Vector2f(52, 0);
+    for(int i = 0; i < sizearray; i++) {
+        staticarr[i].setWord(std::to_string(this->arr[i]));
+    }
+    for(int i = sizearray; i < maxsize; i++) {
+        staticarr[i].setWord("");
+    }
+}
+void StructStaticArray::render() {
+    if (!this->isActive()) return;
+    this->refreshrender();
+    for(int i = 0; i < maxsize; i++)
+        staticarr[i].render(window);
 }

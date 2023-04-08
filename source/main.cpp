@@ -1,5 +1,5 @@
 #include "data_visual.hpp"
-using namespace std;
+
 int main()
 {
     DataVisualization* NewVisual = new DataVisualization();

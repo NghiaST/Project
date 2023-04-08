@@ -1,14 +1,10 @@
-#include <SFML/Graphics.hpp>
-#include <bits/stdc++.h>
-#include <vector>
-
 #include "data_visual.hpp"
-#include "struct_support.hpp"
 
 // Initializations
 void DataVisualization::InitWindow() 
 {
-    sf::Vector2f windowsize = sf::Vector2f(sf::VideoMode::getDesktopMode().width - 20, sf::VideoMode::getDesktopMode().height - 80);
+    // sf::Vector2f windowsize = sf::Vector2f(sf::VideoMode::getDesktopMode().width - 20, sf::VideoMode::getDesktopMode().height - 80);
+    sf::Vector2f windowsize = sf::Vector2f(1346, 688);
     this->window = new sf::RenderWindow(sf::VideoMode(windowsize.x, windowsize.y, 30), "Le Huu Nghia 22125064 - Data Visualizations", sf::Style::Default);
     this->window->setPosition(sf::Vector2i(0, 0));
     // this->window->setFramerateLimit(60);
@@ -30,7 +26,7 @@ DataVisualization::DataVisualization()
     this->InitStates();
     this->page_present = PAGE_STATICARRAY;
     this->StaticArray  = new StructStaticArray(window, true);
-    this->DynamicArray = new StructStaticArray(window, false);
+    this->DynamicArray = new StructDynamicArray(window, false);
     this->LinkedList   = new StructStaticArray(window, false);
     this->Stack        = new StructStaticArray(window, false);
     this->Queue        = new StructStaticArray(window, false);
@@ -82,36 +78,29 @@ void DataVisualization::processEvents()
             this->mouseType = 0;
             break;
     }
+    this->mousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
+
 }
 
 void DataVisualization::update()
 {   
     if (!window->isOpen()) return;
-    sf::Vector2i typeButton = this->states->update(this->mouseType, this->keyboardType);
-    // Code here
-    if (typeButton.x != -1) {
-        std::cout << "Press " << typeButton.x << ' ' << typeButton.y << '\n';
-        if (typeButton.x < 5) {
-            if (page_present == PAGE_STATICARRAY)  StaticArray->turn_off();
-            if (page_present == PAGE_DYNAMICARRAY) DynamicArray->turn_off();
-            if (page_present == PAGE_LINKEDLIST)   LinkedList->turn_off();
-            if (page_present == PAGE_STACK)        Stack->turn_off();
-            if (page_present == PAGE_QUEUE)        Queue->turn_off();
+    #define get_PAGE(x) (x != 4 ? x != 3 ? x != 2 ? x != 1 ? StaticArray : DynamicArray : LinkedList : Stack : Queue)
+    
+    sf::Vector2i DataNode = get_PAGE(page_present)->update(this->mousePosView, this->mouseType, this->keyboardType);
+    if (DataNode.x != -1)
+        this->states->updateInputBox(DataNode.x, DataNode.y);
+    sf::Vector2i typePress = this->states->update(this->mouseType, this->keyboardType);
 
-            page_present = static_cast<PAGE>(typeButton.x);
-            
-            if (page_present == PAGE_STATICARRAY)  StaticArray->turn_on();
-            if (page_present == PAGE_DYNAMICARRAY) DynamicArray->turn_on();
-            if (page_present == PAGE_LINKEDLIST)   LinkedList->turn_on();
-            if (page_present == PAGE_STACK)        Stack->turn_on();
-            if (page_present == PAGE_QUEUE)        Queue->turn_on();
+    if (typePress.x != -1) {
+        std::cout << "Press " << typePress.x << ' ' << typePress.y << '\n';
+        if (typePress.x < 5) {
+            get_PAGE(page_present)->turn_off();
+            page_present = static_cast<PAGE>(typePress.x);
+            get_PAGE(page_present)->turn_on();
         }
-        if (typeButton.x > 4) {
-            if (page_present == PAGE_STATICARRAY)  StaticArray->run(typeButton.x - 5, typeButton.y);
-            if (page_present == PAGE_DYNAMICARRAY) DynamicArray->run(typeButton.x - 5, typeButton.y);
-            if (page_present == PAGE_LINKEDLIST)   LinkedList->run(typeButton.x - 5, typeButton.y);
-            if (page_present == PAGE_STACK)        Stack->run(typeButton.x - 5, typeButton.y);
-            if (page_present == PAGE_QUEUE)        Queue->run(typeButton.x - 5, typeButton.y);
+        else if (typePress.x > 4) {
+            get_PAGE(page_present)->run(typePress.x - 5, typePress.y, states->getValueButton(typePress.x - 5, 0), states->getValueButton(typePress.x - 5, 1));
         }
     }
 }
@@ -119,7 +108,8 @@ void DataVisualization::update()
 void DataVisualization::render()
 {
     if (!window->isOpen()) return;
-    this->window->clear(sf::Color(235, 235, 235));
+    //this->window->clear(sf::Color(235, 235, 235));
+    this->window->clear(sf::Color(150, 150, 150));
 
     if (page_present == PAGE_STATICARRAY)  StaticArray->render();
     if (page_present == PAGE_DYNAMICARRAY) DynamicArray->render();

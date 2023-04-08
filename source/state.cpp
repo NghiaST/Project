@@ -4,44 +4,44 @@ State::State(sf::RenderWindow *window)
 {
     // setup text
     this->window = window;
-    if (!this->font.loadFromFile("dat/roboto/Roboto-Black.ttf")) {
+    if (!this->font.loadFromFile("dat/roboto/Roboto-Medium.ttf")) {
         std::cout << "Error Load Font\n";
     }
 
     // setup std::vector<Button> buttonCategory
     std::vector<std::string> strarray = {"StaticArray", "DynamicArray", "LinkedList", "Stack", "Queue"};
     sf::Vector2f coord = sf::Vector2f(5, 5);
-    sf::Vector2f velocity = sf::Vector2f(150, 0);
+    sf::Vector2f velocity = sf::Vector2f(0, 55);
 
     for(std::string strname : strarray) {
-        buttonCategory.push_back(Button(coord.x, coord.y, velocity.x - 5, 50, &this->font, true, true, strname, 15, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+        buttonCategory.push_back(Button(coord.x, coord.y, 120, velocity.y - 5, &this->font, true, true, strname, 14, sf::Color(255, 192, 203), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
         coord += velocity;
     }
     buttonCategory[0].setStatus(3);
 
     strarray = {"Init", "Add", "Delete", "Update", "Search"};
-    coord = sf::Vector2f(5, 400);
-    velocity = sf::Vector2f(0, 50);
+    coord = sf::Vector2f(5, 500);
+    velocity = sf::Vector2f(0, 35);
 
     for(std::string strname : strarray) {
-        buttonManipulate.push_back(Button(coord.x, coord.y, 100, velocity.y - 5, &this->font, true, false, strname, 15, sf::Color(220, 220, 220, 255), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+        buttonManipulate.push_back(Button(coord.x, coord.y, 80, velocity.y - 5, &this->font, true, false, strname, 14, sf::Color(255, 255, 153), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
         coord += velocity;
     }
 
     // setup std::vector<Button> subbuttonManipulate[5]
     std::vector<std::vector<std::string>> vec2dstr = {
-        {"Empty", "Random", "Manual", "External File"},
+        {"Empty", "Random", "Manual", "File"},
         {"First", "Last", "Manual"},
         {"First", "Last", "Manual"},
         {"Manual"},
         {"Manual"}
     };
-    coord = sf::Vector2f(155, 410);
-    velocity = sf::Vector2f(120, 50);
+    coord = sf::Vector2f(105, 502);
+    velocity = sf::Vector2f(80, 35);
     for(int i = 0; i < 5; i++) {
         sf::Vector2f coord2 = coord;
         for(std::string strname : vec2dstr[i]) {
-            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, velocity.x - 5, 30, &this->font, false, false, strname, 12, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, velocity.x - 5, 26, &this->font, false, false, strname, 12, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
@@ -49,19 +49,19 @@ State::State(sf::RenderWindow *window)
 
     // std::vector<std::vector<InputBox>>
     std::vector<std::vector<std::string>> nameInputBox = {
-        {"Array="},
+        {"Array=", "FileName="},
         {"Pos=", "Value="},
         {"Pos="},
         {"Pos=", "Value="},
         {"Value="}
     };
     boxarr.resize(5);
-    coord = sf::Vector2f(750, 410);
-    velocity = sf::Vector2f(150, 50);
+    coord = sf::Vector2f(450, 502);
+    velocity = sf::Vector2f(200, 35);
     for(int i = 0; i < 5; i++) {
         sf::Vector2f coord2 = coord;
         for(std::string nameBox : nameInputBox[i]) {
-            boxarr[i].push_back(InputBox(coord2.x, coord2.y, velocity.x - 5, 30, &this->font, false, nameBox));
+            boxarr[i].push_back(InputBox(coord2.x, coord2.y, velocity.x - 5, 26, &this->font, false, nameBox));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
@@ -75,14 +75,8 @@ State::State(sf::RenderWindow *window)
     this->typeManipulate = -1;
     this->typesubManipulate = -1;
 }
-
 State::~State()
 {
-}
-
-const bool &State::getQuit() const
-{
-    return this->quit;
 }
 
 void State::checkforQuit()
@@ -91,16 +85,34 @@ void State::checkforQuit()
         this->quit = true;
 }
 
+// setvalue
+void State::updateInputBox(int pos, int value)
+{
+    std::string strpos = std::to_string(pos);
+    std::string strvalue = std::to_string(value);
+    boxarr[1][0].setWordInput(strpos);
+    boxarr[2][0].setWordInput(strpos);
+    boxarr[3][0].setWordInput(strpos);
+    boxarr[4][0].setWordInput(strvalue);
+}
+
+// getvalue
+const bool &State::getQuit() const
+{
+    return this->quit;
+}
+std::string State::getValueButton(int typeManipulate, int id)
+{
+    if (this->boxarr[typeManipulate].size() <= id) 
+        return "";
+    return this->boxarr[typeManipulate][id].getTextInput();
+}
+
 void State::updateMousePositions()
 {
     this->mousePosScreen = sf::Mouse::getPosition();
     this->mousePosWindow = sf::Mouse::getPosition(*this->window);
     this->mousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
-}
-
-void State::endState()
-{
-    std::cout << "End State\n";
 }
 
 sf::Vector2i State::update(int mouseType, int keyboardType)
@@ -152,16 +164,16 @@ sf::Vector2i State::update(int mouseType, int keyboardType)
                 this->typesubManipulate = -1;
             }
             else {
-                ret.x = -1;
+                ret = sf::Vector2i(-1, -1);
             }
         }
-        else {
+        else { // 5 <= ret.x < 10
             for(Button& btn : subbuttonManipulate[ret.x - 5])
                 btn.changeView();
             for(InputBox& box : boxarr[ret.x - 5])
                 box.changeView();
+            ret = sf::Vector2i(-1, -1);
         }
-        ret = sf::Vector2i(-1, -1);
     }
     else if (ret.y != -1) {
         this->typeManipulate = ret.x - 5;
@@ -170,7 +182,6 @@ sf::Vector2i State::update(int mouseType, int keyboardType)
     
     return ret;
 }
-
 void State::render()
 {
     if (this->getQuit()) return;
@@ -185,9 +196,3 @@ void State::render()
             box.render(window);
     }
 }
-
-// void State::Input_Add_InsertTheMiddle() {}
-// void State::Input_Delete_DeleteAtTheMiddle() {}
-// void State::Input_Update_Update() {}
-// void State::Input_Search_Search() {}
-// void State::Build_Input() {}

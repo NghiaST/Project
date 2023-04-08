@@ -4,43 +4,29 @@
 #include <iostream>
 #include <cstring>
 #include "statusbox.hpp"
+#include "node.hpp"
 
-struct InputBox : StatusBox {
+struct InputBox : Node, StatusBox {
 private:
     bool active;
-    int status;
-    bool view;
-
-    // string
-    std::string str_const;
-    std::string str;
-
-    // font
-    sf::Font* font;
-
-    // text
-    int strsize;
 
     // shape
-    int thickness;
+    int width, height;
 
-    // color
-    sf::Color defaultTextColor;
-    sf::Color defaultFillColor;
-    sf::Color idleOutlineColor;
-    sf::Color activeOutlineColor;
+    // string
+    std::string wordInput;
 
     // render
-    sf::Text text;
     sf::RectangleShape shape;
 
 public:
-    InputBox(float x, float y, float width, float height, sf::Font* font, bool view, std::string str_const);
+    InputBox(int x, int y, int width, int height, sf::Font* font, bool view, std::string textConst);
     ~InputBox();
     
     void setView(bool view);
     void changeView();
-    std::string getString();
+    void setWordInput(std::string wordInput);
+    std::string getTextInput();
 
     void Add(int keyboardType);
     void Del();

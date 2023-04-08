@@ -3,10 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <cstring>
 #include <vector>
 #include "button.hpp"
 #include "inputbox.hpp"
-#include <iterator>
 
 enum MOUSE{MSE_NONE = 0, MSE_LEFTCLICK, MSE_RIGHTCLICK, MSE_LEFTHOLD, MSE_RIGHTHOLD};
 
@@ -43,13 +43,17 @@ public:
     State(sf::RenderWindow* window);
     virtual ~State();
 
-    const bool& getQuit() const;
     void checkforQuit();
+    // setvalue
+    void updateInputBox(int pos, int value);
+    // getvalue
+    const bool& getQuit() const;
+    std::string getValueButton(int typeManipulate, int id);
 
     // Mouse
     void updateMousePositions();
 
-    void endState();
+    // Accessors
     sf::Vector2i update(int mouseType, int keyboardType);
     void render();
 

@@ -1,10 +1,9 @@
 #include "node.hpp"
-#include <iostream>
 
 ///--------------------------------------------------------------------
 ///--------------------------------Node--------------------------------
 
-Node::Node(int x, int y, sf::Font* font, std::string wordIn, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
+Node::Node(int x, int y, sf::Font* font, std::string word, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
 {
     // Default
     this->status = 0;
@@ -21,11 +20,11 @@ Node::Node(int x, int y, sf::Font* font, std::string wordIn, sf::Color idleFillC
     this->font = font;
 
     // word
-    this->wordIn = wordIn;
+    this->word = word;
     this->wordOut = "";
 
     // wordsize
-    this->sizeTextIn = 16;
+    this->sizeText = 16;
     this->sizeTextOut = 12;
 
     // color
@@ -41,7 +40,12 @@ Node::Node(int x, int y, sf::Font* font, std::string wordIn, sf::Color idleFillC
     this->runOutlineColor = sf::Color::Black;
     this->runOutlineColor2 = sf::Color::Black;
 
-    this->textInColor = sf::Color::Red;
+    this->idleTextColor = sf::Color::Red;
+    this->hoverTextColor = sf::Color::Red;
+    this->activeTextColor = sf::Color::Red;
+    this->runTextColor = sf::Color::Red;
+    this->runTextColor2 = sf::Color::Red;
+    
     this->textOutColor = sf::Color::Blue;
 }
 
@@ -67,9 +71,9 @@ void Node::setXY(int x, int y)
     this->x = x;
     this->y = y;
 }
-void Node::setWordIn(std::string wordIn)
+void Node::setWord(std::string word)
 {
-    this->wordIn = wordIn;
+    this->word = word;
 }
 void Node::setWordOut(std::string wordOut)
 {
@@ -79,7 +83,7 @@ void Node::setIDLEFillColor(sf::Color idleFillColor)
 {
     this->idleFillColor = idleFillColor;
 }
-void Node::setIDLETextInColor(sf::Color idleOutlineColor)
+void Node::setIDLETextColor(sf::Color idleOutlineColor)
 {
     this->idleOutlineColor = idleOutlineColor;
 }
@@ -97,7 +101,7 @@ int Node::getStatus()
     return this->status;
 }
 
-int Node::update(sf::Vector2f mousePos, int mouseType, int keyboardType, bool isMouseInside) // check if node is active
+int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, bool isMouseInside) // check if node is active
 {
     const static int KBD_ENTER = 13;
     const static int KBD_DELETE = 127;
@@ -113,8 +117,8 @@ int Node::update(sf::Vector2f mousePos, int mouseType, int keyboardType, bool is
                 this->status = 2;
             break;
         case 2:
-            if (keyboardType == KBD_DELETE) 
-                this->status = -1;
+            if (isMouseInside == false && mouseType == MSE_LEFTCLICK)
+                this->status = 0;
             break;
         default :
             break;
@@ -125,8 +129,8 @@ int Node::update(sf::Vector2f mousePos, int mouseType, int keyboardType, bool is
 ///--------------------------------------------------------------------
 ///-----------------------------CircleNode-----------------------------
 
-CircleNode::CircleNode(int x, int y, int radius, sf::Font* font, std::string wordIn, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
-    : Node(x, y, font, wordIn, idleFillColor, runFillColor, runFillColor2)
+CircleNode::CircleNode(int x, int y, int radius, sf::Font* font, std::string word, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
+    : Node(x, y, font, word, idleFillColor, runFillColor, runFillColor2)
 {
     // shape
     this->radius = radius;
@@ -140,11 +144,11 @@ CircleNode::~CircleNode()
 int CircleNode::update(sf::Vector2f mousePos, int mouseType, int keyboardType) // check if CircleNode is active
 {
     bool isMouseInside = this->shape.getGlobalBounds().contains(mousePos);
-    return this->Node::update(mousePos, mouseType, keyboardType, isMouseInside);
+    return this->Node::updateNode(mousePos, mouseType, keyboardType, isMouseInside);
 }
 void CircleNode::refreshrender()
 {
-    this->shape.setPosition(sf::Vector2f(this->x, this->y));
+    this->shape.setPosition(sf::Vector2f(this->x - this->radius, this->y - this->radius));
     this->shape.setRadius(this->radius);
     this->shape.setOutlineThickness(this->thickness);
 
@@ -153,33 +157,37 @@ void CircleNode::refreshrender()
         case 0:
             this->shape.setFillColor(this->idleFillColor);
             this->shape.setOutlineColor(this->idleOutlineColor);
+            this->text.setFillColor(this->idleTextColor);
             break;
         case 1:
             this->shape.setFillColor(this->hoverFillColor);
             this->shape.setOutlineColor(this->hoverOutlineColor);
+            this->text.setFillColor(this->hoverTextColor);
             break;
         case 2:
             this->shape.setFillColor(this->activeFillColor);
             this->shape.setOutlineColor(this->activeOutlineColor);
+            this->text.setFillColor(this->activeTextColor);
             break;
         case 3:
             this->shape.setFillColor(this->runFillColor);
-            this->shape.setOutlineColor(this->runFillColor);
+            this->shape.setOutlineColor(this->runOutlineColor);
+            this->text.setFillColor(this->runTextColor);
             break;
         case 4:
             this->shape.setFillColor(this->runFillColor2);
-            this->shape.setOutlineColor(this->runFillColor2);
+            this->shape.setOutlineColor(this->runOutlineColor2);
+            this->text.setFillColor(this->runTextColor2);
             break;
     }
 
-    this->textIn.setFont(*this->font);
-    this->textIn.setString(this->wordIn);
-    this->textIn.setFillColor(this->textInColor);
+    this->text.setFont(*this->font);
+    this->text.setString(this->word);
 
-    this->textIn.setCharacterSize(this->sizeTextIn);
-    this->textIn.setPosition(
-        this->x + this->radius - this->textIn.getGlobalBounds().width / 2.f, 
-        this->y + this->radius - this->textIn.getGlobalBounds().height / 2.f - 2
+    this->text.setCharacterSize(this->sizeText);
+    this->text.setPosition(
+        this->x - this->text.getGlobalBounds().width / 2.f,
+        this->y - this->text.getGlobalBounds().height / 2.f - 2
     );
 }
 void CircleNode::render(sf::RenderTarget* target) 
@@ -187,14 +195,14 @@ void CircleNode::render(sf::RenderTarget* target)
     this->refreshrender();
 
     target->draw(this->shape);
-    target->draw(this->textIn);
+    target->draw(this->text);
 }
 
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
 
-RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string wordIn, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
-    : Node(x, y, font, wordIn, idleFillColor, runFillColor, runFillColor2)
+RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
+    : Node(x, y, font, word, idleFillColor, runFillColor, runFillColor2)
 {
     // shape
     this->width = width;
@@ -209,11 +217,11 @@ RectangleNode::~RectangleNode()
 int RectangleNode::update(sf::Vector2f mousePos, int mouseType, int keyboardType) // check if CircleNode is active
 {
     bool isMouseInside = this->shape.getGlobalBounds().contains(mousePos);
-    return this->Node::update(mousePos, mouseType, keyboardType, isMouseInside);
+    return this->Node::updateNode(mousePos, mouseType, keyboardType, isMouseInside);
 }
 void RectangleNode::refreshrender()
 {
-    this->shape.setPosition(sf::Vector2f(this->x, this->y));
+    this->shape.setPosition(sf::Vector2f(this->x - this->width / 2.0, this->y - this->height / 2.0));
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
 
@@ -222,33 +230,37 @@ void RectangleNode::refreshrender()
         case 0:
             this->shape.setFillColor(this->idleFillColor);
             this->shape.setOutlineColor(this->idleOutlineColor);
+            this->text.setFillColor(this->idleTextColor);
             break;
         case 1:
             this->shape.setFillColor(this->hoverFillColor);
             this->shape.setOutlineColor(this->hoverOutlineColor);
+            this->text.setFillColor(this->hoverTextColor);
             break;
         case 2:
             this->shape.setFillColor(this->activeFillColor);
             this->shape.setOutlineColor(this->activeOutlineColor);
+            this->text.setFillColor(this->activeTextColor);
             break;
         case 3:
             this->shape.setFillColor(this->runFillColor);
-            this->shape.setOutlineColor(this->runFillColor);
+            this->shape.setOutlineColor(this->runOutlineColor);
+            this->text.setFillColor(this->runTextColor);
             break;
         case 4:
             this->shape.setFillColor(this->runFillColor2);
-            this->shape.setOutlineColor(this->runFillColor2);
+            this->shape.setOutlineColor(this->runOutlineColor2);
+            this->text.setFillColor(this->runTextColor2);
             break;
     }
 
-    this->textIn.setFont(*this->font);
-    this->textIn.setString(this->wordIn);
-    this->textIn.setFillColor(this->textInColor);
+    this->text.setFont(*this->font);
+    this->text.setString(this->word);
 
-    this->textIn.setCharacterSize(this->sizeTextIn);
-    this->textIn.setPosition(
-        this->shape.getPosition().x + this->shape.getSize().x / 2.f - this->textIn.getGlobalBounds().width / 2.f, 
-        this->shape.getPosition().y + this->shape.getSize().y / 2.f - this->textIn.getGlobalBounds().height / 2.f - 2
+    this->text.setCharacterSize(this->sizeText);
+    this->text.setPosition(
+        this->x - this->text.getGlobalBounds().width / 2.f,
+        this->y - this->text.getGlobalBounds().height / 2.f - 2
     );
 }
 void RectangleNode::render(sf::RenderTarget* target) 
@@ -256,5 +268,5 @@ void RectangleNode::render(sf::RenderTarget* target)
     this->refreshrender();
 
     target->draw(this->shape);
-    target->draw(this->textIn);
+    target->draw(this->text);
 }

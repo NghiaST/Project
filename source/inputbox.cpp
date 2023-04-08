@@ -1,46 +1,33 @@
 #include "inputbox.hpp"
 
-InputBox::InputBox(float x, float y, float width, float height, sf::Font* font, bool view, std::string str_const)
+InputBox::InputBox(int x, int y, int width, int height, sf::Font* font, bool view, std::string textConst)
+    : Node(x, y, font, textConst, sf::Color::White, sf::Color::White, sf::Color::White)
 {
     this->active = false;
-    this->status = 0;
     this->view = view;
+    
+    // shape
+    this->width = width;
+    this->height = height;
 
     // string
-    this->str_const = str_const;
-    this->str = "";
-
-    // font
-    this->font = font;
+    this->wordInput = "";
 
     // text
-    this->strsize = 12;
+    this->sizeText = 12;
 
     // shape
     this->thickness = 2;
 
     // color
-    this->defaultTextColor = sf::Color::White;
-    this->defaultFillColor = sf::Color::Black;
-    this->idleOutlineColor = sf::Color(30, 30, 30, 255);
-    this->activeOutlineColor = sf::Color::Yellow;
-    
-    // render
+    this->idleTextColor = sf::Color::Blue;
+    this->idleFillColor = sf::Color::Transparent;
 
-    this->shape.setPosition(sf::Vector2f(x, y));
-    this->shape.setFillColor(this->defaultFillColor);
-    this->shape.setSize(sf::Vector2f(width, height));
-    this->shape.setOutlineThickness(this->thickness);
-    this->shape.setOutlineColor(this->idleOutlineColor);
+    this->runTextColor = sf::Color::Red;
+    this->runFillColor = sf::Color(245, 194, 117);
+    this->runOutlineColor = sf::Color(190, 57, 141);
     
-    this->text.setString(this->str_const);
-    this->text.setFillColor(this->defaultTextColor);
-    this->text.setCharacterSize(this->strsize);
-    this->text.setFont(*this->font);
-    this->text.setPosition(
-        this->shape.getPosition().x + 10, 
-        this->shape.getPosition().y + this->shape.getSize().y / 2.f - this->text.getGlobalBounds().height / 2.f - 2
-    );
+    refreshrender();
 }
 
 InputBox::~InputBox()
@@ -57,62 +44,117 @@ void InputBox::changeView()
     this->view ^= 1;
 }
 
-std::string InputBox::getString()
+void InputBox::setWordInput(std::string wordInput)
 {
-    return this->str;
+    this->wordInput = wordInput;
 }
 
+std::string InputBox::getTextInput()
+{
+    return this->wordInput;
+}
 
 void InputBox::Add(int keyboardType)
 {
-    this->str += (char) keyboardType;
+    this->wordInput += (char) keyboardType;
 }
 
 void InputBox::Del()
 {
-    if (this->str.size() > 0) {
-        this->str.pop_back();
+    if (this->wordInput.size() > 0) {
+        this->wordInput.pop_back();
     }
 }
 
 void InputBox::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
 {
-    this->updateStatus(mousePos, mouseType, keyboardType);
+    if (this->view == false) return;
+    const static int MSE_LEFTCLICK = 1;
+    const static int MSE_LEFTHOLD = 3;
+    bool isMouseInside = this->shape.getGlobalBounds().contains(mousePos);
 
-    if (mouseType == 1)
+    switch (this->status)
     {
-        if (this->shape.getGlobalBounds().contains(mousePos))
-            this->active = true;
-        else 
-            this->active = false;
+        case 0 : 
+            this->status = isMouseInside;
+            break;
+        case 1 :
+            this->status = isMouseInside;
+            if (this->status == 1 && mouseType == MSE_LEFTCLICK)
+                this->status = 3;
+            break;
+        case 3 :
+            if (mouseType == MSE_LEFTCLICK)
+                this->status = (isMouseInside ? 3 : 0);
+            else 
+                this->status = 3;
+            break;
+        default :
+            exit(2);
     }
+    this->active = (this->status == 3);
+
+    const static int KBD_NONE = 0;
+    const static int KBD_BACKSPACE = 8;
+    const static int KBD_NEWLINE = 10;
+    const static int KBD_ENTER = 13;
+    const static int KBD_DEL = 127;
 
     if (this->active == true) {
-        if (keyboardType == 0) ;
-        else if (keyboardType == 8) this->Del();
-        else if ('0' <= keyboardType && keyboardType <= '9') this->Add(keyboardType);
-        else if (keyboardType == 13 || keyboardType == 10) {
-            // return;
-        }
-        else this->Add(keyboardType);
+        if (keyboardType == KBD_BACKSPACE) 
+            this->Del();
+        else if (keyboardType == KBD_NONE || keyboardType == KBD_NEWLINE || keyboardType == KBD_ENTER) 
+            ; // do nothing
+        else if ('0' <= keyboardType && keyboardType <= '9') 
+            this->Add(keyboardType);
+        else 
+            this->Add(keyboardType);
     }
-
-    refreshrender();
 }
 
 void InputBox::refreshrender()
 {
-    this->text.setString(this->str_const + this->str);
+    this->shape.setPosition(sf::Vector2f(this->x, this->y));
+    this->shape.setSize(sf::Vector2f(this->width, this->height));
+    this->shape.setOutlineThickness(this->thickness);
+
+    switch (this->status)
+    {
+        case 0:
+            this->shape.setFillColor(this->idleFillColor);
+            this->shape.setOutlineColor(this->idleOutlineColor);
+            this->text.setFillColor(this->idleTextColor);
+            break;
+        case 1:
+            this->shape.setFillColor(this->hoverFillColor);
+            this->shape.setOutlineColor(this->hoverOutlineColor);
+            this->text.setFillColor(this->hoverTextColor);
+            break;
+        case 2:
+            this->shape.setFillColor(this->activeFillColor);
+            this->shape.setOutlineColor(this->activeOutlineColor);
+            this->text.setFillColor(this->activeTextColor);
+            break;
+        case 3:
+            this->shape.setFillColor(this->runFillColor);
+            this->shape.setOutlineColor(this->runOutlineColor);
+            this->text.setFillColor(this->runTextColor);
+            break;
+        case 4:
+            this->shape.setFillColor(this->runFillColor2);
+            this->shape.setOutlineColor(this->runOutlineColor2);
+            this->text.setFillColor(this->runTextColor2);
+            break;
+    }
+
+    this->text.setFont(*this->font);
+    this->text.setString(this->word + this->wordInput);
+
+    this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
-        this->shape.getPosition().x + 10, 
-        this->shape.getPosition().y + this->shape.getSize().y / 2.f - this->text.getGlobalBounds().height / 2.f - 2
+        this->x + 10,
+        this->y + this->height / 2.0 - this->text.getGlobalBounds().height / 2.f - 2
     );
-    if (this->active == false) {
-        this->shape.setOutlineColor(this->idleOutlineColor);
-    }
-    else {
-        this->shape.setOutlineColor(this->activeOutlineColor);
-    }
 }
 
 void InputBox::render(sf::RenderTarget* target) {
