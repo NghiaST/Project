@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include <cstring>
-#include "circlenode.hpp"
+#include "node.hpp"
 
 struct StructStaticArray {
 private:
