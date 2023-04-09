@@ -1,52 +1,35 @@
 #include "button.hpp"
 #include <iostream>
 
-Button::Button(float x, float y, float width, float height, 
-        sf::Font* font, bool view, bool keepActive, std::string str, int strsize,
-        sf::Color idleFillColor, sf::Color hoverFillColor, sf::Color activeFillColor, sf::Color runFillColor)
+Button::Button(int x, int y, int width, int height, sf::Font *font, bool view, bool keepActive, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+    : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
 {
-    this->status = 0;
     this->view = view;
     this->keepActive = keepActive;
+
+    this->width = width;
+    this->height = height;
 
     // shape
     this->thickness = 2;
 
-    // font
-    this->font = font;
+    this->SetOutlineColor(0, sf::Color::Black);
+    this->SetOutlineColor(1, sf::Color::Black);
+    this->SetOutlineColor(2, sf::Color::Black);
+    this->SetOutlineColor(3, sf::Color::Black);
+    this->SetOutlineColor(4, sf::Color::Black);
 
-    // color
-    this->idleFillColor = idleFillColor;
-    this->hoverFillColor = hoverFillColor;
-    this->activeFillColor = activeFillColor;
-    this->runFillColor = runFillColor;
-
-    this->idleOutlineColor = sf::Color::Black;
-    this->hoverOutlineColor = sf::Color::Black;
-    this->activeOutlineColor = sf::Color::Black;
-    this->runOutlineColor = sf::Color::Black;
-
-    this->textColor = sf::Color::Black;
-
-    ///--- Setup
-    // shape
-    this->shape.setOutlineThickness(this->thickness);
-    this->shape.setPosition(sf::Vector2f(x, y));
-    this->shape.setSize(sf::Vector2f(width, height));
-
-    // text
-    this->text.setFont(*this->font);
-    this->text.setString(str);
-    this->text.setCharacterSize(strsize);
-    this->text.setPosition(
-        this->shape.getPosition().x + this->shape.getSize().x / 2.f - this->text.getGlobalBounds().width / 2.f, 
-        this->shape.getPosition().y + this->shape.getSize().y / 2.f - this->text.getGlobalBounds().height / 2.f - 2
-    );
+    this->SetTextColor(0, sf::Color::Black);
+    this->SetTextColor(1, sf::Color::Black);
+    this->SetTextColor(2, sf::Color::Black);
+    this->SetTextColor(3, sf::Color::Black);
+    this->SetTextColor(4, sf::Color::Black);
     
     refreshrender();
 }
 
-Button::~Button() {
+Button::~Button()
+{
 }
 
 const bool Button::isPressed() const {
@@ -54,26 +37,6 @@ const bool Button::isPressed() const {
         return true;
 
     return false;
-}
-
-void Button::setView(bool view)
-{
-    this->view = view;
-}
-
-void Button::changeView()
-{
-    this->view ^= 1;
-}
-
-void Button::setStatus(int status)
-{
-    this->status = status;
-}
-
-bool Button::getView()
-{
-    return this->view;
 }
 
 void Button::update(sf::Vector2f mousePos, int mouseType) 
@@ -112,29 +75,18 @@ void Button::update(sf::Vector2f mousePos, int mouseType)
 
 void Button::refreshrender()
 {
-    this->text.setFillColor(this->textColor);
-    switch (this->status)
-    {
-        case 0:
-            this->shape.setFillColor(this->idleFillColor);
-            this->shape.setOutlineColor(this->idleOutlineColor);
-            break;
+    this->shape.setPosition(sf::Vector2f(this->x, this->y));
+    this->shape.setSize(sf::Vector2f(this->width, this->height));
+    this->shape.setOutlineThickness(this->thickness);
+    this->text.setFont(*this->font);
+    this->text.setString(this->word);
+    this->text.setCharacterSize(this->sizeText);
+    this->text.setPosition(
+        this->x + this->width / 2.f - this->text.getGlobalBounds().width / 2.f,
+        this->y + this->height / 2.f - this->text.getGlobalBounds().height / 2.f - 2
+    );
 
-        case 1:
-            this->shape.setFillColor(this->hoverFillColor);
-            this->shape.setOutlineColor(this->hoverOutlineColor);
-            break;
-
-        case 2:
-            this->shape.setFillColor(this->activeFillColor);
-            this->shape.setOutlineColor(this->activeOutlineColor);
-            break;
-
-        case 3:
-            this->shape.setFillColor(this->runFillColor);
-            this->shape.setOutlineColor(this->runOutlineColor);
-            break;
-    }
+    this->listColor[this->status].Coloring(this->shape, this->text);
 }
 
 void Button::render(sf::RenderTarget* target) 

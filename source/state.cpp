@@ -14,7 +14,7 @@ State::State(sf::RenderWindow *window)
     sf::Vector2f velocity = sf::Vector2f(0, 55);
 
     for(std::string strname : strarray) {
-        buttonCategory.push_back(Button(coord.x, coord.y, 120, velocity.y - 5, &this->font, true, true, strname, 14, sf::Color(255, 192, 203), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+        buttonCategory.push_back(Button(coord.x, coord.y, 120, velocity.y - 5, &this->font, true, true, strname, 14, TripleColor(sf::Color(255, 192, 203)), TripleColor(sf::Color::Green), TripleColor(sf::Color::Yellow), TripleColor(sf::Color::Blue), TripleColor(sf::Color::Blue)));
         coord += velocity;
     }
     buttonCategory[0].setStatus(3);
@@ -24,7 +24,7 @@ State::State(sf::RenderWindow *window)
     velocity = sf::Vector2f(0, 35);
 
     for(std::string strname : strarray) {
-        buttonManipulate.push_back(Button(coord.x, coord.y, 80, velocity.y - 5, &this->font, true, false, strname, 14, sf::Color(255, 255, 153), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+        buttonManipulate.push_back(Button(coord.x, coord.y, 80, velocity.y - 5, &this->font, true, false, strname, 14, TripleColor(sf::Color(255, 255, 153)), TripleColor(sf::Color::Green), TripleColor(sf::Color::Yellow), TripleColor(sf::Color::Blue), TripleColor(sf::Color::Blue)));
         coord += velocity;
     }
 
@@ -41,7 +41,7 @@ State::State(sf::RenderWindow *window)
     for(int i = 0; i < 5; i++) {
         sf::Vector2f coord2 = coord;
         for(std::string strname : vec2dstr[i]) {
-            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, velocity.x - 5, 26, &this->font, false, false, strname, 12, sf::Color(220, 220, 220), sf::Color::Green, sf::Color::Yellow, sf::Color::Blue));
+            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, velocity.x - 5, 26, &this->font, false, false, strname, 12, TripleColor(sf::Color(220, 220, 220)), TripleColor(sf::Color::Green), TripleColor(sf::Color::Yellow), TripleColor(sf::Color::Blue), TripleColor(sf::Color::Blue)));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
@@ -169,9 +169,9 @@ sf::Vector2i State::update(int mouseType, int keyboardType)
         }
         else { // 5 <= ret.x < 10
             for(Button& btn : subbuttonManipulate[ret.x - 5])
-                btn.changeView();
+                btn.swapView();
             for(InputBox& box : boxarr[ret.x - 5])
-                box.changeView();
+                box.swapView();
             ret = sf::Vector2i(-1, -1);
         }
     }

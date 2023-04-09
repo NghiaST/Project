@@ -1,5 +1,5 @@
-#ifndef __struct_support_hpp__
-#define __struct_support_hpp__
+#ifndef __support_function_hpp__
+#define __support_function_hpp__
 #include <SFML/Graphics.hpp>
 #include <cstring>
 

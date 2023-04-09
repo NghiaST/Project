@@ -75,6 +75,10 @@ void Node::setXY(int x, int y)
     this->x = x;
     this->y = y;
 }
+void Node::setView(bool view)
+{
+    this->view = view;
+}
 void Node::setWord(std::string word)
 {
     this->word = word;
@@ -95,12 +99,19 @@ void Node::SetOutlineColor(int id, sf::Color OutlineColor)
 {
     this->listColor[id].changeOutlineColor(OutlineColor);
 }
-
 void Node::SetColor(int id, TripleColor Color)
 {
     this->listColor[id] = Color;
 }
+void Node::swapView()
+{
+    this->view = !this->view;
+}
 
+int Node::getStatus()
+{
+    return this->status;
+}
 int Node::getX()
 {
     return this->x;
@@ -109,9 +120,9 @@ int Node::getY()
 {
     return this->y;
 }
-int Node::getStatus()
+bool Node::getView()
 {
-    return this->status;
+    return this->view;
 }
 
 int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, bool isMouseInside) // check if node is active
@@ -170,7 +181,7 @@ void CircleNode::refreshrender()
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
         this->x - this->text.getGlobalBounds().width / 2.f,
-        this->y - this->text.getGlobalBounds().height / 2.f - 2
+        this->y - this->text.getGlobalBounds().height / 2.f - 4
     );
 
     this->listColor[this->status].Coloring(this->shape, this->text);
@@ -205,7 +216,7 @@ int RectangleNode::update(sf::Vector2f mousePos, int mouseType, int keyboardType
 }
 void RectangleNode::refreshrender()
 {
-    this->shape.setPosition(sf::Vector2f(this->x - this->width / 2.0, this->y - this->height / 2.0));
+    this->shape.setPosition(sf::Vector2f(this->x - this->width / 2.f, this->y - this->height / 2.f));
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
 
@@ -215,7 +226,7 @@ void RectangleNode::refreshrender()
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
         this->x - this->text.getGlobalBounds().width / 2.f,
-        this->y - this->text.getGlobalBounds().height / 2.f - 2
+        this->y - this->text.getGlobalBounds().height / 2.f - 4
     );
 
     this->listColor[this->status].Coloring(this->shape, this->text);

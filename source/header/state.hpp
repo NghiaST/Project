@@ -1,5 +1,5 @@
-#ifndef __state_h__
-#define __state_h__
+#ifndef __state_hpp__
+#define __state_hpp__
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -7,6 +7,7 @@
 #include <vector>
 #include "button.hpp"
 #include "inputbox.hpp"
+#include "triplecolor.hpp"
 
 enum MOUSE{MSE_NONE = 0, MSE_LEFTCLICK, MSE_RIGHTCLICK, MSE_LEFTHOLD, MSE_RIGHTHOLD};
 

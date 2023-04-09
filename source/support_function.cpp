@@ -1,4 +1,4 @@
-#include "struct_support.hpp"
+#include "support_function.hpp"
 #include <iostream>
 #include <random>
 #include <cstring>

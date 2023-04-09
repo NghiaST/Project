@@ -13,9 +13,6 @@ InputBox::InputBox(int x, int y, int width, int height, sf::Font* font, bool vie
     // string
     this->wordInput = "";
 
-    // text
-    this->sizeText = 12;
-
     // shape
     this->thickness = 2;
 
