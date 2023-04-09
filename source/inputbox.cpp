@@ -1,7 +1,7 @@
 #include "inputbox.hpp"
 
 InputBox::InputBox(int x, int y, int width, int height, sf::Font* font, bool view, std::string textConst)
-    : Node(x, y, font, textConst, sf::Color::White, sf::Color::White, sf::Color::White)
+    : Node(x, y, font, textConst, 12, TripleColor(), TripleColor(), TripleColor(), TripleColor(), TripleColor())
 {
     this->active = false;
     this->view = view;
@@ -20,12 +20,9 @@ InputBox::InputBox(int x, int y, int width, int height, sf::Font* font, bool vie
     this->thickness = 2;
 
     // color
-    this->idleTextColor = sf::Color::Blue;
-    this->idleFillColor = sf::Color::Transparent;
-
-    this->runTextColor = sf::Color::Red;
-    this->runFillColor = sf::Color(245, 194, 117);
-    this->runOutlineColor = sf::Color(190, 57, 141);
+    this->SetTextColor(0, sf::Color::Blue);
+    this->SetFillColor(0, sf::Color::Transparent);
+    this->SetColor(3, TripleColor(sf::Color(245, 194, 117), sf::Color::Red, sf::Color(190, 57, 141)));
     
     refreshrender();
 }
@@ -118,35 +115,6 @@ void InputBox::refreshrender()
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
 
-    switch (this->status)
-    {
-        case 0:
-            this->shape.setFillColor(this->idleFillColor);
-            this->shape.setOutlineColor(this->idleOutlineColor);
-            this->text.setFillColor(this->idleTextColor);
-            break;
-        case 1:
-            this->shape.setFillColor(this->hoverFillColor);
-            this->shape.setOutlineColor(this->hoverOutlineColor);
-            this->text.setFillColor(this->hoverTextColor);
-            break;
-        case 2:
-            this->shape.setFillColor(this->activeFillColor);
-            this->shape.setOutlineColor(this->activeOutlineColor);
-            this->text.setFillColor(this->activeTextColor);
-            break;
-        case 3:
-            this->shape.setFillColor(this->runFillColor);
-            this->shape.setOutlineColor(this->runOutlineColor);
-            this->text.setFillColor(this->runTextColor);
-            break;
-        case 4:
-            this->shape.setFillColor(this->runFillColor2);
-            this->shape.setOutlineColor(this->runOutlineColor2);
-            this->text.setFillColor(this->runTextColor2);
-            break;
-    }
-
     this->text.setFont(*this->font);
     this->text.setString(this->word + this->wordInput);
 
@@ -155,6 +123,8 @@ void InputBox::refreshrender()
         this->x + 10,
         this->y + this->height / 2.0 - this->text.getGlobalBounds().height / 2.f - 2
     );
+    
+    this->listColor[this->status].Coloring(shape, text);
 }
 
 void InputBox::render(sf::RenderTarget* target) {

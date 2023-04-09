@@ -7,7 +7,7 @@ HEADERDIR = source/header
 BINDIR = bin
 FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system
 # SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
-LIST = main data_visual struct_support staticarray button state inputbox statusbox node
+LIST = main data_visual struct_support staticarray button state inputbox node triplecolor
 SOURCES = $(LIST:%=$(SOURCEDIR)/%.cpp)
 #   source/main.cpp source/struct.cpp source/struct_support.cpp
 OBJS = $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)

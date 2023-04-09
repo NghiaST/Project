@@ -1,6 +1,5 @@
 #ifndef __button_h__
 #define __button_h__
-
 #include <SFML/Graphics.hpp>
 
 struct Button {

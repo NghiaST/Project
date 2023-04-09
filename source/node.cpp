@@ -3,7 +3,7 @@
 ///--------------------------------------------------------------------
 ///--------------------------------Node--------------------------------
 
-Node::Node(int x, int y, sf::Font* font, std::string word, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
+Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
 {
     // Default
     this->status = 0;
@@ -24,28 +24,32 @@ Node::Node(int x, int y, sf::Font* font, std::string word, sf::Color idleFillCol
     this->wordOut = "";
 
     // wordsize
-    this->sizeText = 16;
+    this->sizeText = sizeText;
     this->sizeTextOut = 12;
 
     // color
-    this->idleFillColor = idleFillColor;
-    this->hoverFillColor = sf::Color::Green;
-    this->activeFillColor = sf::Color::Yellow;
-    this->runFillColor = runFillColor;
-    this->runFillColor2 = runFillColor2;
+    this->listColor[0] = idleColor;
+    this->listColor[1] = hoverColor;
+    this->listColor[2] = activeColor;
+    this->listColor[3] = runColor;
+    this->listColor[4] = runColor2;
 
-    this->idleOutlineColor = sf::Color::Black;
-    this->hoverOutlineColor = sf::Color::Black;
-    this->activeOutlineColor = sf::Color::Black;
-    this->runOutlineColor = sf::Color::Black;
-    this->runOutlineColor2 = sf::Color::Black;
+    // default
+    this->listColor[1].changeFillColor(sf::Color::Green);
+    this->listColor[2].changeFillColor(sf::Color::Yellow);
 
-    this->idleTextColor = sf::Color::Red;
-    this->hoverTextColor = sf::Color::Red;
-    this->activeTextColor = sf::Color::Red;
-    this->runTextColor = sf::Color::Red;
-    this->runTextColor2 = sf::Color::Red;
-    
+    this->listColor[0].changeTextColor(sf::Color::Red);
+    this->listColor[1].changeTextColor(sf::Color::Red);
+    this->listColor[2].changeTextColor(sf::Color::Red);
+    this->listColor[3].changeTextColor(sf::Color::Red);
+    this->listColor[4].changeTextColor(sf::Color::Red);
+
+    this->listColor[0].changeOutlineColor(sf::Color::Black);
+    this->listColor[1].changeOutlineColor(sf::Color::Black);
+    this->listColor[2].changeOutlineColor(sf::Color::Black);
+    this->listColor[3].changeOutlineColor(sf::Color::Black);
+    this->listColor[4].changeOutlineColor(sf::Color::Black);
+
     this->textOutColor = sf::Color::Blue;
 }
 
@@ -79,13 +83,22 @@ void Node::setWordOut(std::string wordOut)
 {
     this->wordOut = wordOut;
 }
-void Node::setIDLEFillColor(sf::Color idleFillColor)
+void Node::SetFillColor(int id, sf::Color FillColor)
 {
-    this->idleFillColor = idleFillColor;
+    this->listColor[id].changeFillColor(FillColor);
 }
-void Node::setIDLETextColor(sf::Color idleOutlineColor)
+void Node::SetTextColor(int id, sf::Color TextColor)
 {
-    this->idleOutlineColor = idleOutlineColor;
+    this->listColor[id].changeTextColor(TextColor);
+}
+void Node::SetOutlineColor(int id, sf::Color OutlineColor)
+{
+    this->listColor[id].changeOutlineColor(OutlineColor);
+}
+
+void Node::SetColor(int id, TripleColor Color)
+{
+    this->listColor[id] = Color;
 }
 
 int Node::getX()
@@ -129,13 +142,13 @@ int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, boo
 ///--------------------------------------------------------------------
 ///-----------------------------CircleNode-----------------------------
 
-CircleNode::CircleNode(int x, int y, int radius, sf::Font* font, std::string word, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
-    : Node(x, y, font, word, idleFillColor, runFillColor, runFillColor2)
+CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+    : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
 {
-    // shape
     this->radius = radius;
     this->refreshrender();
 }
+
 CircleNode::~CircleNode()
 {
 
@@ -152,43 +165,15 @@ void CircleNode::refreshrender()
     this->shape.setRadius(this->radius);
     this->shape.setOutlineThickness(this->thickness);
 
-    switch (this->status)
-    {
-        case 0:
-            this->shape.setFillColor(this->idleFillColor);
-            this->shape.setOutlineColor(this->idleOutlineColor);
-            this->text.setFillColor(this->idleTextColor);
-            break;
-        case 1:
-            this->shape.setFillColor(this->hoverFillColor);
-            this->shape.setOutlineColor(this->hoverOutlineColor);
-            this->text.setFillColor(this->hoverTextColor);
-            break;
-        case 2:
-            this->shape.setFillColor(this->activeFillColor);
-            this->shape.setOutlineColor(this->activeOutlineColor);
-            this->text.setFillColor(this->activeTextColor);
-            break;
-        case 3:
-            this->shape.setFillColor(this->runFillColor);
-            this->shape.setOutlineColor(this->runOutlineColor);
-            this->text.setFillColor(this->runTextColor);
-            break;
-        case 4:
-            this->shape.setFillColor(this->runFillColor2);
-            this->shape.setOutlineColor(this->runOutlineColor2);
-            this->text.setFillColor(this->runTextColor2);
-            break;
-    }
-
     this->text.setFont(*this->font);
     this->text.setString(this->word);
-
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
         this->x - this->text.getGlobalBounds().width / 2.f,
         this->y - this->text.getGlobalBounds().height / 2.f - 2
     );
+
+    this->listColor[this->status].Coloring(this->shape, this->text);
 }
 void CircleNode::render(sf::RenderTarget* target) 
 {
@@ -201,10 +186,9 @@ void CircleNode::render(sf::RenderTarget* target)
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
 
-RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2)
-    : Node(x, y, font, word, idleFillColor, runFillColor, runFillColor2)
+RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+    : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
 {
-    // shape
     this->width = width;
     this->height = height;
     this->refreshrender();
@@ -225,35 +209,6 @@ void RectangleNode::refreshrender()
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
 
-    switch (this->status)
-    {
-        case 0:
-            this->shape.setFillColor(this->idleFillColor);
-            this->shape.setOutlineColor(this->idleOutlineColor);
-            this->text.setFillColor(this->idleTextColor);
-            break;
-        case 1:
-            this->shape.setFillColor(this->hoverFillColor);
-            this->shape.setOutlineColor(this->hoverOutlineColor);
-            this->text.setFillColor(this->hoverTextColor);
-            break;
-        case 2:
-            this->shape.setFillColor(this->activeFillColor);
-            this->shape.setOutlineColor(this->activeOutlineColor);
-            this->text.setFillColor(this->activeTextColor);
-            break;
-        case 3:
-            this->shape.setFillColor(this->runFillColor);
-            this->shape.setOutlineColor(this->runOutlineColor);
-            this->text.setFillColor(this->runTextColor);
-            break;
-        case 4:
-            this->shape.setFillColor(this->runFillColor2);
-            this->shape.setOutlineColor(this->runOutlineColor2);
-            this->text.setFillColor(this->runTextColor2);
-            break;
-    }
-
     this->text.setFont(*this->font);
     this->text.setString(this->word);
 
@@ -262,6 +217,8 @@ void RectangleNode::refreshrender()
         this->x - this->text.getGlobalBounds().width / 2.f,
         this->y - this->text.getGlobalBounds().height / 2.f - 2
     );
+
+    this->listColor[this->status].Coloring(this->shape, this->text);
 }
 void RectangleNode::render(sf::RenderTarget* target) 
 {

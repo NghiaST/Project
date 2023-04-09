@@ -10,21 +10,18 @@
 
 struct StructStaticArray {
 private:
-    // constant
-    enum PRESENT {NONE = -1, INIT, ADD, DELETE, UPDATE, SEARCH};
-
     // value
     sf::RenderWindow* window;
     sf::Vector2f centerVisual;
     sf::Font font;
-    const static int maxsize = 10;
+    int maxsize;
     int sizearray;
     std::vector<int> arr;
     std::vector<RectangleNode> staticarr;
 
     // value check which case is activated
-    PRESENT type1;
-    int type2;
+    int type1; // none = -1, init, add, del, update, search
+    int type2; // none = -1
 
     bool active;
 public:

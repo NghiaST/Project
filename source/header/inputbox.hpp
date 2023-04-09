@@ -3,10 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cstring>
-#include "statusbox.hpp"
 #include "node.hpp"
 
-struct InputBox : Node, StatusBox {
+struct InputBox : Node {
 private:
     bool active;
 

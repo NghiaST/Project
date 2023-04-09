@@ -7,18 +7,26 @@ StructStaticArray::StructStaticArray(sf::RenderWindow* window, bool active)
 {
     this->window = window;
     this->centerVisual = sf::Vector2f(this->window->getSize().x / 2, 300);
-    this->type1 = NONE;
-    this->type2 = -1;
-    this->active = active;
     if (!this->font.loadFromFile("dat/roboto/Roboto-Regular.ttf")) {
         std::cout << "Error Load Font\n";
     }
+
+    this->maxsize = 12;
+
+    this->type1 = -1;
+    this->type2 = -1;
+    this->active = active;
     arr.resize(maxsize);
 
     sf::Vector2f coord = sf::Vector2f(250, 100);
     sf::Vector2f velocity = sf::Vector2f(52, 0);
+
+    TripleColor idleColor(sf::Color::White);
+    TripleColor hoverColor(sf::Color::Cyan);
+    TripleColor activeColor(sf::Color::Green);
+
     for(int i = 0; i < maxsize; i++) {
-        staticarr.push_back(RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, &this->font, "", sf::Color::White, sf::Color::Cyan, sf::Color::Green));
+        staticarr.push_back(RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, &this->font, "", 15, idleColor, hoverColor, activeColor, TripleColor(), TripleColor()));
         coord += velocity;
     }
     Initialize_Random();

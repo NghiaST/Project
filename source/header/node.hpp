@@ -2,9 +2,10 @@
 #define __node_hpp__
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "triplecolor.hpp"
 
 struct Node {
-public:
+protected :
     /**
      *  Note : "// +" means this data is defaulted 
      * */
@@ -30,43 +31,30 @@ public:
     int sizeTextOut; // +
 
     // color
-    sf::Color idleFillColor;
-    sf::Color hoverFillColor; // +
-    sf::Color activeFillColor; // +
-    sf::Color runFillColor;
-    sf::Color runFillColor2;
-
-    sf::Color idleOutlineColor; // +
-    sf::Color hoverOutlineColor; // +
-    sf::Color activeOutlineColor; // +
-    sf::Color runOutlineColor; // +
-    sf::Color runOutlineColor2; // +
-
-    sf::Color idleTextColor; // +
-    sf::Color hoverTextColor; // +
-    sf::Color activeTextColor; // +
-    sf::Color runTextColor; // +
-    sf::Color runTextColor2; // +
-
+    std::vector<TripleColor> listColor = std::vector<TripleColor>(5, TripleColor());
+    // idle - hover - active - run - run2
     sf::Color textOutColor; // +
     
     // texture
     sf::Text text;
-public:
+public :
     Node() {}
-    Node(int x, int y, sf::Font* font, std::string wordIn, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2);
+    Node(int x, int y, sf::Font* font, std::string wordIn, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
     ~Node();
 
-    // get Private
+    // set Private
     void setStatus(int status);
     void setX(int x);
     void setY(int y);
     void setXY(int x, int y);
     void setWord(std::string word);
     void setWordOut(std::string wordOut);
-    void setIDLEFillColor(sf::Color idleColor);
-    void setIDLETextColor(sf::Color idleOutlineColor);
+    void SetFillColor(int id, sf::Color FillColor);
+    void SetTextColor(int id, sf::Color TextColor);
+    void SetOutlineColor(int id, sf::Color OutlineColor);
+    void SetColor(int id, TripleColor Color);
     
+    // get Private
     int getX();
     int getY();
     int getStatus();
@@ -80,7 +68,8 @@ private:
     int radius;
     sf::CircleShape shape;
 public:
-    CircleNode(int x, int y, int radius, sf::Font* font, std::string wordIn, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2);
+    CircleNode(int x, int y, int radius, sf::Font* font, std::string wordIn, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
+    // CircleNode(int x, int y, int radius, sf::Font* font, std::string wordIn, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2);
     ~CircleNode();
 
     // Functions
@@ -95,7 +84,8 @@ private:
     sf::RectangleShape shape;
 public:
     RectangleNode() {}
-    RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string wordIn, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2);
+    RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
+    // RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string wordIn, sf::Color idleFillColor, sf::Color runFillColor, sf::Color runFillColor2);
     ~RectangleNode();
 
     // Functions
