@@ -9,7 +9,7 @@ StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active)
     this->active = active;
 
     // font
-    if (!this->font.loadFromFile("dat/roboto/Roboto-Regular.ttf")) {
+    if (!this->font.loadFromFile("dat/arial_bold.ttf")) {
         std::cout << "Error Load Font\n";
     }
 
@@ -51,9 +51,9 @@ void StructDataStructure::Initialize_Random()
 }
 void StructDataStructure::Initialize_Manual(std::vector<int> arr) 
 {
-    sizearray = (arr.size() < this->maxsize ? arr.size() : this->maxsize);
+    this->sizearray = (arr.size() < this->maxsize ? arr.size() : this->maxsize);
     for(int i = 0; i < this->sizearray; i++) 
-        this->elements[i] = elements[i];
+        this->elements[i] = arr[i];
 }
 void StructDataStructure::Initialize_ExternalFile(std::string filename) 
 {

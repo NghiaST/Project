@@ -5,7 +5,9 @@ void DataVisualization::InitWindow()
 {
     // sf::Vector2f windowsize = sf::Vector2f(sf::VideoMode::getDesktopMode().width - 20, sf::VideoMode::getDesktopMode().height - 80);
     sf::Vector2f windowsize = sf::Vector2f(1346, 688);
-    this->window = new sf::RenderWindow(sf::VideoMode(windowsize.x, windowsize.y, 30), "Le Huu Nghia 22125064 - Data Visualizations", sf::Style::Default);
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8.0;
+    this->window = new sf::RenderWindow(sf::VideoMode(windowsize.x, windowsize.y, 30), "Le Huu Nghia 22125064 - Data Visualizations", sf::Style::Default, settings);
     this->window->setPosition(sf::Vector2i(0, 0));
     // this->window->setFramerateLimit(60);
     // ::ShowWindow(this->window->getSystemHandle(), SW_MAXIMIZE);

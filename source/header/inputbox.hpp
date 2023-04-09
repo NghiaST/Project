@@ -31,7 +31,7 @@ public:
     void Del();
     void update(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void refreshrender();
-    void render(sf::RenderTarget* target);
+    void render(sf::RenderWindow* window);
 };
 
 #endif

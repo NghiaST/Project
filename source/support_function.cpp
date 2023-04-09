@@ -32,7 +32,7 @@ std::vector<int> string_to_array(std::string str)
 {
     std::vector<int> arr;
     int number = 0;
-    bool isNext = 1;
+    bool isNext = 0;
     for(char c : str)
     {
         if (isdigit(c))

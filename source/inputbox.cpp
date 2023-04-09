@@ -124,9 +124,9 @@ void InputBox::refreshrender()
     this->listColor[this->status].Coloring(shape, text);
 }
 
-void InputBox::render(sf::RenderTarget* target) {
+void InputBox::render(sf::RenderWindow* window) {
     if (this->view == false) return;
     refreshrender();
-    target->draw(this->shape);
-    target->draw(this->text);
+    window->draw(this->shape);
+    window->draw(this->text);
 }

@@ -89,10 +89,10 @@ void Button::refreshrender()
     this->listColor[this->status].Coloring(this->shape, this->text);
 }
 
-void Button::render(sf::RenderTarget* target) 
+void Button::render(sf::RenderWindow* window) 
 {
     if (this->view == false) return;
     this->refreshrender();
-    target->draw(this->shape);
-    target->draw(this->text);
+    window->draw(this->shape);
+    window->draw(this->text);
 }

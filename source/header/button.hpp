@@ -22,7 +22,7 @@ public:
     //Functions
     void update(sf::Vector2f mousePos, int mouseType);
     void refreshrender();
-    void render(sf::RenderTarget* target);
+    void render(sf::RenderWindow* window);
 };
 
 #endif

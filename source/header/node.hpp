@@ -78,7 +78,7 @@ public:
     // Functions
     int update(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void refreshrender();
-    void render(sf::RenderTarget* target);
+    void render(sf::RenderWindow* window);
 };
 
 struct RectangleNode : Node {
@@ -93,7 +93,7 @@ public:
     // Functions
     int update(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void refreshrender();
-    void render(sf::RenderTarget* target);
+    void render(sf::RenderWindow* window);
 };
 
 #endif

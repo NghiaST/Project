@@ -180,18 +180,18 @@ void CircleNode::refreshrender()
     this->text.setString(this->word);
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
-        this->x - this->text.getGlobalBounds().width / 2.f,
+        this->x - this->text.getGlobalBounds().width / 2.f - 1,
         this->y - this->text.getGlobalBounds().height / 2.f - 4
     );
 
     this->listColor[this->status].Coloring(this->shape, this->text);
 }
-void CircleNode::render(sf::RenderTarget* target) 
+void CircleNode::render(sf::RenderWindow* window) 
 {
     this->refreshrender();
 
-    target->draw(this->shape);
-    target->draw(this->text);
+    window->draw(this->shape);
+    window->draw(this->text);
 }
 
 ///--------------------------------------------------------------------
@@ -231,10 +231,10 @@ void RectangleNode::refreshrender()
 
     this->listColor[this->status].Coloring(this->shape, this->text);
 }
-void RectangleNode::render(sf::RenderTarget* target) 
+void RectangleNode::render(sf::RenderWindow* window) 
 {
     this->refreshrender();
 
-    target->draw(this->shape);
-    target->draw(this->text);
+    window->draw(this->shape);
+    window->draw(this->text);
 }
