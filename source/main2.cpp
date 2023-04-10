@@ -1,54 +1,34 @@
 #include <SFML/Graphics.hpp>
-#include <cmath>
-#include "support_function.hpp"
-#include "node.hpp"
-#include "triplecolor.hpp"
-#include "struct_ds.hpp"
-#include "ds_linkedlist.hpp"
+#include <iostream>
 #include "arrow.hpp"
+#include "node.hpp"
+#include "ds_stack.hpp"
 
-void drawArrow(sf::RenderWindow& window, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Color color)
-{
-    // Calculate the direction vector and length
-    sf::Vector2f direction = endPoint - startPoint;
-    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-
-    // Create the arrow shape
-    sf::ConvexShape arrow;
-    arrow.setPointCount(3); // Triangle shape for arrowhead
-    arrow.setPoint(0, sf::Vector2f(length - 10.f, 0.f));
-    arrow.setPoint(1, sf::Vector2f(length, 5.f));
-    arrow.setPoint(2, sf::Vector2f(length, -5.f));
-    arrow.setFillColor(color);
-    arrow.setOutlineColor(sf::Color::Black);
-    arrow.setOutlineThickness(1.f);
-
-    // Set the position and rotation of the arrow
-    arrow.setPosition(startPoint);
-    float angle = std::atan2(direction.y, direction.x) * 180.f / static_cast<float>(M_PI);
-    arrow.setRotation(angle);
-
-    // Draw the arrow to the window
-    window.draw(arrow);
-}
+const float NODE_SIZE = 20.0f; // Node size in pixels
+const float VELOCITY = 100.0f; // Velocity of the nodes in pixels per second
 
 int main()
 {
-    // Create SFML window
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8.0;
-    sf::RenderWindow window(sf::VideoMode(1000, 600), "Arrow Example");
+    // Create a window
+    sf::RenderWindow window(sf::VideoMode(800, 700), "Node Movement");
+    sf::Font font;
+    font.loadFromFile("dat/arial.ttf");
 
+    CircleNode Node(100, 100, 20, &font, "a", 15, {});
+    CircleNode Node2(200, 500, 20, &font, "a", 15, {});
+    ArrowNode arrow(20 * 2, Node.getXY(), Node2.getXY());
 
-    StructLinkedList* linkedlist = new StructLinkedList(&window, true);
-    Arrow arrow;
+    // Create two nodes
+    int status = 1;
 
-    // Start and end points of the arrow
-    sf::Vector2f startPoint(600.f, 300.f);
-    sf::Vector2f endPoint(100.f, 500.f);
-    // sf::Font font;
-    // TripleColor Color();
-    // CircleNode node(100, 100, 100, &font, "a", 10, Color, Color, Color, Color, Color);
+    sf::Vector2f pos1(200, 000);
+    sf::Vector2f pos2(200, 600);
+    sf::Vector2f velocity1(30, 10); // pixel/s
+    sf::Vector2f velocity2(24, -12);
+
+    // Get the initial time
+    sf::Clock clock;
+    sf::Time elapsedTime;
 
     while (window.isOpen())
     {
@@ -59,80 +39,40 @@ int main()
                 window.close();
         }
 
+        // Get the elapsed time since the last frame
+
+        // Update the positions of the nodes based on velocity and elapsed time
+        float seconds = clock.getElapsedTime().asSeconds();
+        float distance = VELOCITY * seconds;
+        sf::Vector2f point1;
+        sf::Vector2f point2;
+        point1.x = pos1.x + velocity1.x * seconds;
+        point1.y = pos1.y + velocity1.y * seconds;
+
+        point2.x = pos2.x + velocity2.x * seconds;
+        point2.y = pos2.y + velocity2.y * seconds;
+
+       // Node.setXY(point1.x, point1.y);
+       // Node2.setXY(point2.x, point2.y);
+        arrow.setNode(Node.getXY(), Node2.getXY());
+        if (seconds > 1.1) {
+            pos1 = point1;
+            pos2 = point2;
+            clock.restart();
+            status = (status + 1) % 5;
+        }
+
+        // Clear the window
         window.clear(sf::Color::White);
 
-        // Draw the arrow to the window
-        arrow.setStartPoint(startPoint);
-        arrow.setEndPoint(endPoint);
-        arrow.render(&window);
-        //drawArrow(window, startPoint, endPoint, sf::Color::Red);
+        Node.render(&window);
+        Node2.render(&window);
+        arrow.renderStatusTime(&window, status, seconds);
 
+        // Display the window
         window.display();
-    }
 
-    return 0;
-}/*
-
-
-#include <SFML/Graphics.hpp>
-#include <vector>
-#include <iostream>
-
-struct Vertex {
-    int x;
-    int y;
-    std::vector<int> edges; // Indices of vertices connected by edges
-};
-
-int main()
-{
-    // Create vertices of the graph
-    std::vector<Vertex> vertices = {
-        {100, 100, {1, 2, 3}},   // Vertex 0 with edges to vertices 1, 2, 3
-        {200, 200, {0, 2}},      // Vertex 1 with edges to vertices 0, 2
-        {300, 100, {0, 1}},      // Vertex 2 with edges to vertices 0, 1
-        {400, 200, {0}}          // Vertex 3 with edge to vertex 0
-    };
-
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Graph Edges", sf::Style::Close);
-    window.setVerticalSyncEnabled(true);
-
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-
-        // Draw edges
-        sf::VertexArray lines(sf::Lines);
-        for (const Vertex& v : vertices) {
-            int startX = v.x;
-            int startY = v.y;
-            for (int i : v.edges) {
-                int endX = vertices[i].x;
-                int endY = vertices[i].y;
-                lines.append(sf::Vertex(sf::Vector2f(startX, startY), sf::Color::Black));
-                lines.append(sf::Vertex(sf::Vector2f(endX, endY), sf::Color::Black));
-            }
-        }
-        window.draw(lines);
-
-        // Draw vertices
-        for (const Vertex& v : vertices) {
-            sf::CircleShape vertexShape(10);
-            vertexShape.setPosition(v.x - 10, v.y - 10);
-            vertexShape.setFillColor(sf::Color::Red);
-            window.draw(vertexShape);
-        }
-
-        window.display();
     }
 
     return 0;
 }
-*/

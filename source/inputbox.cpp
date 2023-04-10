@@ -1,7 +1,7 @@
 #include "inputbox.hpp"
 
 InputBox::InputBox(int x, int y, int width, int height, sf::Font* font, bool view, std::string textConst)
-    : Node(x, y, font, textConst, 12, TripleColor(), TripleColor(), TripleColor(), TripleColor(), TripleColor())
+    : Style(x, y, font, textConst, 12, TripleColor(), TripleColor(), TripleColor(), TripleColor(), TripleColor())
 {
     this->active = false;
     this->view = view;

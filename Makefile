@@ -8,8 +8,8 @@ HEADERDIR = source/header
 BINDIR = bin
 FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system
 # SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
-LIST = main data_visualization support_function button state inputbox node triplecolor struct_ds ds_staticarray ds_dynamicarray ds_linkedlist ds_stack ds_queue arrow
-LIST2 = main2 support_function node triplecolor struct_ds ds_linkedlist ds_staticarray arrow
+LIST = main data_visualization support_function button state inputbox node triplecolor struct_ds ds_staticarray ds_dynamicarray ds_linkedlist ds_stack ds_queue arrow style
+LIST2 = main2 data_visualization support_function button state inputbox node triplecolor struct_ds ds_staticarray ds_dynamicarray ds_linkedlist ds_stack ds_queue arrow style
 
 SOURCES = $(LIST:%=$(SOURCEDIR)/%.cpp)
 #   source/main.cpp source/struct.cpp source/struct_support.cpp
@@ -18,33 +18,58 @@ SOURCES2 = $(LIST2:%=$(SOURCEDIR)/%.cpp)
 OBJS = $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
 OBJS2 = $(SOURCES2:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
 
+OBJDEL = $(wildcard $(OBJDIR)/*.o)
 DEPS = $(OBJS:(OBJDIR)/%.o=(OBJDIR)/%.d)
 
-all: build link run
+VERBOSE = FALSE
+ifeq (${VERBOSE}, TRUE)
+	HIDE = 
+else
+	HIDE = @
+endif
 
-link: ${OBJS}
-	${CXX} $^ -o ${NAME}.exe -L ${FLAGS}
+all: dir build run
+
+dir:
+ifeq ($(wildcard $(OBJDIR)),)
+	${HIDE} echo create folder "${OBJDIR}"
+	${HIDE} mkdir ${OBJDIR}
+endif
 
 build: ${OBJS}
+	${HIDE} echo linking .o file to -*_*- ${NAME}.exe
+	${HIDE} ${CXX} $^ -o ${NAME}.exe -L ${FLAGS}
 
 ${OBJDIR}/%.o: ${SOURCEDIR}/%.cpp
-	${CXX} -I ${INCLUDEDIR} -I ${HEADERDIR} -c $< -o $@ -L ${SOURCEDIR}
+# $(SOURCES:$(SOURCEDIR)/%.cpp=$(OBJDIR)/%.o)
+# ${OBJDIR/%.o=%.cpp}
+	${HIDE} echo compile $*.o
+	${HIDE} ${CXX} -I ${INCLUDEDIR} -I ${HEADERDIR} -c $< -o $@ -L ${SOURCEDIR}
 
 clean:
-	del obj\*.o
+ifeq (${OBJDEL},)
+	${HIDE} echo delete nothing
+else
+	${HIDE} echo delete files
+	${HIDE} del obj\*.o
+endif
 
 run:
-	${NAME}.exe
+	${HIDE} echo ${NAME}.exe
+	${HIDE} ${NAME}.exe
 
-test: build2 link2 run2
+rebuild: clean all
 
-link2: ${OBJS2}
-	${CXX} $^ -o ${NAME2}.exe -L ${FLAGS}
+test: dir build2 run2
 
 build2: ${OBJS2}
+	${HIDE} echo linking .o file to --- ${NAME2}.exe
+	${HIDE} ${CXX} $^ -o ${NAME2}.exe -L ${FLAGS}
 
 run2:
-	$(NAME2).exe
+	${HIDE} echo ${NAME2}.exe
+	${HIDE} ${NAME2}.exe
+
 
 
 # link2:

@@ -21,7 +21,7 @@ protected:
     sf::Vector2f centerVisual;
 
     // check which manipulate is activating
-    int type1; // none = -1, init, add, del, update, search
+    int type1; // none = -1, initialize, insert, del, update, search
     int type2; // none = -1
 
     // list
@@ -33,7 +33,7 @@ protected:
     int sizeNode;
     int distance;
     int diffy;
-    std::vector<TripleColor> Color;
+    std::vector<TripleColor> listColor;
 
 public:
     StructDataStructure(sf::RenderWindow* window, bool active);
@@ -44,9 +44,9 @@ public:
     void Initialize_Manual(std::vector<int> arr);
     void Initialize_ExternalFile(std::string filename);
 
-    void Add_First(int value);
-    void Add_Last(int value);
-    void Add_Manual(int pos, int value);
+    void Insert_First(int value);
+    void Insert_Last(int value);
+    void Insert_Manual(int pos, int value);
 
     void Del_First();
     void Del_Last();

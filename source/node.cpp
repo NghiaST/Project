@@ -3,54 +3,16 @@
 ///--------------------------------------------------------------------
 ///--------------------------------Node--------------------------------
 
-Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, std::vector<TripleColor> listColor)
+    : Style(x, y, font, word, sizeText, listColor)
 {
-    // Default
-    this->status = 0;
-    this->view = true;
 
-    // Position
-    this->x = x;
-    this->y = y;
+}
 
-    // shape
-    this->thickness = 2;
+Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+    : Style(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
+{
 
-    // font
-    this->font = font;
-
-    // word
-    this->word = word;
-    this->wordOut = "";
-
-    // wordsize
-    this->sizeText = sizeText;
-    this->sizeTextOut = 12;
-
-    // color
-    this->listColor[0] = idleColor;
-    this->listColor[1] = hoverColor;
-    this->listColor[2] = activeColor;
-    this->listColor[3] = runColor;
-    this->listColor[4] = runColor2;
-
-    // default
-    this->listColor[1].changeFillColor(sf::Color::Green);
-    this->listColor[2].changeFillColor(sf::Color::Yellow);
-
-    this->listColor[0].changeTextColor(sf::Color::Red);
-    this->listColor[1].changeTextColor(sf::Color::Red);
-    this->listColor[2].changeTextColor(sf::Color::Red);
-    this->listColor[3].changeTextColor(sf::Color::Red);
-    this->listColor[4].changeTextColor(sf::Color::Red);
-
-    this->listColor[0].changeOutlineColor(sf::Color::Black);
-    this->listColor[1].changeOutlineColor(sf::Color::Black);
-    this->listColor[2].changeOutlineColor(sf::Color::Black);
-    this->listColor[3].changeOutlineColor(sf::Color::Black);
-    this->listColor[4].changeOutlineColor(sf::Color::Black);
-
-    this->textOutColor = sf::Color::Blue;
 }
 
 Node::~Node()
@@ -58,74 +20,7 @@ Node::~Node()
 
 }
 
-void Node::setStatus(int status)
-{
-    this->status = status;
-}
-void Node::setX(int x) 
-{
-    this->x = x;
-}
-void Node::setY(int y)
-{
-    this->y = y;
-}
-void Node::setXY(int x, int y)
-{
-    this->x = x;
-    this->y = y;
-}
-void Node::setView(bool view)
-{
-    this->view = view;
-}
-void Node::setWord(std::string word)
-{
-    this->word = word;
-}
-void Node::setWordOut(std::string wordOut)
-{
-    this->wordOut = wordOut;
-}
-void Node::SetFillColor(int id, sf::Color FillColor)
-{
-    this->listColor[id].changeFillColor(FillColor);
-}
-void Node::SetTextColor(int id, sf::Color TextColor)
-{
-    this->listColor[id].changeTextColor(TextColor);
-}
-void Node::SetOutlineColor(int id, sf::Color OutlineColor)
-{
-    this->listColor[id].changeOutlineColor(OutlineColor);
-}
-void Node::SetColor(int id, TripleColor Color)
-{
-    this->listColor[id] = Color;
-}
-void Node::swapView()
-{
-    this->view = !this->view;
-}
-
-int Node::getStatus()
-{
-    return this->status;
-}
-int Node::getX()
-{
-    return this->x;
-}
-int Node::getY()
-{
-    return this->y;
-}
-bool Node::getView()
-{
-    return this->view;
-}
-
-int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, bool isMouseInside) // check if node is active
+int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, bool isMouseInside) // check if Style is active
 {
     const static int KBD_ENTER = 13;
     const static int KBD_DELETE = 127;
@@ -140,18 +35,27 @@ int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, boo
             if (mouseType == MSE_LEFTCLICK)
                 this->status = 2;
             break;
-        case 2:
+        case 2 :
             if (isMouseInside == false && mouseType == MSE_LEFTCLICK)
                 this->status = 0;
             break;
+        case 3 : case 4 :
+            if (isMouseInside == true && mouseType == MSE_LEFTCLICK)
+                this->status = 2;
         default :
             break;
     }
     return this->status;
 }
-
 ///--------------------------------------------------------------------
 ///-----------------------------CircleNode-----------------------------
+
+CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, std::vector<TripleColor> listColor)
+    : Node(x, y, font, word, sizeText, listColor)
+{
+    this->radius = radius;
+    this->refreshrender();
+}
 
 CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
     : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
@@ -196,6 +100,14 @@ void CircleNode::render(sf::RenderWindow* window)
 
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
+
+RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, std::vector<TripleColor> listColor)
+    : Node(x, y, font, word, sizeText, listColor)
+{
+    this->width = width;
+    this->height = height;
+    this->refreshrender();
+}
 
 RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
     : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)

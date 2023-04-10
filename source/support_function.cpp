@@ -3,7 +3,12 @@
 #include <random>
 #include <cstring>
 
-sf::Vector2f operator / (const sf::Vector2f& vector, const int& div)
+sf::Vector2f operator*(const sf::Vector2f &vector, const int &multiply)
+{
+    return sf::Vector2f(vector.x * multiply, vector.y * multiply);
+}
+
+sf::Vector2f operator/(const sf::Vector2f &vector, const int &div)
 {
     return sf::Vector2f(vector.x / div, vector.y / div);
 }

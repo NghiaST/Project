@@ -2,7 +2,7 @@
 #include <iostream>
 
 Button::Button(int x, int y, int width, int height, sf::Font *font, bool view, bool keepActive, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
-    : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
+    : Style(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
 {
     this->view = view;
     this->keepActive = keepActive;

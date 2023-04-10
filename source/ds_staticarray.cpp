@@ -13,7 +13,7 @@ StructStaticArray::StructStaticArray(sf::RenderWindow* window, bool active)
     this->diffy = 2;
 
     for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, &this->font, "", 15, this->Color[0], this->Color[1], this->Color[2], this->Color[3], this->Color[4]));
+        listNode.push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, &this->font, "", 15, this->listColor));
     }
     this->updatePositionNode();
     this->refreshrender();
@@ -34,9 +34,9 @@ void StructStaticArray::run(int manipulate, int way, std::string str1, std::stri
         if (way == 3) this->Initialize_ExternalFile(str2);
     }
     if (manipulate == 1) {
-        if (way == 0) this->Add_First(string_to_int(str2));
-        if (way == 1) this->Add_Last(string_to_int(str2));
-        if (way == 2) this->Add_Manual(string_to_int(str1), string_to_int(str2));
+        if (way == 0) this->Insert_First(string_to_int(str2));
+        if (way == 1) this->Insert_Last(string_to_int(str2));
+        if (way == 2) this->Insert_Manual(string_to_int(str1), string_to_int(str2));
     }
     if (manipulate == 2) {
         if (way == 0) this->Del_First();

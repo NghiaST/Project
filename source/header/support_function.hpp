@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <cstring>
 
+sf::Vector2f operator * (const sf::Vector2f& vector, const int& div);
 sf::Vector2f operator / (const sf::Vector2f& vector, const int& div);
 int Rand(int l, int r);
 

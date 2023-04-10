@@ -3,9 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cstring>
-#include "node.hpp"
+#include "style.hpp"
 
-struct InputBox : Node {
+struct InputBox : Style {
 private:
     bool active;
 

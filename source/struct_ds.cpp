@@ -25,12 +25,12 @@ StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active)
     this->sizearray = 0;
     this->elements = std::vector<int>(maxsize, 0);
 
-    Color = std::vector<TripleColor>(5, TripleColor());
-    Color[0] = TripleColor(sf::Color::White);
-    Color[1] = TripleColor(sf::Color::Cyan);
-    Color[2] = TripleColor(sf::Color::Green);
-    Color[3] = TripleColor(sf::Color::Yellow);
-    Color[4] = TripleColor(sf::Color::Red);
+    listColor = std::vector<TripleColor>(5, TripleColor());
+    listColor[0] = TripleColor(sf::Color::White, sf::Color::Red, sf::Color::Black);
+    listColor[1] = TripleColor(sf::Color::Green, sf::Color::Red, sf::Color::Black);
+    listColor[2] = TripleColor(sf::Color(39, 154, 248), sf::Color::Red, sf::Color::Black);
+    listColor[3] = TripleColor(sf::Color::Cyan, sf::Color::Blue, sf::Color(39, 154, 248));
+    listColor[4] = TripleColor(sf::Color::Green, sf::Color::Red, sf::Color::Green);//(248, 122, 39));
     
     Initialize_Random();
 }
@@ -77,11 +77,11 @@ void StructDataStructure::Initialize_ExternalFile(std::string filename)
     this->Initialize_Manual(string_to_array(content));
 }
 
-// Add
-void StructDataStructure::Add_First(int value) 
+// Insert
+void StructDataStructure::Insert_First(int value) 
 {
     if (sizearray == maxsize) {
-        std::cout << "The array has full of elements. Can't add new elements\n";
+        std::cout << "The array has full of elements. Can't Insert new elements\n";
         return;
     }
     for(int i = sizearray - 1; i >= 0; i--) {
@@ -90,18 +90,18 @@ void StructDataStructure::Add_First(int value)
     elements[0] = value;
     sizearray++;
 }
-void StructDataStructure::Add_Last(int value) 
+void StructDataStructure::Insert_Last(int value) 
 {
     if (sizearray == maxsize) {
-        std::cout << "The array has full of elements. Can't add new elements\n";
+        std::cout << "The array has full of elements. Can't Insert new elements\n";
         return;
     }
     elements[sizearray++] = value;
 }
-void StructDataStructure::Add_Manual(int pos, int value) 
+void StructDataStructure::Insert_Manual(int pos, int value) 
 {
     if (sizearray == maxsize) {
-        std::cout << "The array has full of elements. Can't add new elements\n";
+        std::cout << "The array has full of elements. Can't Insert new elements\n";
         return;
     }
     sizearray++;
@@ -186,52 +186,3 @@ const bool &StructDataStructure::isActive() const
 {
     return this->active;
 }
-/*
-void StructDataStructure::run(int manipulate, int way, std::string str1, std::string str2) {
-    if (!this->active) 
-        exit(2);
-    if (manipulate == -1) return;
-    if (manipulate == 0) {
-        if (way == 0) this->Initialize_Empty();
-        if (way == 1) this->Initialize_Random();
-        if (way == 2) this->Initialize_Manual(string_to_array(str1));
-        if (way == 3) this->Initialize_ExternalFile(str2);
-    }
-    if (manipulate == 1) {
-        if (way == 0) this->Add_First(string_to_int(str2));
-        if (way == 1) this->Add_Last(string_to_int(str2));
-        if (way == 2) this->Add_Manual(string_to_int(str1), string_to_int(str2));
-    }
-    if (manipulate == 2) {
-        if (way == 0) this->Del_First();
-        if (way == 1) this->Del_Last();
-        if (way == 2) this->Del_Manual(string_to_int(str1));
-    }
-    if (manipulate == 3) {
-        this->Update(string_to_int(str1), string_to_int(str2));
-    }
-    if (manipulate == 4) {
-        this->Search(string_to_int(str1));
-    }
-}*/
-/*
-void StructDataStructure::refreshrender()
-{
-    sf::Vector2f coord;
-    coord.x = centerVisual.x - this->distance / 2 * sizearray;
-    coord.y = centerVisual.y;
-    sf::Vector2f coord = sf::Vector2f(250, 100);
-    sf::Vector2f velocity = sf::Vector2f(52, 0);
-    for(int i = 0; i < sizearray; i++) {
-        staticelements[i].setWord(std::to_string(this->elements[i]));
-    }
-    for(int i = sizearray; i < maxsize; i++) {
-        staticelements[i].setWord("");
-    }
-}
-void StructDataStructure::render() {
-    if (this->active == false) return;
-    this->refreshrender();
-    for(int i = 0; i < maxsize; i++)
-        staticelements[i].render(window);
-}*/

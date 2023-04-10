@@ -12,13 +12,16 @@
 enum MOUSE{MSE_NONE = 0, MSE_LEFTCLICK, MSE_RIGHTCLICK, MSE_LEFTHOLD, MSE_RIGHTHOLD};
 
 struct State {
-private:    
+private:
+    // constant 
+    // enum PRESENT {NONE = -1, INIT, ADD, DELETE, UPDATE, SEARCH};
+    const int NONE = -1, INIT = 0, ADD = 1, DELETE = 2, UPDATE = 3, SEARCH = 4;
+    
     // value
     sf::RenderWindow* window;
     sf::Font font;
     // std::vector<sf::Texture> textures;
     bool quit;
-    int cntManipulate;
     
     // mouse
     sf::Vector2i mousePosScreen;
@@ -32,15 +35,15 @@ private:
 
     std::vector<Button> buttonCategory;
     std::vector<Button> buttonManipulate;
-    std::vector<std::vector<Button>> subbuttonManipulate;
-    std::vector<std::vector<InputBox>> boxarr;
+    std::vector<Button> subbuttonManipulate[5];
+
+    std::vector<std::vector<InputBox>> boxarr; // (5, std::vector<int>);
     
 public:
     // Init
     State(sf::RenderWindow* window);
-    ~State();
+    virtual ~State();
 
-    void setNewDS(int ds_new);
     void checkforQuit();
     // setvalue
     void updateInputBox(int pos, int value);

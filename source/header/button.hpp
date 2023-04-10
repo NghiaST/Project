@@ -1,9 +1,9 @@
 #ifndef __button_hpp__
 #define __button_hpp__
 #include <SFML/Graphics.hpp>
-#include "node.hpp"
+#include "style.hpp"
 
-struct Button : Node {
+struct Button : Style {
 private:
     bool keepActive;
 
@@ -11,7 +11,6 @@ private:
     sf::RectangleShape shape;
 
 public:
-    Button() {}
     Button(int x, int y, int width, int height, sf::Font* font, bool view, bool keepActive, std::string word, int sizeText, 
         TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
     ~Button();
