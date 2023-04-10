@@ -80,7 +80,7 @@ void StructLinkedList::updatePositionNode()
         this->listNode[i].setXY(coord.x, coord.y);
 
         if (i) {
-            this->listArrow[i - 1].setNode(coord - velocity, coord);
+            this->listArrow[i - 1].setPoint(coord - velocity, coord);
         }
 
         coord += velocity;

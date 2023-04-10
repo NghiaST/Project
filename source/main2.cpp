@@ -10,7 +10,10 @@ const float VELOCITY = 100.0f; // Velocity of the nodes in pixels per second
 int main()
 {
     // Create a window
-    sf::RenderWindow window(sf::VideoMode(800, 700), "Node Movement");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 2.0;
+    sf::RenderWindow window(sf::VideoMode(1000, 700, 30), "Le Huu Nghia 22125064 - Data Visualizations", sf::Style::Default, settings);
+
     sf::Font font;
     font.loadFromFile("dat/arial.ttf");
 
@@ -52,9 +55,9 @@ int main()
         point2.x = pos2.x + velocity2.x * seconds;
         point2.y = pos2.y + velocity2.y * seconds;
 
-       // Node.setXY(point1.x, point1.y);
-       // Node2.setXY(point2.x, point2.y);
-        arrow.setNode(Node.getXY(), Node2.getXY());
+        Node.setXY(point1.x, point1.y);
+        Node2.setXY(point2.x, point2.y);
+        arrow.setPoint(Node.getXY(), Node2.getXY());
         if (seconds > 1.1) {
             pos1 = point1;
             pos2 = point2;
@@ -63,11 +66,14 @@ int main()
         }
 
         // Clear the window
+        arrow.setStatus(status);
+        arrow.setTime(seconds);
         window.clear(sf::Color::White);
 
         Node.render(&window);
         Node2.render(&window);
-        arrow.renderStatusTime(&window, status, seconds);
+        arrow.render(&window);
+        //arrow.renderStatusTime(&window, status, seconds);
 
         // Display the window
         window.display();

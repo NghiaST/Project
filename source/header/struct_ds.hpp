@@ -30,7 +30,7 @@ protected:
     std::vector<int> elements;
 
     // data for node
-    int sizeNode;
+    int sizeNode;   /// rectangle: length, area: diameter 
     int distance;
     int diffy;
     std::vector<TripleColor> listColor;
