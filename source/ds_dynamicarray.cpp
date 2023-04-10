@@ -22,7 +22,15 @@ StructDynamicArray::~StructDynamicArray()
 {
 }
 
-void StructDynamicArray::run(int manipulate, int way, std::string str1, std::string str2) {
+void StructDynamicArray::turn_on()
+{
+    this->active = true;
+    this->Initialize_Random();
+    this->updatePositionNode();
+}
+
+void StructDynamicArray::run(int manipulate, int way, std::string str1, std::string str2)
+{
     if (!this->active) 
         exit(2);
     if (manipulate == -1) ;
@@ -48,7 +56,6 @@ void StructDynamicArray::run(int manipulate, int way, std::string str1, std::str
     if (manipulate == 4) {
         this->Search(string_to_int(str1));
     }
-
     this->updatePositionNode();
 }
 
@@ -60,7 +67,6 @@ sf::Vector2i StructDynamicArray::update(sf::Vector2f mousePos, int mouseType, in
         if (listNode[i].getStatus() == 2) 
             ret = sf::Vector2i(i, this->elements[i]);
     }
-    this->updatePositionNode();
     return ret;
 }
 

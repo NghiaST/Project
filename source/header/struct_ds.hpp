@@ -57,7 +57,6 @@ public:
     void Search(int value);
 
     void turn_off();
-    void turn_on();
     const bool& isActive() const;
 
     // void run(int manipulate, int way, std::string str1, std::string str2);

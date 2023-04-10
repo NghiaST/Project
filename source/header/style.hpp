@@ -48,6 +48,7 @@ public :
     void setX(int x);
     void setY(int y);
     void setXY(int x, int y);
+    void setXY(sf::Vector2f coord);
     void setView(bool view);
     void setWord(std::string word);
     void setWordOut(std::string wordOut);

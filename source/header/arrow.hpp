@@ -4,18 +4,18 @@
 
 struct Arrow {
 protected:
+    double fulltime = 1;
+    double time = 0;
     sf::Color defaultColor = sf::Color::Black;
     sf::Color activeColor = sf::Color(255, 165, 0);
-
-    sf::Vector2f startPoint, endPoint;
-    sf::Vector2f nextStartPoint, nextEndPoint;
     int radius_triangle = 6;
     int thickness = 2;
+    
+    sf::Vector2f startPoint, endPoint;
+    sf::Vector2f nextStartPoint, nextEndPoint;
 
     int status = 0; // 0, 1, 2 : color normal, create from start to end, move arrow
-                    // 3, 4 : color from start to end, remove from end to start
-    double time = 0;
-    double fulltime = 1;
+                    // 3, 4, 5 : color from start to end, remove from end to start, nothing
 public:
     void setStatus(int status);
     void setTime(double time);

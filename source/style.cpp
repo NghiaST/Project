@@ -106,6 +106,11 @@ void Style::setXY(int x, int y)
     this->x = x;
     this->y = y;
 }
+void Style::setXY(sf::Vector2f coord)
+{
+    this->x = coord.x;
+    this->y = coord.y;
+}
 void Style::setView(bool view)
 {
     this->view = view;

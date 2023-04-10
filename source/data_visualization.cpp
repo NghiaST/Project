@@ -7,7 +7,7 @@ void DataVisualization::InitWindow()
     sf::Vector2f windowsize = sf::Vector2f(1346, 688);
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8.0;
-    this->window = new sf::RenderWindow(sf::VideoMode(windowsize.x, windowsize.y, 30), "Le Huu Nghia 22125064 - Data Visualizations", sf::Style::Default, settings);
+    this->window = new sf::RenderWindow(sf::VideoMode(windowsize.x, windowsize.y, 60), "Le Huu Nghia 22125064 - Data Visualizations", sf::Style::Default, settings);
     this->window->setPosition(sf::Vector2i(0, 0));
     // this->window->setFramerateLimit(60);
     // ::ShowWindow(this->window->getSystemHandle(), SW_MAXIMIZE);
@@ -137,15 +137,24 @@ void DataVisualization::update()
                 case DS_QUEUE        : Queue       ->run(typePress.x, typePress.y, str1, str2); break;
                 default: exit(2);
             }
+            std::cout << "W1\n";
             //get_DS(ds_present)->run(typePress.x, typePress.y, str1, str2);
         }
+    }
+    switch (ds_present) {
+       // case DS_STATICARRAY  : StaticArray ->turn_on(); break;
+       // case DS_DYNAMICARRAY : DynamicArray->turn_on(); break;
+        case DS_LINKEDLIST   : LinkedList  ->updateAnimation(); break;
+       // case DS_STACK        : Stack       ->turn_on(); break;
+       // case DS_QUEUE        : Queue       ->turn_on(); break;
+        default: break;
     }
 }
 
 void DataVisualization::render()
 {
     if (!window->isOpen()) return;
-    this->window->clear(this->Light);
+    this->window->clear(this->Dark);
 
     switch (ds_present) {
         case DS_STATICARRAY  : StaticArray ->render(); break;

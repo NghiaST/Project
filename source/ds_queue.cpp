@@ -25,7 +25,15 @@ StructQueue::~StructQueue()
 {
 }
 
-void StructQueue::run(int manipulate, int way, std::string str1, std::string str2) {
+void StructQueue::turn_on()
+{
+    this->active = true;
+    this->Initialize_Random();
+    this->updatePositionNode();
+}
+
+void StructQueue::run(int manipulate, int way, std::string str1, std::string str2)
+{
     if (!this->active) 
         exit(2);
     if (manipulate == -1) ;
@@ -93,7 +101,6 @@ sf::Vector2i StructQueue::update(sf::Vector2f mousePos, int mouseType, int keybo
         if (listNode[i].getStatus() == 2) 
             ret = sf::Vector2i(i, this->elements[i]);
     }
-    this->updatePositionNode();
     return ret;
 }
 

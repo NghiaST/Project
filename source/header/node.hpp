@@ -4,6 +4,7 @@
 #include <iostream>
 #include "triplecolor.hpp"
 #include "style.hpp"
+#include "support_function.hpp"
 
 struct Node : Style {
 public :
@@ -19,6 +20,12 @@ struct CircleNode : Node {
 private:
     int radius;
     sf::CircleShape shape;
+
+    // visualization
+    bool running = false;
+    double fulltime = 1;
+    sf::Vector2f startPoint, endPoint;
+
 public:
     CircleNode(int x, int y, int radius, sf::Font* font, std::string word, int sizeText, std::vector<TripleColor> Color);
     CircleNode(int x, int y, int radius, sf::Font* font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
@@ -28,6 +35,12 @@ public:
     int update(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void refreshrender();
     void render(sf::RenderWindow* window);
+
+    // visualization
+    void prepareAnimation(sf::Vector2f endPoint, int status);
+    void stopAnimation();
+    void updateMoving(int status, double time);
+    void renderAnimation(sf::RenderWindow* window, int status, double time);
 };
 
 struct RectangleNode : Node {

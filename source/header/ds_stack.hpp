@@ -19,7 +19,7 @@ protected:
 public:
     StructStack(sf::RenderWindow* window, bool active);
     ~StructStack();
-
+    void turn_on();
     void run(int manipulate, int way, std::string str1, std::string str2);
 
     void Peek();

@@ -13,6 +13,10 @@ void Arrow::setStatus(int status)
 void Arrow::setTime(double time)
 {
     this->time = time;
+    if (this->time < 0)
+        this->time = 0;
+    if (this->time > this->fulltime)
+        this->time = this->fulltime;
 }
 void Arrow::setFullTime(double fulltime)
 {
@@ -20,8 +24,8 @@ void Arrow::setFullTime(double fulltime)
 }
 void Arrow::setStatusTime(int status, double time)
 {
-    this->status = status;
-    this->time = time;
+    this->setStatus(status);
+    this->setTime(time);
 }
 
 void Arrow::setStartPoint(sf::Vector2f startPoint)
@@ -94,13 +98,11 @@ void ArrowNode::render(sf::RenderWindow* window)
 {
     // setup time
     double ratio = this->time / this->fulltime;
-    if (ratio < 0) ratio = 0;
-    if (ratio > 1) ratio = 1;
 
     // setup point
     sf::Vector2f presentStartPoint = this->getPresentStartPoint();
     sf::Vector2f presentEndPoint = this->getPresentEndPoint();
-
+    
     /// calculate position arrow    
     double pi = 3.141592653589793238462643383279502;
     sf::Vector2f diff = presentEndPoint - presentStartPoint;
@@ -171,6 +173,10 @@ void ArrowNode::render(sf::RenderWindow* window)
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * (1 - ratio), 0.f));
             break;
+        case 5 :
+            triangle.setPointCount(0);
+            line.setSize(sf::Vector2f(0.f, 0.f));
+            line2.setSize(sf::Vector2f(0.f, 0.f));
         default :
             // debug
             std::cout << "error: no type of print arrow found\n";
@@ -189,7 +195,6 @@ void ArrowNode::renderTime(sf::RenderWindow* window, double time)
 }
 void ArrowNode::renderStatusTime(sf::RenderWindow* window, int status, double time)
 {
-    this->setStatus(status);
-    this->setTime(time);
+    this->setStatusTime(status, time);
     this->render(window);
 }

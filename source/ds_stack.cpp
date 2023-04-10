@@ -25,6 +25,13 @@ StructStack::~StructStack()
 {
 }
 
+void StructStack::turn_on()
+{
+    this->active = true;
+    this->Initialize_Random();
+    this->updatePositionNode();
+}
+
 void StructStack::run(int manipulate, int way, std::string str1, std::string str2) {
     if (!this->active) 
         exit(2);
@@ -88,7 +95,6 @@ sf::Vector2i StructStack::update(sf::Vector2f mousePos, int mouseType, int keybo
         if (listNode[i].getStatus() == 2) 
             ret = sf::Vector2i(i, this->elements[i]);
     }
-    this->updatePositionNode();
     return ret;
 }
 

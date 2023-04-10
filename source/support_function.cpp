@@ -3,12 +3,12 @@
 #include <random>
 #include <cstring>
 
-sf::Vector2f operator*(const sf::Vector2f &vector, const int &multiply)
+sf::Vector2f operator*(const sf::Vector2f &vector, const double &multiply)
 {
     return sf::Vector2f(vector.x * multiply, vector.y * multiply);
 }
 
-sf::Vector2f operator/(const sf::Vector2f &vector, const int &div)
+sf::Vector2f operator/(const sf::Vector2f &vector, const double &div)
 {
     return sf::Vector2f(vector.x / div, vector.y / div);
 }
@@ -21,7 +21,6 @@ int Rand(int l, int r)
 
 int string_to_int(std::string str)
 {
-    std::cout << str << '\n';
     int number = 0;
     for(char c : str)
     {

@@ -20,6 +20,7 @@ public:
     StructQueue(sf::RenderWindow* window, bool active);
     ~StructQueue();
 
+    void turn_on();
     void run(int manipulate, int way, std::string str1, std::string str2);
 
     void Peek_Front();

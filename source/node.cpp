@@ -47,6 +47,7 @@ int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, boo
     }
     return this->status;
 }
+
 ///--------------------------------------------------------------------
 ///-----------------------------CircleNode-----------------------------
 
@@ -71,6 +72,8 @@ CircleNode::~CircleNode()
 
 int CircleNode::update(sf::Vector2f mousePos, int mouseType, int keyboardType) // check if CircleNode is active
 {
+    if (this->running == true) 
+        return -1;
     bool isMouseInside = this->shape.getGlobalBounds().contains(mousePos);
     return this->Node::updateNode(mousePos, mouseType, keyboardType, isMouseInside);
 }
@@ -88,7 +91,7 @@ void CircleNode::refreshrender()
         this->y - this->text.getGlobalBounds().height / 2.f - 4
     );
 
-    this->listColor[this->status].Coloring(this->shape, this->text);
+    this->listColor[this->status % 5].Coloring(this->shape, this->text);
 }
 void CircleNode::render(sf::RenderWindow* window) 
 {
@@ -98,6 +101,36 @@ void CircleNode::render(sf::RenderWindow* window)
     window->draw(this->text);
 }
 
+// visualization
+void CircleNode::prepareAnimation(sf::Vector2f endPoint, int status)
+{
+    this->startPoint = this->getXY();
+    this->endPoint = endPoint;
+    this->status = status;
+    this->running = false;
+}
+void CircleNode::stopAnimation()
+{
+    this->setXY(this->endPoint);
+    this->startPoint = this->endPoint = sf::Vector2f(0, 0);
+    this->status = 0;
+    this->running = false;
+}
+void CircleNode::updateMoving(int status, double time)
+{
+    double ratio = time / fulltime;
+    if (ratio < 0) ratio = 0;
+    if (ratio > 1) ratio = 1;
+    sf::Vector2f presentPoint = startPoint + (endPoint - startPoint) * ratio;
+    this->status = status;
+    this->setXY(presentPoint);
+}
+void CircleNode::renderAnimation(sf::RenderWindow *window, int status, double time)
+{
+    this->updateMoving(status, time);
+
+    this->render(window);
+}
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
 

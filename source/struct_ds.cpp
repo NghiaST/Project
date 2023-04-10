@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <fstream>
+#include <algorithm>
 #include "struct_ds.hpp"
 
 StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active) 
@@ -118,8 +119,7 @@ void StructDataStructure::Del_First()
         std::cout << "The array has no elements. Can't delete elements\n";
         return;
     }
-    for(int i = 1; i < sizearray; i++)
-        this->elements[i - 1] = this->elements[i];
+    std::rotate(elements.begin(), elements.begin() + 1, elements.begin() + sizearray);
     sizearray--;
 }
 void StructDataStructure::Del_Last()
@@ -136,8 +136,7 @@ void StructDataStructure::Del_Manual(int pos)
         std::cout << "The array has no elements. Can't delete elements\n";
         return;
     }
-    for(int i = pos + 1; i < sizearray; i++)
-        this->elements[i - 1] = this->elements[i];
+    std::rotate(elements.begin() + pos, elements.begin() + pos + 1, elements.begin() + sizearray);
     sizearray--;
 }
 
@@ -175,11 +174,6 @@ void StructDataStructure::Search(int value)
 
 void StructDataStructure::turn_off() {
     this->active = false;
-}
-void StructDataStructure::turn_on() {
-    if (this->isActive()) return;
-    this->active = true;
-    this->Initialize_Random();
 }
 
 const bool &StructDataStructure::isActive() const

@@ -175,12 +175,6 @@ void StructStaticArray::turn_off() {
     this->active = false;
 }
 
-void StructStaticArray::turn_on() {
-    if (this->isActive()) return;
-    this->active = true;
-    this->Initialize_Random();
-}
-
 const bool &StructStaticArray::isActive() const
 {
     return this->active;
