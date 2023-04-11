@@ -36,9 +36,12 @@ public:
     Manipulate_Animation_ArrayNode() {}
     void setNode(CircleNode* node);
     void addStep(int statusAnimation, int status, sf::Vector2f startPoint, sf::Vector2f endPoint);
+    void addMultiStep(int count, int statusAnimation, int status, sf::Vector2f startPoint, sf::Vector2f endPoint);
     void runTime(double time);
     void runStep(int step, double time);
     void clearStep();
+
+    int getStep();
 };
 
 struct Manipulate_Animation_Arrow {
@@ -68,9 +71,13 @@ public:
     Manipulate_Animation_ArrayArrow() {}
     void setArrow(ArrowNode* arrow);
     void addStep(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
+    void addMultiStep(int count, int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
     void runTime(double time);
     void runStep(int step, double time);
     void clearStep();
+
+    
+    int getStep();
 };
 
 #endif

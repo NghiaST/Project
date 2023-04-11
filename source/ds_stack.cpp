@@ -87,7 +87,7 @@ void StructStack::Pop()
     sizearray--;
 }
 
-sf::Vector2i StructStack::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructStack::updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->sizearray; i++) {

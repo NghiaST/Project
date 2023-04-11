@@ -60,7 +60,7 @@ void StructStaticArray::run(int manipulate, int way, std::string str1, std::stri
     this->updatePositionNode();
 }
 
-sf::Vector2i StructStaticArray::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructStaticArray::updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->maxsize; i++) {

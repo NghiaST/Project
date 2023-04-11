@@ -1,6 +1,7 @@
 #ifndef __arrow_hpp__
 #define __arrow_hpp__
 #include <SFML/Graphics.hpp>
+const int AR_NOPE = -1, AR_NORMAL = 0, AR_CREATE = 1, AR_MOVE = 2, AR_COLOR_TO = 3, AR_DEL = 4, AR_ACTIVE = 5, AR_ACTIVEMOVE = 6;
 
 struct Arrow {
 protected:
@@ -14,8 +15,8 @@ protected:
     sf::Vector2f startPoint, endPoint;
     sf::Vector2f nextStartPoint, nextEndPoint;
 
-    int statusAnimation = 0; // 0, 1, 2 : color normal, create from start to end, move arrow
-                    // 3, 4, 5 : color from start to end, remove from end to start, nothing
+    int statusAnimation = 0; // -1, 0, 1: do nothing, color normal, create from start to end
+                    // 2, 3, 4, 5 :, move arrow, color from start to end, remove from end to start, color running
 public:
     void setStatusAnimation(int statusAnimation);
     void setTime(double time);

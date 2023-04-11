@@ -5,6 +5,7 @@
 #include "triplecolor.hpp"
 #include "style.hpp"
 #include "support_function.hpp"
+const int NOD_NOPE = -1, NOD_NORMAL = 0, NOD_MOVE = 1, NOD_APPEAR = 2, NOD_RECOLOR = 3, NOD_DEL = 4; //, NODE_CHANGECOLOR = 5;
 
 struct Node : Style {
 public :
@@ -24,7 +25,7 @@ private:
     // visualization
     bool running = false;
     double ratioColor;
-    int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, create node, recolor node, disappear node
+    int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, appear node, recolor node, disappear node
     double fulltime = 1;
     double time;
     sf::Vector2f startPoint, endPoint;

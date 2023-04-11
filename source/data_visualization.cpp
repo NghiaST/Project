@@ -90,11 +90,11 @@ void DataVisualization::update()
     if (!window->isOpen()) return;
     sf::Vector2i DataNode;
     switch (ds_present) {
-        case DS_STATICARRAY  : DataNode = StaticArray ->update(this->mousePosView, this->mouseType, this->keyboardType); break;
-        case DS_DYNAMICARRAY : DataNode = DynamicArray->update(this->mousePosView, this->mouseType, this->keyboardType); break;
-        case DS_LINKEDLIST   : DataNode = LinkedList  ->update(this->mousePosView, this->mouseType, this->keyboardType); break;
-        case DS_STACK        : DataNode = Stack       ->update(this->mousePosView, this->mouseType, this->keyboardType); break;
-        case DS_QUEUE        : DataNode = Queue       ->update(this->mousePosView, this->mouseType, this->keyboardType); break;
+        case DS_STATICARRAY  : DataNode = StaticArray ->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
+        case DS_DYNAMICARRAY : DataNode = DynamicArray->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
+        case DS_LINKEDLIST   : DataNode = LinkedList  ->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
+        case DS_STACK        : DataNode = Stack       ->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
+        case DS_QUEUE        : DataNode = Queue       ->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
         default: exit(2);
     }
     //sf::Vector2i DataNode = get_DS(ds_present)->update(this->mousePosView, this->mouseType, this->keyboardType);

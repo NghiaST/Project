@@ -153,23 +153,18 @@ void StructDataStructure::Update(int pos, int value)
 }
 
 // Search
-void StructDataStructure::Search(int value) 
+int StructDataStructure::Search(int value) 
 {
-    bool found = false;
     for(int i = 0; i < sizearray; i++)
     {
         if (this->elements[i] == value)
         {
-            // Debug
             std::cout << "Find value at element " << i << '\n';
-            found = true;
-            break;
+            return i;
         }
     }
-    if (found == false)
-    {
-        std::cout << "Can't find value\n";
-    }
+    std::cout << "Can't find value\n";
+    return -1;
 }
 
 void StructDataStructure::turn_off() {

@@ -18,9 +18,6 @@ protected:
     std::vector<ArrowNode> listArrow;
     std::vector<sf::Vector2f> listPoint;
 
-    // Manipulate_Animation_ArrayNode* nodeAnimation[20];
-    // Manipulate_Animation_ArrayArrow* arrowAnimation[20];
-
     std::vector<Manipulate_Animation_ArrayNode> nodeAnimation;
     std::vector<Manipulate_Animation_ArrayArrow> arrowAnimation;
 
@@ -29,9 +26,9 @@ protected:
     std::vector<int> preElements;
 
     bool running = false;
-    int Manipulate = -1;
-    int Way = -1;
-    int Pos = -1;
+    // int Manipulate = -1;
+    // int Way = -1;
+    // int Pos = -1;
     std::string Str1;
     std::string Str2;
     int Val;
@@ -46,17 +43,20 @@ public:
     ~StructLinkedList();
 
     void turn_on();
+    std::vector<sf::Vector2f> getPosition(int size);
+    void updateAnimation();
     void run(int manipulate, int way, std::string str1, std::string str2);
 
+    void Animation_Insert_First();
     void Animation_Insert_Last();
-    void updateAnimation();
+    void Animation_Insert_Manual();
+    void stopAnimation();
 
     // support function
-    std::vector<sf::Vector2f> getPosition(int size);
 
     // render
+    sf::Vector2i updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void updatePositionNode();
-    sf::Vector2i update(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void refreshrender();
     void render();
 };

@@ -59,7 +59,7 @@ void StructDynamicArray::run(int manipulate, int way, std::string str1, std::str
     this->updatePositionNode();
 }
 
-sf::Vector2i StructDynamicArray::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructDynamicArray::updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->sizearray; i++) {

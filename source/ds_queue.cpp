@@ -93,7 +93,7 @@ void StructQueue::Dequeue()
     sizearray--;
 }
 
-sf::Vector2i StructQueue::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructQueue::updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->sizearray; i++) {

@@ -142,12 +142,17 @@ void ArrowNode::render(sf::RenderWindow* window)
 
     switch (this->statusAnimation)
     {
-        case 0 : 
+        case AR_NOPE :
+            triangle.setPointCount(0);
+            line.setSize(sf::Vector2f(0.f, 0.f));
+            line2.setSize(sf::Vector2f(0.f, 0.f));
+            break;
+        case AR_NORMAL : 
             triangle.setFillColor(this->defaultColor);
             line.setSize(sf::Vector2f(tmp_length, 0.f));
             line2.setSize(sf::Vector2f(0.f, 0.f));
             break;
-        case 1 :
+        case AR_CREATE :
             if (ratio < 0.99) 
                 triangle.setPointCount(0);
             else 
@@ -155,17 +160,17 @@ void ArrowNode::render(sf::RenderWindow* window)
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * ratio, 0.f));
             break;
-        case 2 :
+        case AR_MOVE :
             triangle.setFillColor(this->defaultColor);
             line.setSize(sf::Vector2f(tmp_length, 0.f));
             line2.setSize(sf::Vector2f(0, 0.f));
             break;
-        case 3 :
+        case AR_COLOR_TO :
             triangle.setFillColor(ratio < 0.99 ? this->defaultColor : this->activeColor);
             line.setSize(sf::Vector2f(tmp_length, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * ratio, 0.f));
             break;
-        case 4 :
+        case AR_DEL :
             if (ratio > 0.01) 
                 triangle.setPointCount(0);
             else 
@@ -173,13 +178,14 @@ void ArrowNode::render(sf::RenderWindow* window)
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * (1 - ratio), 0.f));
             break;
-        case 5 :
-            triangle.setPointCount(0);
+        case AR_ACTIVE : case AR_ACTIVEMOVE :
+            triangle.setFillColor(this->activeColor);
             line.setSize(sf::Vector2f(0.f, 0.f));
-            line2.setSize(sf::Vector2f(0.f, 0.f));
+            line2.setSize(sf::Vector2f(tmp_length, 0.f));
+            break;
         default :
             // debug
-            std::cout << "error: no type of print arrow found\n";
+            std::cout << this->statusAnimation << "error: no type of print arrow found\n";
             exit(3);
             break;
     }

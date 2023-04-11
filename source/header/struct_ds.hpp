@@ -54,7 +54,7 @@ public:
 
     void Update(int pos, int value);
 
-    void Search(int value);
+    int Search(int value);
 
     void turn_off();
     const bool& isActive() const;

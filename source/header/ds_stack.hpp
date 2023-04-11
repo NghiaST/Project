@@ -27,7 +27,7 @@ public:
     void Pop();
     // render
     void updatePositionNode();
-    sf::Vector2i update(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    sf::Vector2i updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void refreshrender();
     void render();
 };
