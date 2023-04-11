@@ -24,7 +24,7 @@ private:
     // visualization
     bool running = false;
     double ratioColor;
-    int statusAnimation; /// 0, 1, 2, 3, 4 : do nothing, move, create node, recolor node, disappear node
+    int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, create node, recolor node, disappear node
     double fulltime = 1;
     double time;
     sf::Vector2f startPoint, endPoint;
@@ -40,7 +40,7 @@ public:
     void render(sf::RenderWindow* window);
 
     // visualization
-    void prepareAnimation(sf::Vector2f endPoint, int statusAnimation, int status);
+    void prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int status);
     void stopAnimation();
     void updateAnimation_Moving(double time);
     void updateAnimation(double time);

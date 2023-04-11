@@ -6,9 +6,9 @@
 //-------------------------------------------------------
 //-------------------------Arrow-------------------------
 
-void Arrow::setStatus(int status)
+void Arrow::setStatusAnimation(int statusAnimation)
 {
-    this->status = status;
+    this->statusAnimation = statusAnimation;
 }
 void Arrow::setTime(double time)
 {
@@ -22,9 +22,9 @@ void Arrow::setFullTime(double fulltime)
 {
     this->fulltime = fulltime;
 }
-void Arrow::setStatusTime(int status, double time)
+void Arrow::setStatusAnimationTime(int statusAnimation, double time)
 {
-    this->setStatus(status);
+    this->setStatusAnimation(statusAnimation);
     this->setTime(time);
 }
 
@@ -140,7 +140,7 @@ void ArrowNode::render(sf::RenderWindow* window)
     line2.setOutlineColor(this->activeColor);
     line2.setOutlineThickness(this->thickness);
 
-    switch (this->status)
+    switch (this->statusAnimation)
     {
         case 0 : 
             triangle.setFillColor(this->defaultColor);
@@ -193,8 +193,8 @@ void ArrowNode::renderTime(sf::RenderWindow* window, double time)
     this->setTime(time);
     this->render(window);
 }
-void ArrowNode::renderStatusTime(sf::RenderWindow* window, int status, double time)
+void ArrowNode::renderStatusAnimationTime(sf::RenderWindow* window, int statusAnimation, double time)
 {
-    this->setStatusTime(status, time);
+    this->setStatusAnimationTime(statusAnimation, time);
     this->render(window);
 }

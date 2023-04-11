@@ -68,5 +68,4 @@ void TripleColor::Coloring(sf::CircleShape &shape, sf::Text &text, double ratio)
     shape.setFillColor(this->FillColor * ratio);
     text.setFillColor(this->TextColor * ratio);
     shape.setOutlineColor(this->OutlineColor * ratio);
-    std::cout << "run triplecolor::coloring\n";
 }

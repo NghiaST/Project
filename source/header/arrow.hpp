@@ -14,13 +14,13 @@ protected:
     sf::Vector2f startPoint, endPoint;
     sf::Vector2f nextStartPoint, nextEndPoint;
 
-    int status = 0; // 0, 1, 2 : color normal, create from start to end, move arrow
+    int statusAnimation = 0; // 0, 1, 2 : color normal, create from start to end, move arrow
                     // 3, 4, 5 : color from start to end, remove from end to start, nothing
 public:
-    void setStatus(int status);
+    void setStatusAnimation(int statusAnimation);
     void setTime(double time);
     void setFullTime(double fulltime);
-    void setStatusTime(int status, double time);
+    void setStatusAnimationTime(int statusAnimation, double time);
 
     void setStartPoint(sf::Vector2f startPoint);
     void setEndPoint(sf::Vector2f endPoint);
@@ -45,7 +45,7 @@ public:
 
     void render(sf::RenderWindow* window);
     void renderTime(sf::RenderWindow* window, double time);
-    void renderStatusTime(sf::RenderWindow* window, int statuss, double time);
+    void renderStatusAnimationTime(sf::RenderWindow* window, int statusAnimations, double time);
 };
 
 #endif

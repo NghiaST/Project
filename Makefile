@@ -8,8 +8,8 @@ HEADERDIR = source/header
 BINDIR = bin
 FLAGS = graphics/lib -lsfml-graphics -lsfml-window -lsfml-system
 # SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
-LIST = main data_visualization support_function button state inputbox node triplecolor struct_ds ds_staticarray ds_dynamicarray ds_linkedlist ds_stack ds_queue arrow style
-LIST2 = main2 data_visualization support_function button state inputbox node triplecolor struct_ds ds_staticarray ds_dynamicarray ds_linkedlist ds_stack ds_queue arrow style
+LIST = main data_visualization support_function button state inputbox node triplecolor struct_ds ds_staticarray ds_dynamicarray ds_linkedlist ds_stack ds_queue arrow style manipulate_animation
+LIST2 = main2 data_visualization support_function button state inputbox node triplecolor struct_ds ds_staticarray ds_dynamicarray ds_linkedlist ds_stack ds_queue arrow style manipulate_animation
 
 SOURCES = $(LIST:%=$(SOURCEDIR)/%.cpp)
 #   source/main.cpp source/struct.cpp source/struct_support.cpp

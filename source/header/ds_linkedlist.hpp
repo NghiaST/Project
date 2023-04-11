@@ -9,6 +9,7 @@
 #include "support_function.hpp"
 #include "struct_ds.hpp"
 #include "arrow.hpp"
+#include "manipulate_animation.hpp"
 
 struct StructLinkedList : StructDataStructure {
 protected:
@@ -16,6 +17,12 @@ protected:
     std::vector<CircleNode> listNode;
     std::vector<ArrowNode> listArrow;
     std::vector<sf::Vector2f> listPoint;
+
+    // Manipulate_Animation_ArrayNode* nodeAnimation[20];
+    // Manipulate_Animation_ArrayArrow* arrowAnimation[20];
+
+    std::vector<Manipulate_Animation_ArrayNode> nodeAnimation;
+    std::vector<Manipulate_Animation_ArrayArrow> arrowAnimation;
 
     double speed = 1;
 
@@ -30,7 +37,7 @@ protected:
     int Val;
     int preSize; /// size of array, number of elements (previous)
 
-    double Time;
+    double totaltime;
     sf::Clock clock;
 
     int count_nodePrint;

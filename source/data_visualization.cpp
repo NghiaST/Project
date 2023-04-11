@@ -86,7 +86,7 @@ void DataVisualization::processEvents()
 }
 
 void DataVisualization::update()
-{   
+{
     if (!window->isOpen()) return;
     sf::Vector2i DataNode;
     switch (ds_present) {
@@ -111,7 +111,7 @@ void DataVisualization::update()
                 case DS_LINKEDLIST   : LinkedList  ->turn_off(); break;
                 case DS_STACK        : Stack       ->turn_off(); break;
                 case DS_QUEUE        : Queue       ->turn_off(); break;
-                default: exit(2);
+                default: std::cout << "Error datavisualization 1 \n"; exit(2);
             }
             //get_DS(ds_present)->turn_off();
             ds_present = static_cast<DATA_STRUCTURE>(typePress.x);
@@ -121,7 +121,7 @@ void DataVisualization::update()
                 case DS_LINKEDLIST   : LinkedList  ->turn_on(); break;
                 case DS_STACK        : Stack       ->turn_on(); break;
                 case DS_QUEUE        : Queue       ->turn_on(); break;
-                default: exit(2);
+                default: std::cout << "Error datavisualization 2 \n"; exit(2);
             }
             //get_DS(ds_present)->turn_on();
         }
@@ -135,9 +135,8 @@ void DataVisualization::update()
                 case DS_LINKEDLIST   : LinkedList  ->run(typePress.x, typePress.y, str1, str2); break;
                 case DS_STACK        : Stack       ->run(typePress.x, typePress.y, str1, str2); break;
                 case DS_QUEUE        : Queue       ->run(typePress.x, typePress.y, str1, str2); break;
-                default: exit(2);
+                default: std::cout << "Error datavisualization 3 \n"; exit(2);
             }
-            std::cout << "W1\n";
             //get_DS(ds_present)->run(typePress.x, typePress.y, str1, str2);
         }
     }
@@ -154,7 +153,7 @@ void DataVisualization::update()
 void DataVisualization::render()
 {
     if (!window->isOpen()) return;
-    this->window->clear(this->Dark);
+    this->window->clear(this->Light);
 
     switch (ds_present) {
         case DS_STATICARRAY  : StaticArray ->render(); break;
@@ -162,7 +161,7 @@ void DataVisualization::render()
         case DS_LINKEDLIST   : LinkedList  ->render(); break;
         case DS_STACK        : Stack       ->render(); break;
         case DS_QUEUE        : Queue       ->render(); break;
-        default: exit(2);
+        default: std::cout << "Error datavisualization 4 \n"; exit(2);
     }
     //get_DS(ds_present)->render();
 

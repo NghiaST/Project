@@ -7,11 +7,11 @@
 StructLinkedList::StructLinkedList(sf::RenderWindow* window, bool active) 
     : StructDataStructure(window, active)
 {
-    this->speed = 1;
+    this->speed = 2;
     this->maxsize = 14;
     this->sizeNode = 30;
-    this->distance = 50;
-    this->diffy = 2;
+    this->distance = 48;
+    this->diffy = 10;
 
     this->sizearray = 0;
     this->elements = std::vector<int>(maxsize, 0);
@@ -24,9 +24,14 @@ StructLinkedList::StructLinkedList(sf::RenderWindow* window, bool active)
         listArrow.push_back(ArrowNode(this->sizeNode));
     }
     listPoint = std::vector<sf::Vector2f>(this->maxsize, sf::Vector2f(0, 0));
-    
-    this->updatePositionNode();
-    this->refreshrender();
+    nodeAnimation = std::vector<Manipulate_Animation_ArrayNode> (this->maxsize, Manipulate_Animation_ArrayNode());
+    for(int i = 0; i < this->maxsize; i++) {
+        // nodeAnimation.push_back(new Manipulate_Animation_ArrayNode());
+        arrowAnimation.push_back(Manipulate_Animation_ArrayArrow());
+    }
+
+    if (this->active)
+        turn_on();
 }
 
 StructLinkedList::~StructLinkedList()
@@ -48,7 +53,10 @@ void StructLinkedList::run(int manipulate, int way, std::string str1, std::strin
         this->running = false;
         for(int i = 0; i < this->count_nodePrint; i++) {
             listNode[i].stopAnimation();
-            listArrow[i].setStatus(0);
+            listArrow[i].setStatusAnimation(0);
+
+            nodeAnimation[i].clearStep();
+            arrowAnimation[i].clearStep();
         }
         Manipulate = -1;
         Way = -1;
@@ -120,12 +128,15 @@ std::vector<sf::Vector2f> StructLinkedList::getPosition(int size)
 void StructLinkedList::Animation_Insert_Last()
 {
     double time = clock.getElapsedTime().asSeconds() * speed;
-    if (this->running == true && time > this->Time)
+    if (this->running == true && time > this->totaltime)
     {
         this->running = false;
         for(int i = 0; i < this->count_nodePrint; i++) {
             listNode[i].stopAnimation();
-            listArrow[i].setStatus(0);
+            listArrow[i].setStatusAnimation(0);
+
+            nodeAnimation[i].clearStep();
+            arrowAnimation[i].clearStep();
         }
         
         Manipulate = -1;
@@ -155,52 +166,52 @@ void StructLinkedList::Animation_Insert_Last()
         clock.restart();
         time = 0;
         this->running = true;
-        this->Time = 1.2;
+        this->totaltime = Steptime + Delay * 5;
         count_nodePrint = preSize + 1;
-    }
     
-    // setup position
-    std::vector<std::vector<float>> arr = std::vector<std::vector<float>> (20, std::vector<float>(20, 0));
-    std::vector<sf::Vector2f> pStart = getPosition(preSize);
-    std::vector<sf::Vector2f> pEnd = getPosition(preSize + 1);
+        // setup position
+        std::vector<sf::Vector2f> pStart = getPosition(preSize);
+        std::vector<sf::Vector2f> pEnd = getPosition(preSize + 1);
 
-    sf::Vector2f velocity;
-    velocity.x = this->distance + this->sizeNode;
-    velocity.y = this->diffy;
+        sf::Vector2f velocity;
+        velocity.x = this->distance + this->sizeNode;
+        velocity.y = this->diffy;
 
-    sf::Vector2f newPosition = pStart.back() + sf::Vector2f(0, 100);
-    pStart.push_back(newPosition);
-    for(int i = 0; i < preSize + 1; i++)
-    {
-        listNode[i].setXY(pStart[i]);
-        if (i < count_nodePrint - 2) {
-            listNode[i].prepareAnimation(pEnd[i], 1, 2);
-        }
-        else if (i == count_nodePrint - 2) {
-            listNode[i].prepareAnimation(pEnd[i], 1, 1);
-        }
-        else {
-            listNode[i].prepareAnimation(pEnd[i], 1, 3);
-        }
-        if (i < preSize) {
-            listArrow[i].setAllPoint(pStart[i], pStart[i + 1], pEnd[i], pEnd[i + 1]);
-            listArrow[i].setStatus(0);
-        }
-        if (i == preSize - 1) {
-            listArrow[i].setStatus(1);
+        sf::Vector2f newPosition = pStart.back() + sf::Vector2f(0, 200);
+        pStart.push_back(newPosition);
+
+        for(int i = 0; i < count_nodePrint; i++)
+        {
+            if (i < count_nodePrint - 2) {
+                nodeAnimation[i].addStep(1, 2, pStart[i], pEnd[i]);
+            }
+            else if (i == count_nodePrint - 2) {
+                nodeAnimation[i].addStep(1, 1, pStart[i], pEnd[i]);
+            }
+            else {
+                nodeAnimation[i].addStep(1, 3, pStart[i], pEnd[i]);
+            }
+
+            if (i < count_nodePrint - 2) {
+                arrowAnimation[i].addStep(0, pStart[i], pStart[i + 1], pEnd[i], pEnd[i + 1]);
+            }
+            else if (i == count_nodePrint - 2) {
+                arrowAnimation[i].addStep(1, pStart[i], pStart[i + 1], pEnd[i], pEnd[i + 1]);
+            }
+
+            nodeAnimation[i].setNode(&listNode[i]);
+            
+            if (i < count_nodePrint - 1) {
+                arrowAnimation[i].setArrow(&listArrow[i]);
+            }
         }
     }
 
     for(int i = 0; i < count_nodePrint; i++)
     {
-        if (i < count_nodePrint - 1)
-            listNode[i].updateAnimation(time);
-        else 
-            listNode[i].updateAnimation(time);
-        // listNode[i].renderAnimation(window, 2, time / 3);
-        if (i != count_nodePrint - 1) 
-            listArrow[i].setTime(time);
-        // listArrow[i].renderStatusTime(window, 2, time / 3);
+        nodeAnimation[i].runTime(time);
+        if (i < count_nodePrint - 1) 
+            arrowAnimation[i].runTime(time);
     }
 }
 
