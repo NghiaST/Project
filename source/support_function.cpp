@@ -13,6 +13,12 @@ sf::Vector2f operator/(const sf::Vector2f &vector, const double &div)
     return sf::Vector2f(vector.x / div, vector.y / div);
 }
 
+sf::Color operator*(const sf::Color &color, const double &ratio)
+{
+    return sf::Color(color.r, color.g, color.b, sf::Uint8(255 * ratio));
+    // return sf::Color(color.r * multiply, color.g * multiply, color.b * multiply);
+}
+
 int Rand(int l, int r)
 {
     if (l > r) return l;

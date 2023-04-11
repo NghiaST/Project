@@ -34,7 +34,7 @@ DataVisualization::DataVisualization()
     this->Queue        = new StructQueue(window, false);
 
     this->Light = sf::Color(220, 220, 220);
-    this->Dark = sf::Color(150, 150, 150);
+    this->Dark = sf::Color(100, 100, 100);
 }
 
 DataVisualization::~DataVisualization()

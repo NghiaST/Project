@@ -7,10 +7,11 @@
 StructLinkedList::StructLinkedList(sf::RenderWindow* window, bool active) 
     : StructDataStructure(window, active)
 {
-    this->maxsize = 12;
-    this->sizeNode = 32;
+    this->speed = 1;
+    this->maxsize = 14;
+    this->sizeNode = 30;
     this->distance = 50;
-    this->diffy = 0;
+    this->diffy = 2;
 
     this->sizearray = 0;
     this->elements = std::vector<int>(maxsize, 0);
@@ -52,6 +53,7 @@ void StructLinkedList::run(int manipulate, int way, std::string str1, std::strin
         Manipulate = -1;
         Way = -1;
         count_nodePrint = this->sizearray;
+        updatePositionNode();
     }
 
     // >= 5 from animation
@@ -125,9 +127,11 @@ void StructLinkedList::Animation_Insert_Last()
             listNode[i].stopAnimation();
             listArrow[i].setStatus(0);
         }
+        
         Manipulate = -1;
         Way = -1;
         count_nodePrint = this->sizearray;
+        updatePositionNode();
         return;
     }
     if (this->running == false && this->Manipulate == -1)
@@ -156,7 +160,7 @@ void StructLinkedList::Animation_Insert_Last()
     }
     
     // setup position
-    // std::vector<std::vector<float>> arr = std::vector<std::vector<float>> (20, std::vector<float>(20, 0));
+    std::vector<std::vector<float>> arr = std::vector<std::vector<float>> (20, std::vector<float>(20, 0));
     std::vector<sf::Vector2f> pStart = getPosition(preSize);
     std::vector<sf::Vector2f> pEnd = getPosition(preSize + 1);
 
@@ -169,22 +173,33 @@ void StructLinkedList::Animation_Insert_Last()
     for(int i = 0; i < preSize + 1; i++)
     {
         listNode[i].setXY(pStart[i]);
-        listNode[i].prepareAnimation(pEnd[i], 3);
+        if (i < count_nodePrint - 2) {
+            listNode[i].prepareAnimation(pEnd[i], 1, 2);
+        }
+        else if (i == count_nodePrint - 2) {
+            listNode[i].prepareAnimation(pEnd[i], 1, 1);
+        }
+        else {
+            listNode[i].prepareAnimation(pEnd[i], 1, 3);
+        }
         if (i < preSize) {
             listArrow[i].setAllPoint(pStart[i], pStart[i + 1], pEnd[i], pEnd[i + 1]);
-            listArrow[i].setStatus(1);
+            listArrow[i].setStatus(0);
         }
         if (i == preSize - 1) {
-            listArrow[i].setStatus(2);
+            listArrow[i].setStatus(1);
         }
     }
 
     for(int i = 0; i < count_nodePrint; i++)
     {
-        listNode[i].updateMoving(2, time);
+        if (i < count_nodePrint - 1)
+            listNode[i].updateAnimation(time);
+        else 
+            listNode[i].updateAnimation(time);
         // listNode[i].renderAnimation(window, 2, time / 3);
         if (i != count_nodePrint - 1) 
-            listArrow[i].setStatusTime(2, time);
+            listArrow[i].setTime(time);
         // listArrow[i].renderStatusTime(window, 2, time / 3);
     }
 }

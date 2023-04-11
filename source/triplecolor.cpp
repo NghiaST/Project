@@ -1,4 +1,6 @@
 #include "triplecolor.hpp"
+#include "support_function.hpp"
+#include <iostream>
 
 TripleColor::TripleColor()
 {
@@ -59,4 +61,12 @@ void TripleColor::Coloring(sf::CircleShape &shape, sf::Text &text)
     shape.setFillColor(this->FillColor);
     text.setFillColor(this->TextColor);
     shape.setOutlineColor(this->OutlineColor);
+}
+
+void TripleColor::Coloring(sf::CircleShape &shape, sf::Text &text, double ratio)
+{
+    shape.setFillColor(this->FillColor * ratio);
+    text.setFillColor(this->TextColor * ratio);
+    shape.setOutlineColor(this->OutlineColor * ratio);
+    std::cout << "run triplecolor::coloring\n";
 }

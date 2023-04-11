@@ -17,7 +17,7 @@ protected:
     std::vector<ArrowNode> listArrow;
     std::vector<sf::Vector2f> listPoint;
 
-    double speed = 3;
+    double speed = 1;
 
     std::vector<int> preElements;
 

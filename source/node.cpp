@@ -91,7 +91,13 @@ void CircleNode::refreshrender()
         this->y - this->text.getGlobalBounds().height / 2.f - 4
     );
 
-    this->listColor[this->status % 5].Coloring(this->shape, this->text);
+    if (this->running == false) {
+        this->listColor[this->status % 5].Coloring(this->shape, this->text);
+    }
+    else {
+        this->listColor[this->status % 5].Coloring(this->shape, this->text, this->ratioColor);
+    }
+    // debug here
 }
 void CircleNode::render(sf::RenderWindow* window) 
 {
@@ -102,12 +108,15 @@ void CircleNode::render(sf::RenderWindow* window)
 }
 
 // visualization
-void CircleNode::prepareAnimation(sf::Vector2f endPoint, int status)
+void CircleNode::prepareAnimation(sf::Vector2f endPoint, int statusAnimation, int status)
 {
+    this->statusAnimation = statusAnimation;
+    this->status = status;
     this->startPoint = this->getXY();
     this->endPoint = endPoint;
-    this->status = status;
-    this->running = false;
+
+    this->running = true;
+    this->ratioColor = 1;
 }
 void CircleNode::stopAnimation()
 {
@@ -115,22 +124,58 @@ void CircleNode::stopAnimation()
     this->startPoint = this->endPoint = sf::Vector2f(0, 0);
     this->status = 0;
     this->running = false;
+    this->ratioColor = 1;
+    this->statusAnimation = -1;
 }
-void CircleNode::updateMoving(int status, double time)
+void CircleNode::updateAnimation_Moving(double ratio)
 {
-    double ratio = time / fulltime;
-    if (ratio < 0) ratio = 0;
-    if (ratio > 1) ratio = 1;
     sf::Vector2f presentPoint = startPoint + (endPoint - startPoint) * ratio;
-    this->status = status;
     this->setXY(presentPoint);
+    this->statusAnimation = 1;
 }
-void CircleNode::renderAnimation(sf::RenderWindow *window, int status, double time)
+void CircleNode::updateAnimation(double time)
 {
-    this->updateMoving(status, time);
+    this->statusAnimation = statusAnimation;
+    if (time < 0) time = 0;
+    if (time > this->fulltime) time = this->fulltime;
+    this->time = this->fulltime;
 
+    double ratio = time / fulltime;
+    switch (this->statusAnimation)
+    {
+        case 0 :    /// do nothing
+            // this->status = 0;
+            this->ratioColor = 1;
+            break;
+        case 1 :    /// move
+            // this->status = 3;
+            this->ratioColor = 1;
+            updateAnimation_Moving(ratio);
+            break;
+        case 2 :    /// create node
+            // this->status = 4;
+            this->ratioColor = ratio;
+            break;
+        case 3 :    /// recolor node
+            // this->status = 2;
+            this->ratioColor = ratio;
+            break;
+        case 4 :    /// disappear node
+            break;
+            // this->status = 1;
+            this->ratioColor = 1 - ratio;
+            break;
+        default :
+            std::cout << "Error circlenode::updateanimation\n";
+            exit(1);
+    }
+}
+void CircleNode::renderAnimation(sf::RenderWindow *window, int statusAnimation, double time)
+{
+    this->updateAnimation(time);
     this->render(window);
 }
+
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
 

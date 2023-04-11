@@ -3,8 +3,10 @@
 #include <SFML/Graphics.hpp>
 #include <cstring>
 
-sf::Vector2f operator * (const sf::Vector2f& vector, const double& div);
+sf::Vector2f operator * (const sf::Vector2f& vector, const double& multiply);
 sf::Vector2f operator / (const sf::Vector2f& vector, const double& div);
+
+sf::Color operator * (const sf::Color& color, const double& multiply);
 int Rand(int l, int r);
 
 int string_to_int(std::string str);
