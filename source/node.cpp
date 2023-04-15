@@ -48,6 +48,11 @@ int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, boo
     return this->status;
 }
 
+bool Node::getRunning()
+{
+    return this->running;
+}
+
 ///--------------------------------------------------------------------
 ///-----------------------------CircleNode-----------------------------
 
@@ -92,10 +97,10 @@ void CircleNode::refreshrender()
     );
 
     if (this->running == false) {
-        this->listColor[this->status % 5].Coloring(this->shape, this->text);
+        this->listColor[this->status].Coloring(this->shape, this->text);
     }
     else {
-        this->listColor[this->status % 5].Coloring(this->shape, this->text, this->ratioColor);
+        this->listColor[this->status].Coloring(this->shape, this->text, this->ratioColor);
     }
     // debug here
 }
@@ -128,17 +133,15 @@ void CircleNode::stopAnimation()
     this->status = 0;
     this->running = false;
     this->ratioColor = 1;
-    this->statusAnimation = -1;
+    this->statusAnimation = NOD_NOPE;
 }
 void CircleNode::updateAnimation_Moving(double ratio)
 {
     sf::Vector2f presentPoint = startPoint + (endPoint - startPoint) * ratio;
     this->setXY(presentPoint);
-    this->statusAnimation = 1;
 }
 void CircleNode::updateAnimation(double time)
 {
-    this->statusAnimation = statusAnimation;
     if (time < 0) time = 0;
     if (time > this->fulltime) time = this->fulltime;
     this->time = this->fulltime;
@@ -146,28 +149,27 @@ void CircleNode::updateAnimation(double time)
     double ratio = time / fulltime;
     switch (this->statusAnimation)
     {
-        case -1 :
+        case NOD_NOPE :
             break;
-        case 0 :    /// do nothing
+        case NOD_STABLE :    /// do nothing
             this->ratioColor = 1;
             break;
-        case 1 :    /// move
+        case NOD_RECOLOR :    /// recolor node
+            this->ratioColor = ratio;
+            break;
+        case NOD_APPEAR :    /// create node
+            this->ratioColor = ratio;
+            break;
+        case NOD_DEL :    /// disappear node
+            this->ratioColor = 1 - ratio;
+            break;
+        case NOD_MOVE :    /// move
             this->ratioColor = 1;
             updateAnimation_Moving(ratio);
             break;
-        case 2 :    /// create node
-            this->ratioColor = ratio;
-            break;
-        case 3 :    /// recolor node
-            this->ratioColor = ratio;
-            break;
-        case 4 :    /// disappear node
-            break;
-            this->ratioColor = 1 - ratio;
-            break;
         default :
             std::cout << statusAnimation << " Error circlenode::updateanimation\n";
-            exit(1);
+            //exit(1);
     }
 }
 void CircleNode::renderAnimation(sf::RenderWindow *window, int statusAnimation, double time)

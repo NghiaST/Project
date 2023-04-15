@@ -9,8 +9,8 @@ StructStack::StructStack(sf::RenderWindow* window, bool active)
 {
     this->maxsize = 11;
     this->sizeNode = 32;
-    this->distance = 64;
-    this->diffy = 5;
+    this->distance = -32;
+    this->diffy = 50;
     for(int i = 0; i < this->maxsize; i++) {
         listNode.push_back(CircleNode(0, 0, this->sizeNode / 2, &this->font, "", 13, listColor));
     }

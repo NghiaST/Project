@@ -23,7 +23,7 @@ protected:
 
     double speed = 1;
 
-    std::vector<int> preElements;
+    std::vector<int> printElements;
 
     bool running = false;
     // int Manipulate = -1;
@@ -47,17 +47,21 @@ public:
     void updateAnimation();
     void run(int manipulate, int way, std::string str1, std::string str2);
 
-    void Animation_Insert_First();
-    void Animation_Insert_Last();
-    void Animation_Insert_Manual();
-    void stopAnimation();
-
-    // support function
-
     // render
     sf::Vector2i updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void updatePositionNode();
     void refreshrender();
     void render();
+
+    void Animation_Initialize(int way);
+    void Animation_Insert_First();
+    void Animation_Insert_Last();
+    void Animation_Insert_Manual();
+    void Animation_Del_First();
+    void Animation_Del_Last();
+    void Animation_Del_Manual();
+    // void Animation_Update();
+    // void Animation_Search();
+    void stopAnimation();
 };
 #endif

@@ -147,10 +147,15 @@ void ArrowNode::render(sf::RenderWindow* window)
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(0.f, 0.f));
             break;
-        case AR_NORMAL : 
+        case AR_NORMAL : case AR_NORMALMOVE :
             triangle.setFillColor(this->defaultColor);
             line.setSize(sf::Vector2f(tmp_length, 0.f));
             line2.setSize(sf::Vector2f(0.f, 0.f));
+            break;
+        case AR_ACTIVE : case AR_ACTIVEMOVE :
+            triangle.setFillColor(this->activeColor);
+            line.setSize(sf::Vector2f(0.f, 0.f));
+            line2.setSize(sf::Vector2f(tmp_length, 0.f));
             break;
         case AR_CREATE :
             if (ratio < 0.99) 
@@ -159,11 +164,6 @@ void ArrowNode::render(sf::RenderWindow* window)
                 triangle.setFillColor(this->activeColor);
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * ratio, 0.f));
-            break;
-        case AR_MOVE :
-            triangle.setFillColor(this->defaultColor);
-            line.setSize(sf::Vector2f(tmp_length, 0.f));
-            line2.setSize(sf::Vector2f(0, 0.f));
             break;
         case AR_COLOR_TO :
             triangle.setFillColor(ratio < 0.99 ? this->defaultColor : this->activeColor);
@@ -178,15 +178,10 @@ void ArrowNode::render(sf::RenderWindow* window)
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * (1 - ratio), 0.f));
             break;
-        case AR_ACTIVE : case AR_ACTIVEMOVE :
-            triangle.setFillColor(this->activeColor);
-            line.setSize(sf::Vector2f(0.f, 0.f));
-            line2.setSize(sf::Vector2f(tmp_length, 0.f));
-            break;
         default :
             // debug
             std::cout << this->statusAnimation << "error: no type of print arrow found\n";
-            exit(3);
+            exit(5);
             break;
     }
 

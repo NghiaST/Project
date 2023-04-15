@@ -5,9 +5,13 @@
 #include "triplecolor.hpp"
 #include "style.hpp"
 #include "support_function.hpp"
-const int NOD_NOPE = -1, NOD_NORMAL = 0, NOD_MOVE = 1, NOD_APPEAR = 2, NOD_RECOLOR = 3, NOD_DEL = 4; //, NODE_CHANGECOLOR = 5;
+const int NOD_NOPE = -1, NOD_STABLE = 0, NOD_RECOLOR = 1, NOD_APPEAR = 2, NOD_DEL = 3, NOD_MOVE = 4;   /// manipulate visual
+const int NOD_NORMAL = 5;   /// -> NOD_STABLE
+const int NOD_SHOW = 6, NOD_SOLVE = 7, NOD_UNSHOW = 8, NOD_ACTIVE = 9;  /// NOD_RECOLOR, manipulate: stable -> change color
+const int NOD_SKIP = 10;
 
 struct Node : Style {
+    bool running = false;
 public :
     Node(int x, int y, sf::Font* font, std::string word, int sizeText, std::vector<TripleColor> listColor);
     Node(int x, int y, sf::Font* font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
@@ -15,6 +19,7 @@ public :
     
     // Functions
     int updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, bool isMouseInside);
+    bool getRunning();
 };
 
 struct CircleNode : Node {
@@ -23,7 +28,7 @@ private:
     sf::CircleShape shape;
 
     // visualization
-    bool running = false;
+    // bool running = false;
     double ratioColor;
     int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, appear node, recolor node, disappear node
     double fulltime = 1;

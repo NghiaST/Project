@@ -26,12 +26,12 @@ StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active)
     this->sizearray = 0;
     this->elements = std::vector<int>(maxsize, 0);
 
-    listColor = std::vector<TripleColor>(5, TripleColor());
+    listColor = std::vector<TripleColor>(5, TripleColor());//98d8aa
     listColor[0] = TripleColor(sf::Color::White, sf::Color::Red, sf::Color::Black);
-    listColor[1] = TripleColor(sf::Color::Green, sf::Color::Red, sf::Color::Black);
-    listColor[2] = TripleColor(sf::Color(39, 154, 248), sf::Color::Red, sf::Color::Black);
+    listColor[1] = TripleColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96), sf::Color::Black);
+    listColor[2] = TripleColor(sf::Color(255, 109, 96), sf::Color(243, 239, 159), sf::Color::Black);
     listColor[3] = TripleColor(sf::Color::Cyan, sf::Color::Blue, sf::Color(39, 154, 248));
-    listColor[4] = TripleColor(sf::Color::Green, sf::Color::Red, sf::Color::Green);//(248, 122, 39));
+    listColor[4] = TripleColor(sf::Color(126, 244, 19), sf::Color(210, 19, 18), sf::Color(210, 19, 18));//(248, 122, 39));
     
     Initialize_Random();
 }
