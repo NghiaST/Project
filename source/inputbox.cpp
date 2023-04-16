@@ -48,12 +48,12 @@ std::string InputBox::getTextInput()
     return this->wordInput;
 }
 
-void InputBox::Add(int keyboardType)
+void InputBox::Add_Character(int keyboardType)
 {
     this->wordInput += (char) keyboardType;
 }
 
-void InputBox::Del()
+void InputBox::Del_Character()
 {
     if (this->wordInput.size() > 0) {
         this->wordInput.pop_back();
@@ -84,6 +84,7 @@ void InputBox::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
                 this->status = 3;
             break;
         default :
+            std::cout << "Error inputbox.cpp 1\n";
             exit(2);
     }
     this->active = (this->status == 3);
@@ -96,13 +97,13 @@ void InputBox::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
 
     if (this->active == true) {
         if (keyboardType == KBD_BACKSPACE) 
-            this->Del();
+            this->Del_Character();
         else if (keyboardType == KBD_NONE || keyboardType == KBD_NEWLINE || keyboardType == KBD_ENTER) 
             ; // do nothing
         else if ('0' <= keyboardType && keyboardType <= '9') 
-            this->Add(keyboardType);
+            this->Add_Character(keyboardType);
         else 
-            this->Add(keyboardType);
+            this->Add_Character(keyboardType);
     }
 }
 

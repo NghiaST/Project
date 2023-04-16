@@ -1,82 +1,45 @@
 #include "manipulate_animation.hpp"
 
-Manipulate_Animation_Node::Manipulate_Animation_Node(int statusAnimation, int status, sf::Vector2f startPoint, sf::Vector2f endPoint)
+// Manipulate_Animation_Node
+Manipulate_Animation_Node::Manipulate_Animation_Node(int statusAnimation, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word)
 {
     this->statusAnimation = statusAnimation;
     this->status = status;
     this->startPoint = startPoint;
     this->endPoint = endPoint;
+    this->word = word;
 }
 
 void Manipulate_Animation_Node::build(CircleNode* node)
 {
     node->prepareAnimation(startPoint, endPoint, statusAnimation, status);
+    node->setWord(word);
 }
 
+// Manipulate_Animation_ArrayNode
+void Manipulate_Animation_ArrayNode::setup(CircleNode *node, sf::Vector2f presentPoint, int word, bool view)
+{
+    clearStep();
+    setNode(node);
+    setPresentPoint(presentPoint);
+    setWord(word);
+    if (view)
+        setStatusAnimation(AR_NORMAL);
+    else
+        setStatusAnimation(AR_NOPE);
+}
 void Manipulate_Animation_ArrayNode::setNode(CircleNode *node)
 {
     this->node = node;
 }
-
-void Manipulate_Animation_ArrayNode::addStep(int statusAnimation)
+void Manipulate_Animation_ArrayNode::setWord(int word)
 {
-    if (statusAnimation == NOD_MOVE) {
-        std::cout << "Error manipulatee_animation_arrayNode: NOD_MOVE don't have position\n";
-        exit(14);
-    }
-    this->addStep(statusAnimation, this->presentPoint, this->presentPoint);
+    this->setWord(std::to_string(word));
 }
-void Manipulate_Animation_ArrayNode::addStep(int statusAnimation, sf::Vector2f nextPoint)
+void Manipulate_Animation_ArrayNode::setWord(std::string word)
 {
-    this->addStep(statusAnimation, this->presentPoint, nextPoint);
+    this->word = word;
 }
-void Manipulate_Animation_ArrayNode::addStep(int statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint)
-{
-    setStatusAnimation(statusAnimation);
-    listStep.push_back(Manipulate_Animation_Node(this->statusAnimation, this->status, presentPoint, nextPoint));
-    setPresentPoint(nextPoint);
-}
-
-void Manipulate_Animation_ArrayNode::skipMultiStep(int count)
-{
-    while (count--) this->addStep(NOD_SKIP);
-}
-
-void Manipulate_Animation_ArrayNode::runTime(double time)
-{
-    if (listStep.size() == 0) {
-        std::cout << "Bug in manipulate 1 : listStep size = 0\n";
-        exit(1);
-    }
-    int step = (int) (1.0L * time / this->steptime);
-    if (step >= listStep.size()) step = listStep.size() - 1;
-    if (step < 0) step = 0;
-    runStep(step, time - step * this->steptime);
-}
-
-void Manipulate_Animation_ArrayNode::runStep(int step, double time)
-{
-    if (listStep.size() == 0) {
-        std::cout << "Bug in manipulate 2: listStep size = 0\n";
-        exit(1);
-    }
-    if (step >= listStep.size()) step = listStep.size() - 1;
-
-    if (step != previous_step)
-    {
-        listStep[step].build(node);
-        previous_step = step;
-    }
-    node->updateAnimation(time);
-}
-
-void Manipulate_Animation_ArrayNode::clearStep()
-{
-    listStep.clear();
-    previous_step = -1;
-    status = 0;
-}
-
 void Manipulate_Animation_ArrayNode::setStatusAnimation(int statusAnimation)
 {
     switch (statusAnimation)
@@ -113,28 +76,73 @@ void Manipulate_Animation_ArrayNode::setStatusAnimation(int statusAnimation)
     }
     this->statusAnimation = statusAnimation;
 }
-
 void Manipulate_Animation_ArrayNode::setPresentPoint(sf::Vector2f presentPoint)
 {
     this->presentPoint = presentPoint;
 }
 
-void Manipulate_Animation_ArrayNode::setup(CircleNode *node, sf::Vector2f presentPoint, bool view)
+void Manipulate_Animation_ArrayNode::addStep(int statusAnimation)
 {
-    clearStep();
-    setNode(node);
-    setPresentPoint(presentPoint);
-    if (view)
-        setStatusAnimation(AR_NORMAL);
-    else
-        setStatusAnimation(AR_NOPE);
+    if (statusAnimation == NOD_MOVE) {
+        std::cout << "Error manipulatee_animation_arrayNode: NOD_MOVE don't have position\n";
+        exit(14);
+    }
+    this->addStep(statusAnimation, this->presentPoint, this->presentPoint);
+}
+void Manipulate_Animation_ArrayNode::addStep(int statusAnimation, sf::Vector2f nextPoint)
+{
+    this->addStep(statusAnimation, this->presentPoint, nextPoint);
+}
+void Manipulate_Animation_ArrayNode::addStep(int statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint)
+{
+    setStatusAnimation(statusAnimation);
+    listStep.push_back(Manipulate_Animation_Node(this->statusAnimation, this->status, presentPoint, nextPoint, word));
+    setPresentPoint(nextPoint);
+}
+void Manipulate_Animation_ArrayNode::skipMultiStep(int count)
+{
+    while (count--) this->addStep(NOD_SKIP);
 }
 
+void Manipulate_Animation_ArrayNode::runTime(double time)
+{
+    if (listStep.size() == 0) {
+        std::cout << "Bug in manipulate 1 : listStep size = 0\n";
+        exit(1);
+    }
+    int step = (int) (1.0L * time / this->steptime);
+    if (step >= listStep.size()) step = listStep.size() - 1;
+    if (step < 0) step = 0;
+    runStep(step, time - step * this->steptime);
+}
+void Manipulate_Animation_ArrayNode::runStep(int step, double time)
+{
+    if (listStep.size() == 0) {
+        std::cout << "Bug in manipulate 2: listStep size = 0\n";
+        exit(1);
+    }
+    if (step >= listStep.size()) step = listStep.size() - 1;
+
+    if (step != previous_step)
+    {
+        listStep[step].build(node);
+        previous_step = step;
+    }
+    node->updateAnimation(time);
+}
+
+void Manipulate_Animation_ArrayNode::clearStep()
+{
+    listStep.clear();
+    previous_step = -1;
+    status = 0;
+}
 double Manipulate_Animation_ArrayNode::getTotaltime()
 {
     return this->listStep.size() * steptime + delay * 5;
 }
 
+// Manipulate_Animation_Arrow
 Manipulate_Animation_Arrow::Manipulate_Animation_Arrow(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
 {
     this->statusAnimation = statusAnimation;
@@ -150,82 +158,22 @@ void Manipulate_Animation_Arrow::build(ArrowNode *arrow)
     arrow->setStatusAnimation(statusAnimation);
 }
 
+// Manipulate_Animation_ArrayArrow
+void Manipulate_Animation_ArrayArrow::setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view)
+{
+    clearStep();
+    setArrow(arrow);
+    this->startPoint = startPoint;
+    this->endPoint = endPoint;
+    if (view)
+        setStatusAnimation(AR_NORMAL);
+    else 
+        setStatusAnimation(AR_NOPE);
+}
 void Manipulate_Animation_ArrayArrow::setArrow(ArrowNode *arrow)
 {
     this->arrow = arrow;
 }
-
-void Manipulate_Animation_ArrayArrow::setPoint(sf::Vector2f startPoint, sf::Vector2f endPoint)
-{
-    this->startPoint = startPoint;
-    this->endPoint = endPoint;
-}
-
-void Manipulate_Animation_ArrayArrow::addStepNoChange()
-{
-    if (this->listStep.size() == 0)
-    {
-        std::cout << "Error add step no change: listStep size = 0\n";
-        exit(6);
-    }
-}
-
-void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation)
-{
-    if (statusAnimation == AR_MOVE) {
-        std::cout << "manipulate_animation Manipulate_Animation_ArrayArrow : add MOVE without position\n";
-        exit(13);
-    }
-    this->addStep(statusAnimation, this->startPoint, this->endPoint, this->startPoint, this->endPoint);
-}
-void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
-{
-    this->addStep(statusAnimation, this->startPoint, this->endPoint, nextStartPoint, nextEndPoint);
-}
-void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
-{
-    setStatusAnimation(statusAnimation);
-    listStep.push_back(Manipulate_Animation_Arrow(this->statusAnimation, startPoint, endPoint, nextStartPoint, nextEndPoint));
-    this->startPoint = nextStartPoint;
-    this->endPoint = nextEndPoint;
-}
-
-void Manipulate_Animation_ArrayArrow::skipMultiStep(int count)
-{
-    while (count--) this->addStep(AR_SKIP);
-}
-
-void Manipulate_Animation_ArrayArrow::runTime(double time)
-{
-    int step = (int) (time / this->steptime);
-    if (step >= listStep.size()) step = listStep.size() - 1;
-    if (step < 0) step = 0;
-    runStep(step, time - step * this->steptime);
-}
-
-void Manipulate_Animation_ArrayArrow::runStep(int step, double time)
-{
-    if (listStep.size() == 0) {
-        std::cout << "Bug in manipulate Animation 3: listStep size = 0\n";
-        exit(1);
-    }
-    if (step >= listStep.size()) step = listStep.size() - 1;
-    if (step < 0) step = 0;
-
-    if (step != previous_step)
-    {
-        listStep[step].build(arrow);
-        previous_step = step;
-    }
-    arrow->setTime(time);
-}
-
-void Manipulate_Animation_ArrayArrow::clearStep()
-{
-    listStep.clear();
-    previous_step = -1;
-}
-
 void Manipulate_Animation_ArrayArrow::setStatusAnimation(int statusAnimation)
 {
     if (statusAnimation == AR_SKIP)
@@ -267,20 +215,66 @@ void Manipulate_Animation_ArrayArrow::setStatusAnimation(int statusAnimation)
     }
     this->statusAnimation = statusAnimation;
 }
+void Manipulate_Animation_ArrayArrow::setPoint(sf::Vector2f startPoint, sf::Vector2f endPoint)
+{
+    this->startPoint = startPoint;
+    this->endPoint = endPoint;
+}
 
+void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation)
+{
+    if (statusAnimation == AR_MOVE) {
+        std::cout << "manipulate_animation Manipulate_Animation_ArrayArrow : add MOVE without position\n";
+        exit(13);
+    }
+    this->addStep(statusAnimation, this->startPoint, this->endPoint, this->startPoint, this->endPoint);
+}
+void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
+{
+    this->addStep(statusAnimation, this->startPoint, this->endPoint, nextStartPoint, nextEndPoint);
+}
+void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
+{
+    setStatusAnimation(statusAnimation);
+    listStep.push_back(Manipulate_Animation_Arrow(this->statusAnimation, startPoint, endPoint, nextStartPoint, nextEndPoint));
+    this->startPoint = nextStartPoint;
+    this->endPoint = nextEndPoint;
+}
+void Manipulate_Animation_ArrayArrow::skipMultiStep(int count)
+{
+    while (count--) this->addStep(AR_SKIP);
+}
+
+void Manipulate_Animation_ArrayArrow::runTime(double time)
+{
+    int step = (int) (time / this->steptime);
+    if (step >= listStep.size()) step = listStep.size() - 1;
+    if (step < 0) step = 0;
+    runStep(step, time - step * this->steptime);
+}
+void Manipulate_Animation_ArrayArrow::runStep(int step, double time)
+{
+    if (listStep.size() == 0) {
+        std::cout << "Bug in manipulate Animation 3: listStep size = 0\n";
+        exit(1);
+    }
+    if (step >= listStep.size()) step = listStep.size() - 1;
+    if (step < 0) step = 0;
+
+    if (step != previous_step)
+    {
+        listStep[step].build(arrow);
+        previous_step = step;
+    }
+    arrow->setTime(time);
+}
+
+void Manipulate_Animation_ArrayArrow::clearStep()
+{
+    listStep.clear();
+    previous_step = -1;
+}
 int Manipulate_Animation_ArrayArrow::getStep()
 {
     return this->listStep.size();
-}
-
-void Manipulate_Animation_ArrayArrow::setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view)
-{
-    clearStep();
-    setArrow(arrow);
-    this->startPoint = startPoint;
-    this->endPoint = endPoint;
-    if (view)
-        setStatusAnimation(AR_NORMAL);
-    else 
-        setStatusAnimation(AR_NOPE);
 }

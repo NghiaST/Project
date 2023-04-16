@@ -44,12 +44,11 @@ public:
 
     void turn_on();
     std::vector<sf::Vector2f> getPosition(int size);
-    void updateAnimation();
     void run(int manipulate, int way, std::string str1, std::string str2);
 
     // render
     sf::Vector2i updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType);
-    void updatePositionNode();
+    void refreshNode();
     void refreshrender();
     void render();
 
@@ -60,8 +59,12 @@ public:
     void Animation_Del_First();
     void Animation_Del_Last();
     void Animation_Del_Manual();
-    // void Animation_Update();
-    // void Animation_Search();
+    void Animation_Update();
+    void Animation_Search();
+
+    void activeAnimation();
     void stopAnimation();
+
+
 };
 #endif

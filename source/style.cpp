@@ -164,3 +164,11 @@ bool Style::getView()
 {
     return this->view;
 }
+std::string Style::getWord()
+{
+    return this->word;
+}
+std::string Style::getWordOut()
+{
+    return this->wordOut;
+}

@@ -29,7 +29,6 @@ protected :
     // wordsize
     int sizeText; // +
     int sizeTextOut; // +
-//    TripleColor idleColor, hoverColor, activeColor, runColor, runColor2;
 
     // color
     std::vector<TripleColor> listColor = std::vector<TripleColor>(5, TripleColor());
@@ -64,6 +63,8 @@ public :
     int getY();
     sf::Vector2f getXY();
     bool getView();
+    std::string getWord();
+    std::string getWordOut();
 };
 
 #endif

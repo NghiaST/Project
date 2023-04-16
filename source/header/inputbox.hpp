@@ -27,8 +27,8 @@ public:
     void setWordInput(std::string wordInput);
     std::string getTextInput();
 
-    void Add(int keyboardType);
-    void Del();
+    void Add_Character(int keyboardType);
+    void Del_Character();
     void update(sf::Vector2f mousePos, int mouseType, int keyboardType);
     void refreshrender();
     void render(sf::RenderWindow* window);

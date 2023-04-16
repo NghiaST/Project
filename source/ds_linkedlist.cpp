@@ -41,7 +41,6 @@ void StructLinkedList::turn_on()
 {
     this->active = true;
     this->run(0, 1, "", ""); // Initialize_Random
-    this->updatePositionNode();
 }
 
 std::vector<sf::Vector2f> StructLinkedList::getPosition(int size)
@@ -78,7 +77,7 @@ void StructLinkedList::run(int manipulate, int way, std::string str1, std::strin
     if (manipulate == -1) return;
 
     this->preSize = this->sizearray;
-    this->printElements = elements;
+    // this->printElements = elements;
     this->Str1 = str1;
     this->Str2 = str2;
     
@@ -98,16 +97,17 @@ void StructLinkedList::run(int manipulate, int way, std::string str1, std::strin
         if (way == 2) this->Animation_Del_Manual();
     }
     if (manipulate == 3) {
-        this->Update(string_to_int(str1), string_to_int(str2));
-        this->count_nodePrint = this->sizearray;
-        updatePositionNode();
+        Animation_Update();
     }
     if (manipulate == 4) {
-        this->Search(string_to_int(str1));
-        this->count_nodePrint = this->sizearray;
-        updatePositionNode();
+        Animation_Search();
     }
+}
 
+void StructLinkedList::activeAnimation()
+{
+    this->running = true;
+    clock.restart();
 }
 
 void StructLinkedList::stopAnimation()
@@ -123,7 +123,7 @@ void StructLinkedList::stopAnimation()
     }
     this->count_nodePrint = this->sizearray;
     this->printElements = this->elements;
-    updatePositionNode();
+    refreshNode();
 }
 
 sf::Vector2i StructLinkedList::updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType)
@@ -137,7 +137,18 @@ sf::Vector2i StructLinkedList::updateKBM(sf::Vector2f mousePos, int mouseType, i
     return ret;
 }
 
-void StructLinkedList::updateAnimation()
+void StructLinkedList::refreshNode()
+{
+    std::vector<sf::Vector2f> listP = this->getPosition(this->sizearray);
+    for(int i = 0; i < this->sizearray; i++) {
+        this->listNode[i].setXY(listP[i]);
+        if (i)
+            this->listArrow[i - 1].setPoint(listP[i - 1], listP[i]);
+        this->listNode[i].setWord(std::to_string(this->elements[i]));
+    }
+}
+
+void StructLinkedList::refreshrender()
 {
     double time = clock.getElapsedTime().asSeconds() * speed;
     if (this->running == true && time > this->totaltime)
@@ -151,35 +162,6 @@ void StructLinkedList::updateAnimation()
             if (i < count_nodePrint - 1) 
                 arrowAnimation[i].runTime(time);
         }
-    }
-}
-
-void StructLinkedList::updatePositionNode()
-{
-    sf::Vector2f velocity, coord;
-    velocity.x = this->distance + this->sizeNode;
-    velocity.y = this->diffy;
-
-    coord.x = this->centerVisual.x - velocity.x / 2 * (this->sizearray - 1);
-    coord.y = this->centerVisual.y - velocity.y / 2 * (this->sizearray - 1);
-
-    for(int i = 0; i < this->sizearray; i++) {
-        this->listNode[i].setXY(coord);
-        listPoint[i] = coord;
-
-        if (i) {
-            this->listArrow[i - 1].setPoint(coord - velocity, coord);
-        }
-
-        coord += velocity;
-    }
-    this->printElements = this->elements;
-}
-
-void StructLinkedList::refreshrender()
-{
-    for(int i = 0; i < this->count_nodePrint; i++) {
-        this->listNode[i].setWord(std::to_string(this->printElements[i]));
     }
 }
 
@@ -205,9 +187,8 @@ void StructLinkedList::Animation_Insert_First()
         // Way = -1;
         return;
     }
-    clock.restart();
-    this->running = true;
     count_nodePrint = preSize + 1;
+    activeAnimation();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(preSize);
@@ -223,11 +204,11 @@ void StructLinkedList::Animation_Insert_First()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == 0) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], false);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
         }
         else if (i > 0) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
         }
     }
@@ -277,9 +258,8 @@ void StructLinkedList::Animation_Insert_Last()
         // Way = -1;
         return;
     }
-    clock.restart();
-    this->running = true;
     count_nodePrint = preSize + 1;
+    activeAnimation();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(preSize);
@@ -296,15 +276,15 @@ void StructLinkedList::Animation_Insert_Last()
     int pos = count_nodePrint - 1;
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < pos - 1) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
         }
         else if (i == pos - 1) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
         }
         else if (i == pos) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], false);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
         }
     }
 
@@ -380,16 +360,16 @@ void StructLinkedList::Animation_Insert_Manual()
     // step 1
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == pos - 1) {
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 2], true);
-            nodeAnimation[i].setup(&listNode[i], pStart[i], true);
         }
         else if (i == pos) {
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
-            nodeAnimation[i].setup(&listNode[i], pStart[i], false);
         }
         else {
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
-            nodeAnimation[i].setup(&listNode[i], pStart[i], true);
         }
     }
 
@@ -470,8 +450,6 @@ void StructLinkedList::Animation_Del_First()
 {
     this->printElements = this->elements;
     Del_First();
-    for(int x : printElements) std::cout << x << ' '; std::cout << '\n';
-    for(int x : elements) std::cout << x << ' '; std::cout << '\n';
     if (this->preSize == 0)
     {
         std::cout << "Error. The size of linked list is none. Can't remove\n";
@@ -479,9 +457,9 @@ void StructLinkedList::Animation_Del_First()
         // Way = -1;
         return;
     }
-    clock.restart();
-    this->running = true;
+    
     count_nodePrint = preSize;
+    activeAnimation();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
@@ -492,7 +470,7 @@ void StructLinkedList::Animation_Del_First()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
     }
 
@@ -542,9 +520,9 @@ void StructLinkedList::Animation_Del_Last()
         // Way = -1;
         return;
     }
-    clock.restart();
-    this->running = true;
+
     count_nodePrint = preSize;
+    activeAnimation();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
@@ -555,7 +533,7 @@ void StructLinkedList::Animation_Del_Last()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
     }
 
@@ -640,7 +618,7 @@ void StructLinkedList::Animation_Del_Manual()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
     }
 
@@ -740,12 +718,126 @@ void StructLinkedList::Animation_Initialize(int way)
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
 
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], false);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
         nodeAnimation[i].addStep(NOD_APPEAR);
         if (i < count_nodePrint - 1) {
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
             arrowAnimation[i].addStep(AR_CREATE);
         }
     }
+    this->totaltime = nodeAnimation[0].getTotaltime();
+}
+
+void StructLinkedList::Animation_Update()
+{
+    this->printElements = this->elements;
+    int pos = string_to_int(this->Str1);
+    int value = string_to_int(this->Str2);
+    if (pos < 0) pos = 0; 
+    if (pos >= this->sizearray) pos = this->sizearray - 1;
+    this->Update(pos, value);
+    count_nodePrint = this->sizearray;
+    activeAnimation();
+
+    // setup position
+    std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
+
+    // build step
+    for(int i = 0; i < count_nodePrint; i++) {
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+    }
+
+    for(int ipos = 0; ipos < pos; ipos++)
+    {
+        for(int i = 0; i < count_nodePrint; i++)
+        {
+            if (i == ipos)
+            {
+                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].addStep(NOD_UNSHOW);
+
+                arrowAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].addStep(AR_COLOR_TO);
+            }
+            else {
+                nodeAnimation[i].skipMultiStep(2);
+                arrowAnimation[i].skipMultiStep(2);
+            }
+        }
+    }
+
+    for(int i = 0; i < count_nodePrint; i++)
+    {
+        if (i == pos)
+        {
+            nodeAnimation[i].addStep(NOD_SHOW);
+            nodeAnimation[i].addStep(NOD_ACTIVE);
+            nodeAnimation[pos].setWord(value);
+            nodeAnimation[i].addStep(NOD_APPEAR);
+
+            arrowAnimation[i].skipMultiStep(3);
+        }
+        else {
+            nodeAnimation[i].skipMultiStep(3);
+            arrowAnimation[i].skipMultiStep(3);
+        }
+    }
+
+    this->totaltime = nodeAnimation[0].getTotaltime();
+}
+
+void StructLinkedList::Animation_Search()
+{
+    this->printElements = this->elements;
+    int pos = Search(string_to_int(this->Str1));
+    if (pos == -1) pos = this->sizearray;
+    count_nodePrint = this->sizearray;
+    activeAnimation();
+
+    // setup position
+    std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
+
+    // build step
+    for(int i = 0; i < count_nodePrint; i++) {
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+    }
+
+    for(int ipos = 0; ipos < pos; ipos++)
+    {
+        for(int i = 0; i < count_nodePrint; i++)
+        {
+            if (i == ipos)
+            {
+                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].addStep(NOD_UNSHOW);
+
+                arrowAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].addStep(AR_COLOR_TO);
+            }
+            else {
+                nodeAnimation[i].skipMultiStep(2);
+                arrowAnimation[i].skipMultiStep(2);
+            }
+        }
+    }
+    if (pos != count_nodePrint)
+    {
+        for(int istep = 0; istep < 9; istep++)
+        for(int i = 0; i < count_nodePrint; i++)
+        {
+            if (i == pos)
+            {
+                nodeAnimation[i].addStep(istep & 1 ? NOD_DEL : NOD_APPEAR);
+                arrowAnimation[i].skipMultiStep(1);
+            }
+            else {
+                nodeAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].skipMultiStep(1);
+            }
+        }
+    }
+
     this->totaltime = nodeAnimation[0].getTotaltime();
 }

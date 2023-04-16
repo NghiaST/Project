@@ -140,14 +140,6 @@ void DataVisualization::update()
             //get_DS(ds_present)->run(typePress.x, typePress.y, str1, str2);
         }
     }
-    switch (ds_present) {
-       // case DS_STATICARRAY  : StaticArray ->turn_on(); break;
-       // case DS_DYNAMICARRAY : DynamicArray->turn_on(); break;
-        case DS_LINKEDLIST   : LinkedList  ->updateAnimation(); break;
-       // case DS_STACK        : Stack       ->turn_on(); break;
-       // case DS_QUEUE        : Queue       ->turn_on(); break;
-        default: break;
-    }
 }
 
 void DataVisualization::render()

@@ -2,6 +2,7 @@
 #define __manipulate_animation_hpp__
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <cstring>
 #include "node.hpp"
 #include "arrow.hpp"
 
@@ -10,13 +11,14 @@ const double Fulltime = 1;
 const double Steptime = Delay + Fulltime;
 
 struct Manipulate_Animation_Node {
-public:
+private:
     sf::Vector2f startPoint;
     sf::Vector2f endPoint;
     int statusAnimation;
     int status;
+    std::string word;
 public:
-    Manipulate_Animation_Node(int statusAnimation, int status, sf::Vector2f startPoint, sf::Vector2f endPoint);
+    Manipulate_Animation_Node(int statusAnimation, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word);
     void build(CircleNode* node);
 };
 
@@ -26,30 +28,33 @@ private:
     sf::Vector2f presentPoint;
     int statusAnimation;
     int status;
+    std::string word;
 
     double delay = Delay;
     double fulltime = Fulltime;
     double steptime = Steptime;
-    // double total_time;
-    // double time;
+
     std::vector<Manipulate_Animation_Node> listStep;
     int previous_step = -1;
 
-    void addStep(int statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint);
-
 public:
     Manipulate_Animation_ArrayNode() {}
+    void setup(CircleNode* node, sf::Vector2f presentPoint, int word, bool view);
     void setNode(CircleNode* node);
-    void addStep(int statusAnimation);
-    void addStep(int statusAnimation, sf::Vector2f nextPoint);
-    void skipMultiStep(int count);
-    void runTime(double time);
-    void runStep(int step, double time);
-    void clearStep();
-
+    void setWord(int number);
+    void setWord(std::string word);
     void setStatusAnimation(int statusAnimation);
     void setPresentPoint(sf::Vector2f presentPoint);
-    void setup(CircleNode* node, sf::Vector2f presentPoint, bool view);
+
+    void addStep(int statusAnimation);
+    void addStep(int statusAnimation, sf::Vector2f nextPoint);
+    void addStep(int statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint);
+    void skipMultiStep(int count);
+
+    void runTime(double time);
+    void runStep(int step, double time);
+
+    void clearStep();
     double getTotaltime();
 };
 
@@ -74,29 +79,27 @@ private:
     double delay = Delay;
     double fulltime = Fulltime;
     double steptime = Steptime;
-    // double total_time;
-    // double time;
+
     std::vector<Manipulate_Animation_Arrow> listStep;
     int previous_step = -1;
 
-    void addStep(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
-
 public:
     Manipulate_Animation_ArrayArrow() {}
+    void setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view);
     void setArrow(ArrowNode* arrow);
+    void setStatusAnimation(int statusAnimation);
     void setPoint(sf::Vector2f startPoint, sf::Vector2f endPoint);
 
-    void addStepNoChange();
     void addStep(int statusAnimation);
     void addStep(int statusAnimation, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
+    void addStep(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
     void skipMultiStep(int count);
+
     void runTime(double time);
     void runStep(int step, double time);
-    void clearStep();
 
-    void setStatusAnimation(int statusAnimation);
+    void clearStep();
     int getStep();
-    void setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view);
 };
 
 #endif
