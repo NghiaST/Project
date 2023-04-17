@@ -1,7 +1,7 @@
 #include "inputbox.hpp"
 
 InputBox::InputBox(int x, int y, int width, int height, sf::Font* font, bool view, std::string textConst)
-    : Style(x, y, font, textConst, 12, TripleColor(), TripleColor(), TripleColor(), TripleColor(), TripleColor())
+    : Style(x, y, font, textConst, 12, ElementColor(), ElementColor(), ElementColor(), ElementColor(), ElementColor())
 {
     this->active = false;
     this->view = view;
@@ -19,7 +19,7 @@ InputBox::InputBox(int x, int y, int width, int height, sf::Font* font, bool vie
     // color
     this->SetTextColor(0, sf::Color::Blue);
     this->SetFillColor(0, sf::Color::Transparent);
-    this->SetColor(3, TripleColor(sf::Color(245, 194, 117), sf::Color::Red, sf::Color(190, 57, 141)));
+    this->SetColor(3, ElementColor(sf::Color(245, 194, 117), sf::Color::Red, sf::Color(190, 57, 141)));
     
     refreshrender();
 }
@@ -114,7 +114,7 @@ void InputBox::refreshrender()
     this->shape.setOutlineThickness(this->thickness);
 
     this->text.setFont(*this->font);
-    this->text.setString(this->word + this->wordInput);
+    this->text.setString((this->word + this->wordInput).c_str());
 
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(

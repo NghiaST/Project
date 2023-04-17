@@ -9,7 +9,7 @@ sf::Vector2f operator / (const sf::Vector2f& vector, const double& div);
 sf::Color operator * (const sf::Color& color, const double& multiply);
 int Rand(int l, int r);
 
-int string_to_int(std::string str);
+int string_to_int(std::string str); 
 std::vector<int> string_to_array(std::string str);
 
 #endif

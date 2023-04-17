@@ -38,7 +38,7 @@ private:
     int previous_step = -1;
 
 public:
-    Manipulate_Animation_ArrayNode() {}
+    //Manipulate_Animation_ArrayNode() {}
     void setup(CircleNode* node, sf::Vector2f presentPoint, int word, bool view);
     void setNode(CircleNode* node);
     void setWord(int number);
@@ -84,7 +84,7 @@ private:
     int previous_step = -1;
 
 public:
-    Manipulate_Animation_ArrayArrow() {}
+    //Manipulate_Animation_ArrayArrow() {}
     void setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view);
     void setArrow(ArrowNode* arrow);
     void setStatusAnimation(int statusAnimation);

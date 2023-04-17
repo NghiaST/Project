@@ -11,6 +11,8 @@ StructStack::StructStack(sf::RenderWindow* window, bool active)
     this->sizeNode = 32;
     this->distance = -32;
     this->diffy = 50;
+
+    this->elements = std::vector<int>(maxsize, 0);
     for(int i = 0; i < this->maxsize; i++) {
         listNode.push_back(CircleNode(0, 0, this->sizeNode / 2, &this->font, "", 13, listColor));
     }
@@ -23,13 +25,6 @@ StructStack::StructStack(sf::RenderWindow* window, bool active)
 
 StructStack::~StructStack()
 {
-}
-
-void StructStack::turn_on()
-{
-    this->active = true;
-    this->Initialize_Random();
-    this->updatePositionNode();
 }
 
 void StructStack::run(int manipulate, int way, std::string str1, std::string str2) {

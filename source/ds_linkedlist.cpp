@@ -37,12 +37,6 @@ StructLinkedList::~StructLinkedList()
 {
 }
 
-void StructLinkedList::turn_on()
-{
-    this->active = true;
-    this->run(0, 1, "", ""); // Initialize_Random
-}
-
 std::vector<sf::Vector2f> StructLinkedList::getPosition(int size)
 {
     std::vector<sf::Vector2f> listP;
@@ -209,7 +203,8 @@ void StructLinkedList::Animation_Insert_First()
         }
         else if (i > 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            if (i < count_nodePrint - 1)
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
         }
     }
     for(int i = 0; i < count_nodePrint; i++)
@@ -369,7 +364,8 @@ void StructLinkedList::Animation_Insert_Manual()
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            if (i < count_nodePrint - 1)
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
         }
     }
 
@@ -403,7 +399,8 @@ void StructLinkedList::Animation_Insert_Manual()
         }
         else {
             nodeAnimation[i].skipMultiStep(2);
-            arrowAnimation[i].skipMultiStep(2);
+            if (i < count_nodePrint - 1)
+                arrowAnimation[i].skipMultiStep(2);
         }
     }
 
@@ -471,7 +468,8 @@ void StructLinkedList::Animation_Del_First()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-        arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+        if (i < count_nodePrint - 1)
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
     }
 
     for(int i = 0; i < count_nodePrint; i++)
@@ -532,10 +530,10 @@ void StructLinkedList::Animation_Del_Last()
     pEnd.push_back(newPosition);
 
     // build step
-    for(int i = 0; i < count_nodePrint; i++) {
+    for (int i = 0; i < count_nodePrint; i++)
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+    for (int i = 0; i < count_nodePrint - 1; i++) 
         arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
-    }
 
     int pos = count_nodePrint - 1;
     for(int ipos = 0; ipos < pos; ipos++)
@@ -559,7 +557,8 @@ void StructLinkedList::Animation_Del_Last()
             }
             else {
                 nodeAnimation[i].skipMultiStep(2);
-                arrowAnimation[i].skipMultiStep(2);
+                if (i < count_nodePrint - 1)
+                    arrowAnimation[i].skipMultiStep(2);
             }
         }
     }
@@ -619,7 +618,8 @@ void StructLinkedList::Animation_Del_Manual()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-        arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+        if (i < count_nodePrint - 1)
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
     }
 
     for(int ipos = 0; ipos < pos - 1; ipos++)
@@ -636,7 +636,8 @@ void StructLinkedList::Animation_Del_Manual()
             }
             else {
                 nodeAnimation[i].skipMultiStep(2);
-                arrowAnimation[i].skipMultiStep(2);
+                if (i < count_nodePrint - 1)
+                    arrowAnimation[i].skipMultiStep(2);
             }
         }
     }
@@ -665,7 +666,8 @@ void StructLinkedList::Animation_Del_Manual()
         }
         else {
             nodeAnimation[i].skipMultiStep(2);
-            arrowAnimation[i].skipMultiStep(2);
+            if (i < count_nodePrint - 1)
+                arrowAnimation[i].skipMultiStep(2);
         }
     }
 
@@ -745,7 +747,8 @@ void StructLinkedList::Animation_Update()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-        arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+        if (i < count_nodePrint - 1)
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
     }
 
     for(int ipos = 0; ipos < pos; ipos++)
@@ -757,12 +760,16 @@ void StructLinkedList::Animation_Update()
                 nodeAnimation[i].addStep(NOD_SHOW);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
 
-                arrowAnimation[i].skipMultiStep(1);
-                arrowAnimation[i].addStep(AR_COLOR_TO);
+                if (i < count_nodePrint - 1) {
+                    arrowAnimation[i].skipMultiStep(1);
+                    arrowAnimation[i].addStep(AR_COLOR_TO);
+                }
             }
             else {
                 nodeAnimation[i].skipMultiStep(2);
-                arrowAnimation[i].skipMultiStep(2);
+                if (i < count_nodePrint - 1) {
+                    arrowAnimation[i].skipMultiStep(2);
+                }
             }
         }
     }
@@ -775,13 +782,12 @@ void StructLinkedList::Animation_Update()
             nodeAnimation[i].addStep(NOD_ACTIVE);
             nodeAnimation[pos].setWord(value);
             nodeAnimation[i].addStep(NOD_APPEAR);
-
-            arrowAnimation[i].skipMultiStep(3);
         }
         else {
             nodeAnimation[i].skipMultiStep(3);
-            arrowAnimation[i].skipMultiStep(3);
         }
+        if (i < count_nodePrint - 1)
+            arrowAnimation[i].skipMultiStep(3);
     }
 
     this->totaltime = nodeAnimation[0].getTotaltime();
@@ -801,27 +807,33 @@ void StructLinkedList::Animation_Search()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-        arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+        if (i < count_nodePrint - 1)
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
     }
 
-    for(int ipos = 0; ipos < pos; ipos++)
+    for (int ipos = 0; ipos < pos; ipos++)
     {
-        for(int i = 0; i < count_nodePrint; i++)
+        for (int i = 0; i < count_nodePrint; i++)
         {
             if (i == ipos)
             {
                 nodeAnimation[i].addStep(NOD_SHOW);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
 
-                arrowAnimation[i].skipMultiStep(1);
-                arrowAnimation[i].addStep(AR_COLOR_TO);
+                if (i < count_nodePrint - 1) {
+                    arrowAnimation[i].skipMultiStep(1);
+                    arrowAnimation[i].addStep(AR_COLOR_TO);
+                }
             }
             else {
                 nodeAnimation[i].skipMultiStep(2);
-                arrowAnimation[i].skipMultiStep(2);
+                if (i < count_nodePrint - 1) {
+                    arrowAnimation[i].skipMultiStep(2);
+                }
             }
         }
     }
+
     if (pos != count_nodePrint)
     {
         for(int istep = 0; istep < 9; istep++)
@@ -830,12 +842,12 @@ void StructLinkedList::Animation_Search()
             if (i == pos)
             {
                 nodeAnimation[i].addStep(istep & 1 ? NOD_DEL : NOD_APPEAR);
-                arrowAnimation[i].skipMultiStep(1);
             }
             else {
                 nodeAnimation[i].skipMultiStep(1);
-                arrowAnimation[i].skipMultiStep(1);
             }
+            if (i < count_nodePrint - 1)
+                arrowAnimation[i].skipMultiStep(1);
         }
     }
 

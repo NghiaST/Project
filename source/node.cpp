@@ -3,13 +3,13 @@
 ///--------------------------------------------------------------------
 ///--------------------------------Node--------------------------------
 
-Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, std::vector<TripleColor> listColor)
+Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, std::vector<ElementColor> listColor)
     : Style(x, y, font, word, sizeText, listColor)
 {
 
 }
 
-Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
     : Style(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
 {
 
@@ -56,14 +56,14 @@ bool Node::getRunning()
 ///--------------------------------------------------------------------
 ///-----------------------------CircleNode-----------------------------
 
-CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, std::vector<TripleColor> listColor)
+CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, std::vector<ElementColor> listColor)
     : Node(x, y, font, word, sizeText, listColor)
 {
     this->radius = radius;
     this->refreshrender();
 }
 
-CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
     : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
 {
     this->radius = radius;
@@ -89,7 +89,7 @@ void CircleNode::refreshrender()
     this->shape.setOutlineThickness(this->thickness);
 
     this->text.setFont(*this->font);
-    this->text.setString(this->word);
+    this->text.setString((this->word).c_str());
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
         this->x - this->text.getGlobalBounds().width / 2.f - 1,
@@ -181,7 +181,7 @@ void CircleNode::renderAnimation(sf::RenderWindow *window, int statusAnimation, 
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
 
-RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, std::vector<TripleColor> listColor)
+RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, std::vector<ElementColor> listColor)
     : Node(x, y, font, word, sizeText, listColor)
 {
     this->width = width;
@@ -189,7 +189,7 @@ RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font
     this->refreshrender();
 }
 
-RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
     : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
 {
     this->width = width;
@@ -213,7 +213,7 @@ void RectangleNode::refreshrender()
     this->shape.setOutlineThickness(this->thickness);
 
     this->text.setFont(*this->font);
-    this->text.setString(this->word);
+    this->text.setString((this->word).c_str());
 
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(

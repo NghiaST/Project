@@ -2,7 +2,8 @@
 #define __style_hpp__
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "triplecolor.hpp"
+#include "ElementColor.hpp"
+#include "themes.hpp"
 
 struct Style {
 protected :
@@ -31,15 +32,18 @@ protected :
     int sizeTextOut; // +
 
     // color
-    std::vector<TripleColor> listColor = std::vector<TripleColor>(5, TripleColor());
+    Themes* theme;
+    THEME_TYPE typetheme;
+    std::vector<ElementColor> listColor = std::vector<ElementColor>(5, ElementColor());
     // idle - hover - active - run - run2
     sf::Color textOutColor; // +
     
     // texture
     sf::Text text;
 public :
-    Style(int x, int y, sf::Font* font, std::string word, int sizeText, std::vector<TripleColor> listColor);
-    Style(int x, int y, sf::Font* font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
+    // Style(int x, int y, int sizeText, std::string word, sf::Font* font, Themes* theme);
+    Style(int x, int y, sf::Font* font, std::string word, int sizeText, std::vector<ElementColor> listColor);
+    Style(int x, int y, sf::Font* font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
     ~Style();
 
     // set Private
@@ -54,7 +58,7 @@ public :
     void SetFillColor(int id, sf::Color FillColor);
     void SetTextColor(int id, sf::Color TextColor);
     void SetOutlineColor(int id, sf::Color OutlineColor);
-    void SetColor(int id, TripleColor Color);
+    void SetColor(int id, ElementColor Color);
     void swapView();
     
     // get Private

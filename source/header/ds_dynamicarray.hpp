@@ -18,7 +18,6 @@ public:
     StructDynamicArray(sf::RenderWindow* window, bool active);
     ~StructDynamicArray();
 
-    void turn_on();
     void run(int manipulate, int way, std::string str1, std::string str2);
 
     // render

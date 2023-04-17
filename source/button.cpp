@@ -1,7 +1,7 @@
 #include "button.hpp"
 #include <iostream>
 
-Button::Button(int x, int y, int width, int height, sf::Font *font, bool view, bool keepActive, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+Button::Button(int x, int y, int width, int height, sf::Font *font, bool view, bool keepActive, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
     : Style(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
 {
     this->view = view;
@@ -79,7 +79,7 @@ void Button::refreshrender()
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
     this->text.setFont(*this->font);
-    this->text.setString(this->word);
+    this->text.setString(this->word.c_str());
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
         this->x + this->width / 2.f - this->text.getGlobalBounds().width / 2.f,
@@ -95,4 +95,5 @@ void Button::render(sf::RenderWindow* window)
     this->refreshrender();
     window->draw(this->shape);
     window->draw(this->text);
+    std::cout << "W\n";
 }

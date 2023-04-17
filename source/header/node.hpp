@@ -2,7 +2,7 @@
 #define __node_hpp__
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "triplecolor.hpp"
+#include "ElementColor.hpp"
 #include "style.hpp"
 #include "support_function.hpp"
 const int NOD_NOPE = -1, NOD_STABLE = 0, NOD_RECOLOR = 1, NOD_APPEAR = 2, NOD_DEL = 3, NOD_MOVE = 4;   /// manipulate visual
@@ -13,8 +13,8 @@ const int NOD_SKIP = 10;
 struct Node : Style {
     bool running = false;
 public :
-    Node(int x, int y, sf::Font* font, std::string word, int sizeText, std::vector<TripleColor> listColor);
-    Node(int x, int y, sf::Font* font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
+    Node(int x, int y, sf::Font* font, std::string word, int sizeText, std::vector<ElementColor> listColor);
+    Node(int x, int y, sf::Font* font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
     ~Node();
     
     // Functions
@@ -36,8 +36,8 @@ private:
     sf::Vector2f startPoint, endPoint;
 
 public:
-    CircleNode(int x, int y, int radius, sf::Font* font, std::string word, int sizeText, std::vector<TripleColor> Color);
-    CircleNode(int x, int y, int radius, sf::Font* font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
+    CircleNode(int x, int y, int radius, sf::Font* font, std::string word, int sizeText, std::vector<ElementColor> Color);
+    CircleNode(int x, int y, int radius, sf::Font* font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
     ~CircleNode();
 
     // Functions
@@ -58,8 +58,8 @@ private:
     int width, height;
     sf::RectangleShape shape;
 public:
-    RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, int sizeText, std::vector<TripleColor> listColor);
-    RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
+    RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, int sizeText, std::vector<ElementColor> listColor);
+    RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
     ~RectangleNode();
 
     // Functions

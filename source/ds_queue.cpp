@@ -11,11 +11,13 @@ StructQueue::StructQueue(sf::RenderWindow* window, bool active)
     this->sizeNode = 32;
     this->distance = 64;
     this->diffy = 5;
+
+    this->elements = std::vector<int>(maxsize, 0);
     for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(CircleNode(0, 0, this->sizeNode / 2, &this->font, "", 13, listColor));
+        listNode.push_back(new CircleNode(0, 0, this->sizeNode / 2, &this->font, "", 13, listColor));
     }
     for(int i = 0; i < this->maxsize; i++) {
-        listArrow.push_back(ArrowNode(this->sizeNode));
+        listArrow.push_back(new ArrowNode(this->sizeNode));
     }
     this->updatePositionNode();
     this->refreshrender();
@@ -23,13 +25,6 @@ StructQueue::StructQueue(sf::RenderWindow* window, bool active)
 
 StructQueue::~StructQueue()
 {
-}
-
-void StructQueue::turn_on()
-{
-    this->active = true;
-    this->Initialize_Random();
-    this->updatePositionNode();
 }
 
 void StructQueue::run(int manipulate, int way, std::string str1, std::string str2)
@@ -61,14 +56,14 @@ void StructQueue::Peek_Front()
 {
     if (this->sizearray == 0)
         return;
-    this->listNode[0].setStatus(3);
+    this->listNode[0]->setStatus(3);
 }
 
 void StructQueue::Peek_Back()
 {
     if (this->sizearray == 0)
         return;
-    this->listNode[this->sizearray - 1].setStatus(3);
+    this->listNode[this->sizearray - 1]->setStatus(3);
 }
 
 void StructQueue::Enqueue(int value)
@@ -97,8 +92,8 @@ sf::Vector2i StructQueue::updateKBM(sf::Vector2f mousePos, int mouseType, int ke
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->sizearray; i++) {
-        listNode[i].update(mousePos, mouseType, keyboardType);
-        if (listNode[i].getStatus() == 2) 
+        listNode[i]->update(mousePos, mouseType, keyboardType);
+        if (listNode[i]->getStatus() == 2) 
             ret = sf::Vector2i(i, this->elements[i]);
     }
     return ret;
@@ -114,9 +109,9 @@ void StructQueue::updatePositionNode()
     coord.y = this->centerVisual.y - velocity.y / 2 * (this->sizearray - 1);
 
     for(int i = 0; i < this->sizearray; i++) {
-        this->listNode[i].setXY(coord.x, coord.y);
+        this->listNode[i]->setXY(coord.x, coord.y);
         if (i) {
-            this->listArrow[i - 1].setPoint(coord - velocity, coord);
+            this->listArrow[i - 1]->setPoint(coord - velocity, coord);
         }
         coord += velocity;
     }
@@ -125,7 +120,7 @@ void StructQueue::updatePositionNode()
 void StructQueue::refreshrender()
 {
     for(int i = 0; i < this->sizearray; i++) {
-        this->listNode[i].setWord(std::to_string(this->elements[i]));
+        this->listNode[i]->setWord(std::to_string(this->elements[i]));
     }
 }
 void StructQueue::render()
@@ -133,7 +128,7 @@ void StructQueue::render()
     if (!this->isActive()) return;
     this->refreshrender();
     for(int i = 0; i < this->sizearray; i++)
-        listNode[i].render(window);
+        listNode[i]->render(window);
     for(int i = 0; i < this->sizearray - 1; i++)
-        listArrow[i].render(window);
+        listArrow[i]->render(window);
 }

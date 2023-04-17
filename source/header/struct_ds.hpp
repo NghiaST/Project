@@ -32,8 +32,28 @@ protected:
     // data for node
     int sizeNode;   /// rectangle: length, area: diameter 
     int distance;
+    int diffx;
     int diffy;
-    std::vector<TripleColor> listColor;
+    std::vector<ElementColor> listColor;
+
+    // animation
+    bool running = false;
+    double totaltime;
+    sf::Clock clock;
+    double speed = 1;
+
+    std::vector<int> printElements;
+    int count_nodePrint;
+
+    std::string Str1;
+    std::string Str2;
+    int Val;
+    int preSize;/// size of array, number of elements (previous)
+
+    // type animation
+    int Manipulate = -1;
+    int Way = -1;
+    int Pos = -1;
 
 public:
     StructDataStructure(sf::RenderWindow* window, bool active);
@@ -56,11 +76,14 @@ public:
 
     int Search(int value);
 
+    // virtual void updatePositionNode() = 0;
+    void turn_on();
     void turn_off();
     const bool& isActive() const;
 
-    // void run(int manipulate, int way, std::string str1, std::string str2);
-
+    virtual void run(int manipulate, int way, std::string str1, std::string str2) = 0;
+    virtual void refreshrender() = 0;
+    virtual void render() = 0;
 
     // render
     // sf::Vector2i update(sf::Vector2f mousePos, int mouseType, int keyboardType);

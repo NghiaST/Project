@@ -1,40 +1,143 @@
 #include "data_visualization.hpp"
 
+
 // Initializations
 void DataVisualization::InitWindow() 
 {
-    // sf::Vector2f windowsize = sf::Vector2f(sf::VideoMode::getDesktopMode().width - 20, sf::VideoMode::getDesktopMode().height - 80);
-    sf::Vector2f windowsize = sf::Vector2f(1346, 688);
+    sf::Vector2u windowsize = sf::Vector2u(1346, 688); 
+    unsigned int antialiasinglevel = 8;
+
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 8.0;
+    settings.antialiasingLevel = antialiasinglevel;
+
     this->window = new sf::RenderWindow(sf::VideoMode(windowsize.x, windowsize.y, 60), "Le Huu Nghia 22125064 - Data Visualizations", sf::Style::Default, settings);
     this->window->setPosition(sf::Vector2i(0, 0));
+    // sf::Vector2f windowsize = sf::Vector2f(sf::VideoMode::getDesktopMode().width - 20, sf::VideoMode::getDesktopMode().height - 80);
     // this->window->setFramerateLimit(60);
     // ::ShowWindow(this->window->getSystemHandle(), SW_MAXIMIZE);
 }
 
 void DataVisualization::InitStates()
 {
-    this->states = new State(this->window);
+    states = new State(window, &presentMode);
 }
 
+void DataVisualization::InitThemes()
+{
+    LightMode = new Themes();
+    DarkMode = new Themes();
+
+    LightMode->setBackground(sf::Color(220, 220, 220));
+
+    LightMode->setNode(Palette(
+        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::Black),
+        ElementColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96) , sf::Color::Black),
+        ElementColor(sf::Color(255, 109, 96) , sf::Color(243, 239, 159), sf::Color::Black),
+        ElementColor(sf::Color::Cyan         , sf::Color::Blue         , sf::Color(39, 154, 248)),
+        ElementColor(sf::Color(126, 244, 19) , sf::Color(210, 19, 18)  , sf::Color(210, 19, 18))
+    ));
+   /* LightMode->setArrow(Palette(
+        
+    ));*/
+    LightMode->setButtonDs(Palette(
+        ElementColor(sf::Color(255, 192, 203), sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Green        , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Yellow       , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
+    ));
+    LightMode->setButtonManipulate(Palette(
+        ElementColor(sf::Color(255, 255, 153), sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Green        , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Yellow       , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
+    ));
+    LightMode->setButtonSubmanipulate(Palette(
+        ElementColor(sf::Color(220, 220, 220), sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Green        , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Yellow       , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
+    ));
+    LightMode->setButtonInputbox(Palette(
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Green        , sf::Color::Red          , sf::Color::Black),
+        ElementColor(sf::Color(255, 109, 96) , sf::Color(243, 239, 159), sf::Color::Black),
+        ElementColor(sf::Color(245, 194, 117), sf::Color::Red          , sf::Color::Black),
+        ElementColor(sf::Color(126, 244, 19) , sf::Color::Red          , sf::Color::Black)
+    ));
+    LightMode->setButtonStep(Palette(
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black)
+    )); /// should be change
+
+    DarkMode->setBackground(sf::Color(100, 100, 100));
+    DarkMode->setNode(Palette(
+        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::Black),
+        ElementColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96) , sf::Color::Black),
+        ElementColor(sf::Color(255, 109, 96) , sf::Color(243, 239, 159), sf::Color::Black),
+        ElementColor(sf::Color::Cyan         , sf::Color::Blue         , sf::Color(39, 154, 248)),
+        ElementColor(sf::Color(126, 244, 19) , sf::Color(210, 19, 18)  , sf::Color(210, 19, 18))
+    ));
+/*    DarkMode->setArrow(Palette(
+        
+    ));*/
+    DarkMode->setButtonDs(Palette(
+        ElementColor(sf::Color(255, 192, 203), sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Green        , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Yellow       , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
+    ));
+    DarkMode->setButtonManipulate(Palette(
+        ElementColor(sf::Color(255, 255, 153), sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Green        , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Yellow       , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
+    ));
+    DarkMode->setButtonSubmanipulate(Palette(
+        ElementColor(sf::Color(220, 220, 220), sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Green        , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Yellow       , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
+    ));
+    DarkMode->setButtonInputbox(Palette(
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Green        , sf::Color::Red          , sf::Color::Black),
+        ElementColor(sf::Color(255, 109, 96) , sf::Color(243, 239, 159), sf::Color::Black),
+        ElementColor(sf::Color(245, 194, 117), sf::Color::Red          , sf::Color::Black),
+        ElementColor(sf::Color(126, 244, 19) , sf::Color::Red          , sf::Color::Black)
+    ));
+    DarkMode->setButtonStep(Palette(
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black)
+    )); /// should be change
+    presentMode = *LightMode;
+}
 //// Initializations functions
 
 // Constructors/Destructors
 DataVisualization::DataVisualization()
 {
     this->active = true;
+    InitThemes(); // LightMode, DarkMode
     this->InitWindow();
     this->InitStates();
     this->ds_present = DS_STATICARRAY;
     this->StaticArray  = new StructStaticArray(window, true);
     this->DynamicArray = new StructDynamicArray(window, false);
-    this->LinkedList   = new StructLinkedList(window, false);
-    this->Stack        = new StructStack(window, false);
     this->Queue        = new StructQueue(window, false);
-
-    this->Light = sf::Color(220, 220, 220);
-    this->Dark = sf::Color(100, 100, 100);
+    this->Stack        = new StructStack(window, false);
+    this->LinkedList   = new StructLinkedList(window, false);
 }
 
 DataVisualization::~DataVisualization()
@@ -46,6 +149,9 @@ DataVisualization::~DataVisualization()
     delete this->LinkedList;
     delete this->Stack;
     delete this->Queue;
+
+    delete this->LightMode;
+    delete this->DarkMode;
 }
 
 // Functions
@@ -145,7 +251,7 @@ void DataVisualization::update()
 void DataVisualization::render()
 {
     if (!window->isOpen()) return;
-    this->window->clear(this->Light);
+    this->window->clear(this->presentMode.getBackground());
 
     switch (ds_present) {
         case DS_STATICARRAY  : StaticArray ->render(); break;

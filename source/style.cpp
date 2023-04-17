@@ -2,8 +2,36 @@
 
 ///--------------------------------------------------------------------
 ///--------------------------------Style--------------------------------
+/*
+Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, Themes* theme, THEME_TYPE typetheme)
+{
+    // Default
+    this->status = 0;
+    this->view = true;
 
-Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, std::vector<TripleColor> listColor)
+    // Position
+    this->x = x;
+    this->y = y;
+
+    // shape
+    this->thickness = 2;
+
+    // font
+    this->font = font;
+
+    // word
+    this->word = word;
+    this->wordOut = "";
+
+    // wordsize
+    this->sizeText = sizeText;
+    this->sizeTextOut = 12;
+
+    this->theme = theme;
+    this->typetheme = typetheme;
+}
+*/
+Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, std::vector<ElementColor> listColor)
 {
     // Default
     this->status = 0;
@@ -28,13 +56,13 @@ Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, std::
     this->sizeTextOut = 12;
 
     while (listColor.size() < 5) {
-        listColor.push_back(TripleColor());
+        listColor.push_back(ElementColor());
         std::cout << "Style::Style warning: listColor don't have enough color\n";
     }
     this->listColor = listColor;
 }
 
-Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2)
+Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
 {
     // Default
     this->status = 0;
@@ -135,7 +163,7 @@ void Style::SetOutlineColor(int id, sf::Color OutlineColor)
 {
     this->listColor[id].changeOutlineColor(OutlineColor);
 }
-void Style::SetColor(int id, TripleColor Color)
+void Style::SetColor(int id, ElementColor Color)
 {
     this->listColor[id] = Color;
 }

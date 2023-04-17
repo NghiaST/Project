@@ -11,7 +11,7 @@ StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active)
 
     // font
     if (!this->font.loadFromFile("dat/arial_bold.ttf")) {
-        std::cout << "Error Load Font\n";
+        std::cout << "Error Load Font haha\n";
     }
 
     // point
@@ -26,12 +26,12 @@ StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active)
     this->sizearray = 0;
     this->elements = std::vector<int>(maxsize, 0);
 
-    listColor = std::vector<TripleColor>(5, TripleColor());//98d8aa
-    listColor[0] = TripleColor(sf::Color::White, sf::Color::Red, sf::Color::Black);
-    listColor[1] = TripleColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96), sf::Color::Black);
-    listColor[2] = TripleColor(sf::Color(255, 109, 96), sf::Color(243, 239, 159), sf::Color::Black);
-    listColor[3] = TripleColor(sf::Color::Cyan, sf::Color::Blue, sf::Color(39, 154, 248));
-    listColor[4] = TripleColor(sf::Color(126, 244, 19), sf::Color(210, 19, 18), sf::Color(210, 19, 18));//(248, 122, 39));
+    listColor = std::vector<ElementColor>(5, ElementColor());//98d8aa
+    listColor[0] = ElementColor(sf::Color::White, sf::Color::Red, sf::Color::Black);
+    listColor[1] = ElementColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96), sf::Color::Black);
+    listColor[2] = ElementColor(sf::Color(255, 109, 96), sf::Color(243, 239, 159), sf::Color::Black);
+    listColor[3] = ElementColor(sf::Color::Cyan, sf::Color::Blue, sf::Color(39, 154, 248));
+    listColor[4] = ElementColor(sf::Color(126, 244, 19), sf::Color(210, 19, 18), sf::Color(210, 19, 18));//(248, 122, 39));
     
     Initialize_Random();
 }
@@ -167,7 +167,14 @@ int StructDataStructure::Search(int value)
     return -1;
 }
 
-void StructDataStructure::turn_off() {
+void StructDataStructure::turn_on()
+{
+    this->active = true;
+    this->run(0, 1, "", ""); // Initialize_Random
+}
+
+void StructDataStructure::turn_off()
+{
     this->active = false;
 }
 

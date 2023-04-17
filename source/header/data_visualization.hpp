@@ -8,6 +8,7 @@
 #include "ds_linkedlist.hpp"
 #include "ds_stack.hpp"
 #include "ds_queue.hpp"
+#include "themes.hpp"
 
 enum DATA_STRUCTURE{DS_STATICARRAY = 0, DS_DYNAMICARRAY, DS_LINKEDLIST, DS_STACK, DS_QUEUE};
 
@@ -15,7 +16,7 @@ struct DataVisualization {
 private:
     // Varibles
     sf::RenderWindow* window;
-    sf::Color Light, Dark;
+    Themes *LightMode, *DarkMode, presentMode;
     bool active;
     int keyboardType;
     int mouseType;
@@ -30,8 +31,14 @@ private:
     StructQueue* Queue;
 
     // Initializations
+    void InitThemes();
     void InitWindow();
     void InitStates();
+
+    // Functions
+    void processEvents();
+    void update();
+    void render();
 
 public:
     // Constructors/Destructors
@@ -39,10 +46,6 @@ public:
     virtual ~DataVisualization();
     //#define get_DS(x) (x != DS_QUEUE ? x != DS_STACK ? x != DS_LINKEDLIST ? x != DS_DYNAMICARRAY ? StaticArray : DynamicArray : LinkedList : Stack : Queue)
 
-    // Functions
-    void processEvents();
-    void update();
-    void render();
     void run();
 };
 

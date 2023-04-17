@@ -18,7 +18,6 @@ public:
     StructStaticArray(sf::RenderWindow* window, bool active);
     ~StructStaticArray();
 
-    void turn_on();
     void run(int manipulate, int way, std::string str1, std::string str2);
 
     // render

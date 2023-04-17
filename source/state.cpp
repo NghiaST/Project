@@ -1,12 +1,14 @@
 #include "state.hpp"
 
-State::State(sf::RenderWindow *window)
+State::State(sf::RenderWindow* window, Themes* theme)
 {
     // setup text
     this->window = window;
+    this->quit = false;
     if (!this->font.loadFromFile("dat/roboto/Roboto-Medium.ttf")) {
         std::cout << "Error Load Font\n";
     }
+    this->theme = theme;
 
     // setup std::vector<Button> buttonCategory
     std::vector<std::string> strarray = {"StaticArray", "DynamicArray", "LinkedList", "Stack", "Queue"};
@@ -15,9 +17,10 @@ State::State(sf::RenderWindow *window)
     sf::Vector2f sizeRec = sf::Vector2f(120, velocity.y - 5);
 
     for(std::string strname : strarray) {
-        buttonCategory.push_back(Button(coord.x, coord.y, sizeRec.x, sizeRec.y, &this->font, true, true, strname, 14, TripleColor(sf::Color(255, 192, 203)), TripleColor(sf::Color::Green), TripleColor(sf::Color::Yellow), TripleColor(sf::Color::Blue), TripleColor(sf::Color::Blue)));
+        buttonCategory.push_back(Button(coord.x, coord.y, sizeRec.x, sizeRec.y, &this->font, true, true, strname, 14, ElementColor(sf::Color(255, 192, 203)), ElementColor(sf::Color::Green), ElementColor(sf::Color::Yellow), ElementColor(sf::Color::Blue), ElementColor(sf::Color::Blue)));
         coord += velocity;
     }
+    std::cout << "Size: " << buttonCategory.size() << '\n';
     setNewDS(0);
 }
 State::~State()
@@ -103,7 +106,7 @@ void State::setNewDS(int ds_new)
     sizeRec = sf::Vector2f(80, velocity.y - 5);
     for(std::string strname : strManipulate) 
     {
-        buttonManipulate.push_back(Button(coord.x, coord.y, sizeRec.x, sizeRec.y, &this->font, true, false, strname, 14, TripleColor(sf::Color(255, 255, 153)), TripleColor(sf::Color::Green), TripleColor(sf::Color::Yellow), TripleColor(sf::Color::Blue), TripleColor(sf::Color::Blue)));
+        buttonManipulate.push_back(Button(coord.x, coord.y, sizeRec.x, sizeRec.y, &this->font, true, false, strname, 14, ElementColor(sf::Color(255, 255, 153)), ElementColor(sf::Color::Green), ElementColor(sf::Color::Yellow), ElementColor(sf::Color::Blue), ElementColor(sf::Color::Blue)));
         coord += velocity;
     }
 
@@ -115,7 +118,7 @@ void State::setNewDS(int ds_new)
     {
         sf::Vector2f coord2 = coord;
         for(std::string strname : strsubManipulate[i]) {
-            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, sizeRec.x, sizeRec.y, &this->font, false, false, strname, 12, TripleColor(sf::Color(220, 220, 220)), TripleColor(sf::Color::Green), TripleColor(sf::Color::Yellow), TripleColor(sf::Color::Blue), TripleColor(sf::Color::Blue)));
+            subbuttonManipulate[i].push_back(Button(coord2.x, coord2.y, sizeRec.x, sizeRec.y, &this->font, false, false, strname, 12, ElementColor(sf::Color(220, 220, 220)), ElementColor(sf::Color::Green), ElementColor(sf::Color::Yellow), ElementColor(sf::Color::Blue), ElementColor(sf::Color::Blue)));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;

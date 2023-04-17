@@ -12,7 +12,7 @@ private:
 
 public:
     Button(int x, int y, int width, int height, sf::Font* font, bool view, bool keepActive, std::string word, int sizeText, 
-        TripleColor idleColor, TripleColor hoverColor, TripleColor activeColor, TripleColor runColor, TripleColor runColor2);
+        ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
     ~Button();
 
     //Accessors

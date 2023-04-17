@@ -7,7 +7,8 @@
 #include <vector>
 #include "button.hpp"
 #include "inputbox.hpp"
-#include "triplecolor.hpp"
+#include "ElementColor.hpp"
+#include "themes.hpp"
 
 enum MOUSE{MSE_NONE = 0, MSE_LEFTCLICK, MSE_RIGHTCLICK, MSE_LEFTHOLD, MSE_RIGHTHOLD};
 
@@ -16,6 +17,7 @@ private:
     // value
     sf::RenderWindow* window;
     sf::Font font;
+    Themes* theme;
     // std::vector<sf::Texture> textures;
     bool quit;
     int cntManipulate;
@@ -37,7 +39,7 @@ private:
     
 public:
     // Init
-    State(sf::RenderWindow* window);
+    State(sf::RenderWindow* window, Themes* theme);
     ~State();
 
     void setNewDS(int ds_new);

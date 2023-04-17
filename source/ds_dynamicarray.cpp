@@ -11,6 +11,8 @@ StructDynamicArray::StructDynamicArray(sf::RenderWindow* window, bool active)
     this->sizeNode = 50;
     this->distance = 4;
     this->diffy = 2;
+
+    this->elements = std::vector<int>(maxsize, 0);
     for(int i = 0; i < this->maxsize; i++) {
         listNode.push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, &this->font, "", 15, this->listColor));
     }
@@ -20,13 +22,6 @@ StructDynamicArray::StructDynamicArray(sf::RenderWindow* window, bool active)
 
 StructDynamicArray::~StructDynamicArray()
 {
-}
-
-void StructDynamicArray::turn_on()
-{
-    this->active = true;
-    this->Initialize_Random();
-    this->updatePositionNode();
 }
 
 void StructDynamicArray::run(int manipulate, int way, std::string str1, std::string str2)
