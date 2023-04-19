@@ -3,10 +3,11 @@
 #include <algorithm>
 #include "struct_ds.hpp"
 
-StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active) 
+StructDataStructure::StructDataStructure(sf::RenderWindow* window, PublicThemes* theme, bool active) 
 {
     // window
     this->window = window;
+    this->theme = theme;
     this->active = active;
 
     // font
@@ -15,7 +16,7 @@ StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active)
     }
 
     // point
-    this->centerVisual = sf::Vector2f(this->window->getSize().x / 2, 130);
+    this->centerVisual = sf::Vector2f(this->window->getSize().x / 2, 150);
 
     // check which manipulate is activating
     this->type1 = -1;
@@ -25,15 +26,6 @@ StructDataStructure::StructDataStructure(sf::RenderWindow* window, bool active)
     this->maxsize = 12;
     this->sizearray = 0;
     this->elements = std::vector<int>(maxsize, 0);
-
-    listColor = std::vector<ElementColor>(5, ElementColor());//98d8aa
-    listColor[0] = ElementColor(sf::Color::White, sf::Color::Red, sf::Color::Black);
-    listColor[1] = ElementColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96), sf::Color::Black);
-    listColor[2] = ElementColor(sf::Color(255, 109, 96), sf::Color(243, 239, 159), sf::Color::Black);
-    listColor[3] = ElementColor(sf::Color::Cyan, sf::Color::Blue, sf::Color(39, 154, 248));
-    listColor[4] = ElementColor(sf::Color(126, 244, 19), sf::Color(210, 19, 18), sf::Color(210, 19, 18));//(248, 122, 39));
-    
-    Initialize_Random();
 }
 
 StructDataStructure::~StructDataStructure()

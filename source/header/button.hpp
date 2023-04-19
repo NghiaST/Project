@@ -4,15 +4,14 @@
 #include "style.hpp"
 
 struct Button : Style {
-private:
+protected:
     bool keepActive;
 
     int width, height;
     sf::RectangleShape shape;
 
 public:
-    Button(int x, int y, int width, int height, sf::Font* font, bool view, bool keepActive, std::string word, int sizeText, 
-        ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
+    Button(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, std::string word, sf::Font *font, Palette* palette);
     ~Button();
 
     //Accessors
@@ -20,8 +19,8 @@ public:
 
     //Functions
     void update(sf::Vector2f mousePos, int mouseType);
-    void refreshrender();
-    void render(sf::RenderWindow* window);
+    virtual void refreshrender();
+    virtual void render(sf::RenderWindow* window);
 };
 
 #endif

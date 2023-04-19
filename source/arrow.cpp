@@ -84,14 +84,10 @@ sf::Vector2f Arrow::getPresentEndPoint(int time)
 //-------------------------------------------------------
 //-----------------------ArrowNode-----------------------
 
-ArrowNode::ArrowNode(int diameterNode)
+ArrowNode::ArrowNode(int diameterNode, Palette* palette)
 {
     this->radiusNode = diameterNode / 2;
-}
-ArrowNode::ArrowNode(int diameterNode, sf::Vector2f startPoint, sf::Vector2f endPoint)
-{
-    this->radiusNode = diameterNode / 2;
-    this->setPoint(startPoint, endPoint);
+    this->palette = palette;
 }
 
 void ArrowNode::render(sf::RenderWindow* window)
@@ -125,56 +121,55 @@ void ArrowNode::render(sf::RenderWindow* window)
     triangle.setPoint(1, p2);
     triangle.setPoint(2, p3);
     triangle.setOutlineThickness(0);
+    this->palette->getColor(0).Coloring(triangle);
 
     sf::RectangleShape line;
     line.setPosition(startArrow);
     line.setRotation(rad * 180 / pi);
-    line.setFillColor(this->defaultColor);
-    line.setOutlineColor(this->defaultColor);
     line.setOutlineThickness(this->thickness);
+    this->palette->getColor(0).Coloring(line);
 
     sf::RectangleShape line2;
     line2.setPosition(startArrow);
     line2.setRotation(rad * 180 / pi);
-    line2.setFillColor(this->activeColor);
-    line2.setOutlineColor(this->activeColor);
     line2.setOutlineThickness(this->thickness);
+    this->palette->getColor(1).Coloring(line2);
 
     switch (this->statusAnimation)
     {
-        case AR_NOPE :
+        case AR_NOPE :    
+            this->palette->getColor(0).Coloring(triangle);
             triangle.setPointCount(0);
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(0.f, 0.f));
             break;
         case AR_NORMAL : case AR_NORMALMOVE :
-            triangle.setFillColor(this->defaultColor);
+            this->palette->getColor(0).Coloring(triangle);
             line.setSize(sf::Vector2f(tmp_length, 0.f));
             line2.setSize(sf::Vector2f(0.f, 0.f));
             break;
         case AR_ACTIVE : case AR_ACTIVEMOVE :
-            triangle.setFillColor(this->activeColor);
+            this->palette->getColor(1).Coloring(triangle);
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(tmp_length, 0.f));
             break;
         case AR_CREATE :
+            this->palette->getColor(1).Coloring(triangle);
             if (ratio < 0.99) 
                 triangle.setPointCount(0);
-            else 
-                triangle.setFillColor(this->activeColor);
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * ratio, 0.f));
             break;
         case AR_COLOR_TO :
-            triangle.setFillColor(ratio < 0.99 ? this->defaultColor : this->activeColor);
+            this->palette->getColor(ratio < 0.99 ? 0 : 1).Coloring(triangle);
             line.setSize(sf::Vector2f(tmp_length, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * ratio, 0.f));
             break;
         case AR_DEL :
+            this->palette->getColor(1).Coloring(triangle);
             if (ratio > 0.01) 
                 triangle.setPointCount(0);
             else 
-                triangle.setFillColor(this->activeColor);
             line.setSize(sf::Vector2f(0.f, 0.f));
             line2.setSize(sf::Vector2f(tmp_length * (1 - ratio), 0.f));
             break;

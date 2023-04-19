@@ -1,6 +1,7 @@
 #ifndef __arrow_hpp__
 #define __arrow_hpp__
 #include <SFML/Graphics.hpp>
+#include "themes.hpp"
 const int AR_NOPE = -1, AR_NORMAL = 0, AR_ACTIVE = 1, AR_NORMALMOVE = 2, AR_ACTIVEMOVE = 3, AR_CREATE = 4, AR_COLOR_TO = 5, AR_DEL = 6;
 const int AR_SKIP = 7, AR_MOVE = 8;
 struct Arrow {
@@ -8,8 +9,7 @@ protected:
     double fulltime = 1;
     double time = 0;
 
-    sf::Color defaultColor = sf::Color::Black;
-    sf::Color activeColor = sf::Color(255, 165, 0);
+    Palette *palette;
     int radius_triangle = 6;
     int thickness = 2;
     
@@ -42,8 +42,7 @@ struct ArrowNode : Arrow {
 private:
     int radiusNode;
 public:
-    ArrowNode(int diameterNode);
-    ArrowNode(int diameterNode, sf::Vector2f startPoint, sf::Vector2f endPoint);
+    ArrowNode(int diameterNode, Palette* palette);
 
     void render(sf::RenderWindow* window);
     void renderTime(sf::RenderWindow* window, double time);

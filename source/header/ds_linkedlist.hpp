@@ -16,13 +16,12 @@ protected:
     // value
     std::vector<CircleNode> listNode;
     std::vector<ArrowNode> listArrow;
-    std::vector<sf::Vector2f> listPoint;
 
     std::vector<Manipulate_Animation_ArrayNode> nodeAnimation;
     std::vector<Manipulate_Animation_ArrayArrow> arrowAnimation;
 
 public:
-    StructLinkedList(sf::RenderWindow* window, bool active);
+    StructLinkedList(sf::RenderWindow* window, PublicThemes* theme, bool active);
     ~StructLinkedList();
 
     std::vector<sf::Vector2f> getPosition(int size);

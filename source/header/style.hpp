@@ -15,10 +15,10 @@ protected :
     bool view; // +
 
     // position
-    int x, y;
+    sf::Vector2f coord;
 
     // shape
-    int thickness; // +
+    float thickness; // +
 
     // font
     sf::Font* font;
@@ -28,37 +28,30 @@ protected :
     std::string wordOut; // +
 
     // wordsize
-    int sizeText; // +
-    int sizeTextOut; // +
+    unsigned int sizeText; // +
 
-    // color
-    Themes* theme;
-    THEME_TYPE typetheme;
-    std::vector<ElementColor> listColor = std::vector<ElementColor>(5, ElementColor());
-    // idle - hover - active - run - run2
+    // color: idle - hover - active - running / animation
+    Palette* palette;
     sf::Color textOutColor; // +
+
+    
     
     // texture
     sf::Text text;
 public :
-    // Style(int x, int y, int sizeText, std::string word, sf::Font* font, Themes* theme);
-    Style(int x, int y, sf::Font* font, std::string word, int sizeText, std::vector<ElementColor> listColor);
-    Style(int x, int y, sf::Font* font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
+    Style(sf::Vector2f coord, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
     ~Style();
 
     // set Private
     void setStatus(int status);
-    void setX(int x);
-    void setY(int y);
-    void setXY(int x, int y);
+    void setX(float x);
+    void setY(float y);
+    void setXY(float x, float y);
     void setXY(sf::Vector2f coord);
     void setView(bool view);
+    void setTextSize(unsigned int sizeText);
     void setWord(std::string word);
-    void setWordOut(std::string wordOut);
-    void SetFillColor(int id, sf::Color FillColor);
-    void SetTextColor(int id, sf::Color TextColor);
-    void SetOutlineColor(int id, sf::Color OutlineColor);
-    void SetColor(int id, ElementColor Color);
+    void setPalette(Palette* palette);
     void swapView();
     
     // get Private

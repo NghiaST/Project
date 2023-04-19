@@ -4,32 +4,33 @@
 #include "support_function.hpp"
 #include "struct_ds.hpp"
 
-StructLinkedList::StructLinkedList(sf::RenderWindow* window, bool active) 
-    : StructDataStructure(window, active)
+StructLinkedList::StructLinkedList(sf::RenderWindow* window, PublicThemes* theme, bool active) 
+    : StructDataStructure(window, theme, active)
 {
     this->speed = 3;
     this->maxsize = 14;
+
+    this->sizeText = 12;
     this->sizeNode = 30;
-    this->distance = 48;
+    this->diffx = 15;
     this->diffy = 10;
+    this->distance = this->sizeNode + this->diffx;
+    this->thickness = 2;
 
-    this->sizearray = 0;
-    this->elements = std::vector<int>(maxsize, 0);
-    this->printElements = this->elements;
+    float sizeNode;   /// rectangle: length, area: diameter 
+    float distance;
+    float diffx;
+    float diffy;
+    unsigned int sizeText;
+    float thickness;
 
-    for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(CircleNode(0, 0, this->sizeNode / 2, &this->font, "", 13, this->listColor));
-    }
-    for(int i = 0; i < this->maxsize; i++) {
-        listArrow.push_back(ArrowNode(this->sizeNode));
-    }
-    listPoint = std::vector<sf::Vector2f>(this->maxsize, sf::Vector2f(0, 0));
+    this->elements = std::vector<int>(this->maxsize, 0);
+    listNode = std::vector<CircleNode> (this->maxsize, CircleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeText, this->thickness, "", &this->font, &this->theme->node));
+    listArrow = std::vector<ArrowNode> (this->maxsize, ArrowNode(this->sizeNode, &this->theme->arrow));
+    listPoint = std::vector<sf::Vector2f> (this->maxsize, sf::Vector2f(0, 0));
     nodeAnimation = std::vector<Manipulate_Animation_ArrayNode> (this->maxsize, Manipulate_Animation_ArrayNode());
-    for(int i = 0; i < this->maxsize; i++) {
-        nodeAnimation.push_back(Manipulate_Animation_ArrayNode());
-        arrowAnimation.push_back(Manipulate_Animation_ArrayArrow());
-    }
-
+    arrowAnimation = std::vector<Manipulate_Animation_ArrayArrow> (this->maxsize, Manipulate_Animation_ArrayArrow());
+    
     if (this->active)
         turn_on();
 }
@@ -181,15 +182,15 @@ void StructLinkedList::Animation_Insert_First()
         // Way = -1;
         return;
     }
-    count_nodePrint = preSize + 1;
+    count_nodePrint = sizearray;
     activeAnimation();
 
     // setup position
-    std::vector<sf::Vector2f> pStart = getPosition(preSize);
-    std::vector<sf::Vector2f> pEnd = getPosition(preSize + 1);
+    std::vector<sf::Vector2f> pStart = getPosition(sizearray - 1);
+    std::vector<sf::Vector2f> pEnd = getPosition(sizearray);
 
     sf::Vector2f newPosition;
-    if (this->preSize == 0)
+    if (this->count_nodePrint == 1)
         newPosition = pEnd[0] + sf::Vector2f(0, 200);
     else 
         newPosition = pStart[0] + sf::Vector2f(0, 200);
@@ -199,7 +200,8 @@ void StructLinkedList::Animation_Insert_First()
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+            if (i < count_nodePrint - 1)
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
         }
         else if (i > 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
@@ -253,15 +255,15 @@ void StructLinkedList::Animation_Insert_Last()
         // Way = -1;
         return;
     }
-    count_nodePrint = preSize + 1;
+    count_nodePrint = sizearray;
     activeAnimation();
 
     // setup position
-    std::vector<sf::Vector2f> pStart = getPosition(preSize);
-    std::vector<sf::Vector2f> pEnd = getPosition(preSize + 1);
+    std::vector<sf::Vector2f> pStart = getPosition(sizearray - 1);
+    std::vector<sf::Vector2f> pEnd = getPosition(sizearray);
 
     sf::Vector2f newPosition;
-    if (this->preSize == 0)
+    if (this->count_nodePrint == 1)
         newPosition = pEnd.back() + sf::Vector2f(0, 200);
     else 
         newPosition = pStart.back() + sf::Vector2f(0, 200);
@@ -339,14 +341,14 @@ void StructLinkedList::Animation_Insert_Manual()
     }
     clock.restart();
     this->running = true;
-    count_nodePrint = preSize + 1;
+    count_nodePrint = sizearray;
 
     // setup position
-    std::vector<sf::Vector2f> pStart = getPosition(preSize);
-    std::vector<sf::Vector2f> pEnd = getPosition(preSize + 1);
+    std::vector<sf::Vector2f> pStart = getPosition(sizearray - 1);
+    std::vector<sf::Vector2f> pEnd = getPosition(sizearray);
 
     sf::Vector2f newPosition;
-    if (this->preSize == 0)
+    if (this->count_nodePrint == 1)
         newPosition = pEnd.back() + sf::Vector2f(0, 200);
     else 
         newPosition = pStart[pos] + sf::Vector2f(0, 200);

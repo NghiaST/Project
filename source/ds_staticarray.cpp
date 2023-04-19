@@ -4,8 +4,8 @@
 #include "support_function.hpp"
 #include "struct_ds.hpp"
 
-StructStaticArray::StructStaticArray(sf::RenderWindow* window, bool active) 
-    : StructDataStructure(window, active)
+StructStaticArray::StructStaticArray(sf::RenderWindow* window, PublicThemes* theme, bool active) 
+    : StructDataStructure(window, theme, active)
 {    
     this->maxsize = 12;
     this->sizeNode = 50;
@@ -14,10 +14,10 @@ StructStaticArray::StructStaticArray(sf::RenderWindow* window, bool active)
 
     this->elements = std::vector<int>(maxsize, 0);
     for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, &this->font, "", 15, this->listColor));
+        listNode.push_back(RectangleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeNode, 12, 2, "", &this->font, &this->theme->node));
     }
-    this->updatePositionNode();
-    this->refreshrender();
+    if (this->active)
+        turn_on();
 }
 
 StructStaticArray::~StructStaticArray()
@@ -25,6 +25,8 @@ StructStaticArray::~StructStaticArray()
 }
 
 void StructStaticArray::run(int manipulate, int way, std::string str1, std::string str2) {
+    if (!this->active)
+        exit(2);
     if (manipulate == -1) ;
     if (manipulate == 0) {
         if (way == 0) this->Initialize_Empty();

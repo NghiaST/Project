@@ -4,8 +4,8 @@
 #include "support_function.hpp"
 #include "struct_ds.hpp"
 
-StructDynamicArray::StructDynamicArray(sf::RenderWindow* window, bool active) 
-    : StructDataStructure(window, active)
+StructDynamicArray::StructDynamicArray(sf::RenderWindow* window, PublicThemes* theme, bool active) 
+    : StructDataStructure(window, theme, active)
 {
     this->maxsize = 15;
     this->sizeNode = 50;
@@ -14,10 +14,10 @@ StructDynamicArray::StructDynamicArray(sf::RenderWindow* window, bool active)
 
     this->elements = std::vector<int>(maxsize, 0);
     for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, &this->font, "", 15, this->listColor));
+        listNode.push_back(RectangleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeNode, 12, 2, "", &this->font, &this->theme->node));
     }
-    this->updatePositionNode();
-    this->refreshrender();
+    if (this->active)
+        turn_on();
 }
 
 StructDynamicArray::~StructDynamicArray()

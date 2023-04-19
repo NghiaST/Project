@@ -1,29 +1,14 @@
 #include "button.hpp"
 #include <iostream>
 
-Button::Button(int x, int y, int width, int height, sf::Font *font, bool view, bool keepActive, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
-    : Style(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
+Button::Button(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, std::string word, sf::Font *font, Palette* palette)
+    : Style(coord, sizeText, thickness, word, font, palette)
 {
     this->view = view;
     this->keepActive = keepActive;
 
     this->width = width;
     this->height = height;
-
-    // shape
-    this->thickness = 2;
-
-    this->SetOutlineColor(0, sf::Color::Black);
-    this->SetOutlineColor(1, sf::Color::Black);
-    this->SetOutlineColor(2, sf::Color::Black);
-    this->SetOutlineColor(3, sf::Color::Black);
-    this->SetOutlineColor(4, sf::Color::Black);
-
-    this->SetTextColor(0, sf::Color::Black);
-    this->SetTextColor(1, sf::Color::Black);
-    this->SetTextColor(2, sf::Color::Black);
-    this->SetTextColor(3, sf::Color::Black);
-    this->SetTextColor(4, sf::Color::Black);
     
     refreshrender();
 }
@@ -75,18 +60,17 @@ void Button::update(sf::Vector2f mousePos, int mouseType)
 
 void Button::refreshrender()
 {
-    this->shape.setPosition(sf::Vector2f(this->x, this->y));
+    this->shape.setPosition(this->coord);
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
     this->text.setFont(*this->font);
     this->text.setString(this->word.c_str());
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
-        this->x + this->width / 2.f - this->text.getGlobalBounds().width / 2.f,
-        this->y + this->height / 2.f - this->text.getGlobalBounds().height / 2.f - 2
+        this->coord.x + this->width / 2.f - this->text.getGlobalBounds().width / 2.f,
+        this->coord.y + this->height / 2.f - this->text.getGlobalBounds().height / 2.f - 2
     );
-
-    this->listColor[this->status].Coloring(this->shape, this->text);
+    palette->getColor(this->status).Coloring(this->shape, this->text);
 }
 
 void Button::render(sf::RenderWindow* window) 
@@ -95,5 +79,4 @@ void Button::render(sf::RenderWindow* window)
     this->refreshrender();
     window->draw(this->shape);
     window->draw(this->text);
-    std::cout << "W\n";
 }

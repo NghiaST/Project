@@ -4,20 +4,21 @@
 #include "ElementColor.hpp"
 #include <vector>
 
-enum THEME_TYPE { THEME_NODE = 1, ARROW, BTN_DS, BTN };
+struct PublicThemes;
+struct Themes;
 
 struct Palette {
 private :
     std::vector<ElementColor> listColor;
 public :
     Palette() {}
-    Palette(ElementColor color0, ElementColor color1, ElementColor color2, ElementColor color3, ElementColor color4);
+    Palette(ElementColor ecolor0, ElementColor ecolor1, ElementColor ecolor2, ElementColor ecolor3, ElementColor ecolor4);
     Palette(std::vector<ElementColor> listColor);
     ElementColor getColor(int status);
 };
 
-struct Themes {
-private :
+struct PublicThemes {
+public :
     sf::Color background;
     Palette node;
     Palette arrow;
@@ -26,6 +27,15 @@ private :
     Palette button_submanipulate;
     Palette button_inputbox;
     Palette button_step;
+
+    PublicThemes() {}
+    PublicThemes(sf::Color background, Palette node, Palette arrow, Palette button_ds,
+                Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox,
+                Palette button_step);
+    void getThemes(Themes* theme);
+};
+
+struct Themes : private PublicThemes {
 public :
     Themes() {}
     Themes(sf::Color background, Palette node, Palette arrow, Palette button_ds,

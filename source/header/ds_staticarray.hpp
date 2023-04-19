@@ -15,7 +15,7 @@ protected:
     std::vector<RectangleNode> listNode;
 
 public:
-    StructStaticArray(sf::RenderWindow* window, bool active);
+    StructStaticArray(sf::RenderWindow* window, PublicThemes* theme, bool active);
     ~StructStaticArray();
 
     void run(int manipulate, int way, std::string str1, std::string str2);

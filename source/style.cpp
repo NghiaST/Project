@@ -2,114 +2,28 @@
 
 ///--------------------------------------------------------------------
 ///--------------------------------Style--------------------------------
-/*
-Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, Themes* theme, THEME_TYPE typetheme)
+
+Style::Style(sf::Vector2f coord, unsigned int sizeText, float thickness, std::string word, sf::Font *font, Palette* palette)
 {
     // Default
     this->status = 0;
     this->view = true;
 
     // Position
-    this->x = x;
-    this->y = y;
+    this->coord = coord;
 
     // shape
-    this->thickness = 2;
+    this->thickness = thickness;
 
     // font
     this->font = font;
 
     // word
     this->word = word;
-    this->wordOut = "";
 
     // wordsize
     this->sizeText = sizeText;
-    this->sizeTextOut = 12;
-
-    this->theme = theme;
-    this->typetheme = typetheme;
-}
-*/
-Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, std::vector<ElementColor> listColor)
-{
-    // Default
-    this->status = 0;
-    this->view = true;
-
-    // Position
-    this->x = x;
-    this->y = y;
-
-    // shape
-    this->thickness = 2;
-
-    // font
-    this->font = font;
-
-    // word
-    this->word = word;
-    this->wordOut = "";
-
-    // wordsize
-    this->sizeText = sizeText;
-    this->sizeTextOut = 12;
-
-    while (listColor.size() < 5) {
-        listColor.push_back(ElementColor());
-        std::cout << "Style::Style warning: listColor don't have enough color\n";
-    }
-    this->listColor = listColor;
-}
-
-Style::Style(int x, int y, sf::Font *font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
-{
-    // Default
-    this->status = 0;
-    this->view = true;
-
-    // Position
-    this->x = x;
-    this->y = y;
-
-    // shape
-    this->thickness = 2;
-
-    // font
-    this->font = font;
-
-    // word
-    this->word = word;
-    this->wordOut = "";
-
-    // wordsize
-    this->sizeText = sizeText;
-    this->sizeTextOut = 12;
-
-    // color
-    this->listColor[0] = idleColor;
-    this->listColor[1] = hoverColor;
-    this->listColor[2] = activeColor;
-    this->listColor[3] = runColor;
-    this->listColor[4] = runColor2;
-
-    // default
-    this->listColor[1].changeFillColor(sf::Color::Green);
-    this->listColor[2].changeFillColor(sf::Color::Yellow);
-
-    this->listColor[0].changeTextColor(sf::Color::Red);
-    this->listColor[1].changeTextColor(sf::Color::Red);
-    this->listColor[2].changeTextColor(sf::Color::Red);
-    this->listColor[3].changeTextColor(sf::Color::Red);
-    this->listColor[4].changeTextColor(sf::Color::Red);
-
-    this->listColor[0].changeOutlineColor(sf::Color::Black);
-    this->listColor[1].changeOutlineColor(sf::Color::Black);
-    this->listColor[2].changeOutlineColor(sf::Color::Black);
-    this->listColor[3].changeOutlineColor(sf::Color::Black);
-    this->listColor[4].changeOutlineColor(sf::Color::Black);
-
-    this->textOutColor = sf::Color::Blue;
+    this->palette = palette;
 }
 
 Style::~Style()
@@ -121,23 +35,21 @@ void Style::setStatus(int status)
 {
     this->status = status;
 }
-void Style::setX(int x) 
+void Style::setX(float x) 
 {
-    this->x = x;
+    this->coord.x = x;
 }
-void Style::setY(int y)
+void Style::setY(float y)
 {
-    this->y = y;
+    this->coord.y = y;
 }
-void Style::setXY(int x, int y)
+void Style::setXY(float x, float y)
 {
-    this->x = x;
-    this->y = y;
+    this->coord = sf::Vector2f(x, y);
 }
 void Style::setXY(sf::Vector2f coord)
 {
-    this->x = coord.x;
-    this->y = coord.y;
+    this->coord = coord;
 }
 void Style::setView(bool view)
 {
@@ -147,46 +59,29 @@ void Style::setWord(std::string word)
 {
     this->word = word;
 }
-void Style::setWordOut(std::string wordOut)
+void Style::setPalette(Palette* palette)
 {
-    this->wordOut = wordOut;
-}
-void Style::SetFillColor(int id, sf::Color FillColor)
-{
-    this->listColor[id].changeFillColor(FillColor);
-}
-void Style::SetTextColor(int id, sf::Color TextColor)
-{
-    this->listColor[id].changeTextColor(TextColor);
-}
-void Style::SetOutlineColor(int id, sf::Color OutlineColor)
-{
-    this->listColor[id].changeOutlineColor(OutlineColor);
-}
-void Style::SetColor(int id, ElementColor Color)
-{
-    this->listColor[id] = Color;
+    this->palette = palette;
 }
 void Style::swapView()
 {
     this->view = !this->view;
 }
-
 int Style::getStatus()
 {
     return this->status;
 }
 int Style::getX()
 {
-    return this->x;
+    return this->coord.x;
 }
 int Style::getY()
 {
-    return this->y;
+    return this->coord.y;
 }
 sf::Vector2f Style::getXY()
 {
-    return sf::Vector2f(this->x, this->y);
+    return this->coord;
 }
 bool Style::getView()
 {

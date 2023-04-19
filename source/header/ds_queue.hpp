@@ -13,11 +13,11 @@
 struct StructQueue : StructDataStructure {
 protected:
     // value
-    std::vector<CircleNode*> listNode;
-    std::vector<ArrowNode*> listArrow;
+    std::vector<CircleNode> listNode;
+    std::vector<ArrowNode> listArrow;
 
 public:
-    StructQueue(sf::RenderWindow* window, bool active);
+    StructQueue(sf::RenderWindow* window, PublicThemes* theme, bool active);
     ~StructQueue();
 
     void run(int manipulate, int way, std::string str1, std::string str2);

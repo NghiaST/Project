@@ -4,23 +4,20 @@
 #include "support_function.hpp"
 #include "struct_ds.hpp"
 
-StructStack::StructStack(sf::RenderWindow* window, bool active) 
-    : StructDataStructure(window, active)
+StructStack::StructStack(sf::RenderWindow* window, PublicThemes* theme, bool active) 
+    : StructDataStructure(window, theme, active)
 {
-    this->maxsize = 11;
+    this->maxsize = 13;
     this->sizeNode = 32;
-    this->distance = -32;
-    this->diffy = 50;
+    this->diffx = 0;
+    this->diffy = 32;
+    this->distance = this->sizeNode + this->diffx;
 
     this->elements = std::vector<int>(maxsize, 0);
-    for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(CircleNode(0, 0, this->sizeNode / 2, &this->font, "", 13, listColor));
-    }
-    for(int i = 0; i < this->maxsize; i++) {
-        listArrow.push_back(ArrowNode(this->sizeNode));
-    }
-    this->updatePositionNode();
-    this->refreshrender();
+    listNode = std::vector<CircleNode> (this->maxsize, CircleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeText, this->thickness, "", &this->font, &this->theme->node));
+    listArrow = std::vector<ArrowNode> (this->maxsize, ArrowNode(this->sizeNode, &this->theme->arrow));
+    if (this->active)
+        turn_on();
 }
 
 StructStack::~StructStack()

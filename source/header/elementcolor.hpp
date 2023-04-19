@@ -17,8 +17,11 @@ public:
     void changeOutlineColor(sf::Color OutlineColor);
     void changeColor(sf::Color FillColor, sf::Color TextColor, sf::Color OutlineColor);
     void Coloring(sf::CircleShape& shape, sf::Text& text);
-    void Coloring(sf::RectangleShape& shape, sf::Text& text);
     void Coloring(sf::CircleShape& shape, sf::Text& text, double ratio);
+    void Coloring(sf::RectangleShape& shape, sf::Text& text);
+    void Coloring(sf::RectangleShape& shape, sf::Text& text, double ratio);
+    void Coloring(sf::RectangleShape& shape);
+    void Coloring(sf::ConvexShape& shape);
 };
 
 #endif

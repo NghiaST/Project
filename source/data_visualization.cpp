@@ -4,7 +4,7 @@
 // Initializations
 void DataVisualization::InitWindow() 
 {
-    sf::Vector2u windowsize = sf::Vector2u(1346, 688); 
+    sf::Vector2u windowsize = sf::Vector2u(1346, 688);
     unsigned int antialiasinglevel = 8;
 
     sf::ContextSettings settings;
@@ -19,13 +19,14 @@ void DataVisualization::InitWindow()
 
 void DataVisualization::InitStates()
 {
-    states = new State(window, &presentMode);
+    states = new State(window, theme);
 }
 
 void DataVisualization::InitThemes()
 {
     LightMode = new Themes();
     DarkMode = new Themes();
+    theme = new PublicThemes();
 
     LightMode->setBackground(sf::Color(220, 220, 220));
 
@@ -36,15 +37,19 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color::Cyan         , sf::Color::Blue         , sf::Color(39, 154, 248)),
         ElementColor(sf::Color(126, 244, 19) , sf::Color(210, 19, 18)  , sf::Color(210, 19, 18))
     ));
-   /* LightMode->setArrow(Palette(
-        
-    ));*/
+    LightMode->setArrow(Palette(
+        ElementColor(sf::Color::Black        , sf::Color::Transparent  , sf::Color::Black),
+        ElementColor(sf::Color(255, 165, 0)  , sf::Color::Transparent  , sf::Color(255, 165, 0)),
+        ElementColor(sf::Color::White        , sf::Color::White        , sf::Color::White),
+        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White),
+        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White)
+    ));
     LightMode->setButtonDs(Palette(
         ElementColor(sf::Color(255, 192, 203), sf::Color::Black        , sf::Color::Black),
         ElementColor(sf::Color::Green        , sf::Color::Black        , sf::Color::Black),
         ElementColor(sf::Color::Yellow       , sf::Color::Black        , sf::Color::Black),
-        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black),
-        ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
+        ElementColor(sf::Color(34, 137, 221) , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color(34, 137, 221)  , sf::Color::Black        , sf::Color::Black)
     ));
     LightMode->setButtonManipulate(Palette(
         ElementColor(sf::Color(255, 255, 153), sf::Color::Black        , sf::Color::Black),
@@ -61,10 +66,10 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
     ));
     LightMode->setButtonInputbox(Palette(
-        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color(255, 171, 171), sf::Color(255, 10, 115) , sf::Color::Black),
         ElementColor(sf::Color::Green        , sf::Color::Red          , sf::Color::Black),
         ElementColor(sf::Color(255, 109, 96) , sf::Color(243, 239, 159), sf::Color::Black),
-        ElementColor(sf::Color(245, 194, 117), sf::Color::Red          , sf::Color::Black),
+        ElementColor(sf::Color(245, 194, 117), sf::Color::Red          , sf::Color(210, 19, 18)),
         ElementColor(sf::Color(126, 244, 19) , sf::Color::Red          , sf::Color::Black)
     ));
     LightMode->setButtonStep(Palette(
@@ -75,7 +80,7 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black)
     )); /// should be change
 
-    DarkMode->setBackground(sf::Color(100, 100, 100));
+    DarkMode->setBackground(sf::Color(40, 40, 40));
     DarkMode->setNode(Palette(
         ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::Black),
         ElementColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96) , sf::Color::Black),
@@ -83,9 +88,13 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color::Cyan         , sf::Color::Blue         , sf::Color(39, 154, 248)),
         ElementColor(sf::Color(126, 244, 19) , sf::Color(210, 19, 18)  , sf::Color(210, 19, 18))
     ));
-/*    DarkMode->setArrow(Palette(
-        
-    ));*/
+    DarkMode->setArrow(Palette(
+        ElementColor(sf::Color::White        , sf::Color::Transparent  , sf::Color::White),
+        ElementColor(sf::Color(128, 255, 0)  , sf::Color::Transparent  , sf::Color(128, 255, 0)),
+        ElementColor(sf::Color::White        , sf::Color::White        , sf::Color::White),
+        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White),
+        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White)  
+    ));
     DarkMode->setButtonDs(Palette(
         ElementColor(sf::Color(255, 192, 203), sf::Color::Black        , sf::Color::Black),
         ElementColor(sf::Color::Green        , sf::Color::Black        , sf::Color::Black),
@@ -108,7 +117,7 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color::Blue         , sf::Color::Black        , sf::Color::Black)
     ));
     DarkMode->setButtonInputbox(Palette(
-        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color(250, 250, 250), sf::Color::Black    , sf::Color::Black),
         ElementColor(sf::Color::Green        , sf::Color::Red          , sf::Color::Black),
         ElementColor(sf::Color(255, 109, 96) , sf::Color(243, 239, 159), sf::Color::Black),
         ElementColor(sf::Color(245, 194, 117), sf::Color::Red          , sf::Color::Black),
@@ -121,7 +130,10 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
         ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black)
     )); /// should be change
-    presentMode = *LightMode;
+    listTheme[0] = LightMode;
+    listTheme[1] = DarkMode;
+    typetheme = 0;
+    theme->getThemes(listTheme[typetheme]);
 }
 //// Initializations functions
 
@@ -133,11 +145,13 @@ DataVisualization::DataVisualization()
     this->InitWindow();
     this->InitStates();
     this->ds_present = DS_STATICARRAY;
-    this->StaticArray  = new StructStaticArray(window, true);
-    this->DynamicArray = new StructDynamicArray(window, false);
-    this->Queue        = new StructQueue(window, false);
-    this->Stack        = new StructStack(window, false);
-    this->LinkedList   = new StructLinkedList(window, false);
+    this->StaticArray  = new StructStaticArray(window, theme, true);
+    this->DynamicArray = new StructDynamicArray(window, theme, false);
+    this->LinkedList   = new StructLinkedList(window, theme, false);
+    this->Stack        = new StructStack(window, theme, false);
+    theme->getThemes(listTheme[typetheme]);
+    this->Queue        = new StructQueue(window, theme, false);
+    
 }
 
 DataVisualization::~DataVisualization()
@@ -210,7 +224,7 @@ void DataVisualization::update()
 
     if (typePress.x != -1) {
         std::cout << "Press " << typePress.x << ' ' << typePress.y << '\n';
-        if (typePress.x < 5) {
+        if (0 <= typePress.x && typePress.x < 100) {
             switch (ds_present) {
                 case DS_STATICARRAY  : StaticArray ->turn_off(); break;
                 case DS_DYNAMICARRAY : DynamicArray->turn_off(); break;
@@ -231,8 +245,8 @@ void DataVisualization::update()
             }
             //get_DS(ds_present)->turn_on();
         }
-        else if (typePress.x > 4) {
-            typePress.x -= 5;
+        else if (100 <= typePress.x && typePress.x < 200) {
+            typePress.x -= 100;
             std::string str1 = states->getValueButton(typePress.x, 0);
             std::string str2 = states->getValueButton(typePress.x, 1);
             switch (ds_present) {
@@ -245,17 +259,22 @@ void DataVisualization::update()
             }
             //get_DS(ds_present)->run(typePress.x, typePress.y, str1, str2);
         }
+        else if (200 <= typePress.x && typePress.x < 300) {
+            typetheme = typePress.x - 200;
+            theme->getThemes(listTheme[typetheme]);
+        }
     }
 }
 
 void DataVisualization::render()
 {
     if (!window->isOpen()) return;
-    this->window->clear(this->presentMode.getBackground());
+    this->window->clear(this->theme->background);
+    std::cout << (int)this->theme->background.r << ' ' << typetheme << '\n';
 
     switch (ds_present) {
         case DS_STATICARRAY  : StaticArray ->render(); break;
-        case DS_DYNAMICARRAY : DynamicArray->render(); break;
+        case DS_DYNAMICARRAY : DynamicArray->render(); break;   
         case DS_LINKEDLIST   : LinkedList  ->render(); break;
         case DS_STACK        : Stack       ->render(); break;
         case DS_QUEUE        : Queue       ->render(); break;

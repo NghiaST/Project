@@ -4,34 +4,28 @@
 #include <iostream>
 #include <cstring>
 #include "style.hpp"
+#include "button.hpp"
 
-struct InputBox : Style {
+struct InputBox : Button {
 private:
     bool active;
-
-    // shape
-    int width, height;
 
     // string
     std::string wordInput;
 
-    // render
-    sf::RectangleShape shape;
-
 public:
-    InputBox(int x, int y, int width, int height, sf::Font* font, bool view, std::string textConst);
+    InputBox(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, std::string textConst, sf::Font *font, Palette* palette);
     ~InputBox();
     
-    void setView(bool view);
-    void changeView();
     void setWordInput(std::string wordInput);
-    std::string getTextInput();
+    std::string getWordInput();
 
     void Add_Character(int keyboardType);
     void Del_Character();
     void update(sf::Vector2f mousePos, int mouseType, int keyboardType);
-    void refreshrender();
-    void render(sf::RenderWindow* window);
+    
+    void refreshrender() override;
+    void render(sf::RenderWindow* window) override;
 };
 
 #endif

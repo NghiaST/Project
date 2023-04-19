@@ -1,36 +1,38 @@
 #include "themes.hpp"
 #include <iostream>
 
-Palette::Palette(ElementColor color0, ElementColor color1, ElementColor color2, ElementColor color3, ElementColor color4)
+Palette::Palette(ElementColor ecolor0, ElementColor ecolor1, ElementColor ecolor2, ElementColor ecolor3, ElementColor ecolor4)
 {
-    listColor = {color0, color1, color2, color3, color4};
+    listColor = {ecolor0, ecolor1, ecolor2, ecolor3, ecolor4};
 }
 
 Palette::Palette(std::vector<ElementColor> listColor)
 {
     if (listColor.size() < 5)
     {
-        std::cout << "error themes.cpp : lack of color in vector<ElementColor> \n";
+        std::cout << "error themes.cpp : lack of ecolor in vector<ElementColor> \n";
         exit(1);
     }
     this->listColor = listColor;
 }
 
-Themes::Themes(sf::Color background, Palette node, Palette arrow, Palette button_ds,
-               Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox,
-               Palette button_step)
-          : background(background),
-            node(node),
-            arrow(arrow),
-            button_ds(button_ds),
-            button_manipulate(button_manipulate),
-            button_submanipulate(button_submanipulate),
-            button_inputbox(button_inputbox),
-            button_step(button_step) {}
+ElementColor Palette::getColor(int status)
+{
+    return this->listColor[status];
+}
+
+PublicThemes::PublicThemes(sf::Color background, Palette node, Palette arrow, Palette button_ds, Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox, Palette button_step) 
+    : background(background), node(node), arrow(arrow),
+      button_ds(button_ds), button_manipulate(button_manipulate),
+      button_submanipulate(button_submanipulate),
+      button_inputbox(button_inputbox),
+      button_step(button_step) {}
+
+Themes::Themes(sf::Color background, Palette node, Palette arrow, Palette button_ds, Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox, Palette button_step)
+    : PublicThemes(background, node, arrow, button_ds, button_manipulate, button_submanipulate, button_inputbox, button_step) {}
 
 void Themes::setBackground(sf::Color newBackground) {
     background = newBackground;
-    std::cout << "W " << (int)background.r << ' ' << (int)background.g << ' ' << (int) background.b << '\n';
 }
 
 void Themes::setNode(Palette newNode)
@@ -92,4 +94,16 @@ Palette Themes::getButtonInputbox() {
 
 Palette Themes::getButtonStep() {
     return button_step;
+}
+
+void PublicThemes::getThemes(Themes* theme)
+{
+    this->background = theme->getBackground();
+    this->node = theme->getNode();
+    this->arrow = theme->getArrow();
+    this->button_ds = theme->getButtonDS();
+    this->button_manipulate = theme->getButtonManipulate();
+    this->button_submanipulate = theme->getButtonSubmanipulate();
+    this->button_inputbox = theme->getButtonInputbox();
+    this->button_step = theme->getButtonStep();
 }

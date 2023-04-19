@@ -1,26 +1,10 @@
 #include "inputbox.hpp"
 
-InputBox::InputBox(int x, int y, int width, int height, sf::Font* font, bool view, std::string textConst)
-    : Style(x, y, font, textConst, 12, ElementColor(), ElementColor(), ElementColor(), ElementColor(), ElementColor())
+InputBox::InputBox(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, std::string textConst, sf::Font *font, Palette* palette)
+    : Button(coord, width, height, sizeText, thickness, view, keepActive, textConst, font, palette)
 {
     this->active = false;
-    this->view = view;
-    
-    // shape
-    this->width = width;
-    this->height = height;
-
-    // string
     this->wordInput = "";
-
-    // shape
-    this->thickness = 2;
-
-    // color
-    this->SetTextColor(0, sf::Color::Blue);
-    this->SetFillColor(0, sf::Color::Transparent);
-    this->SetColor(3, ElementColor(sf::Color(245, 194, 117), sf::Color::Red, sf::Color(190, 57, 141)));
-    
     refreshrender();
 }
 
@@ -29,21 +13,12 @@ InputBox::~InputBox()
 
 }
 
-void InputBox::setView(bool view)
-{
-    this->view = view;
-}
-void InputBox::changeView()
-{
-    this->view ^= 1;
-}
-
 void InputBox::setWordInput(std::string wordInput)
 {
     this->wordInput = wordInput;
 }
 
-std::string InputBox::getTextInput()
+std::string InputBox::getWordInput()
 {
     return this->wordInput;
 }
@@ -107,9 +82,9 @@ void InputBox::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
     }
 }
 
-void InputBox::refreshrender()
+void InputBox::refreshrender() // override
 {
-    this->shape.setPosition(sf::Vector2f(this->x, this->y));
+    this->shape.setPosition(this->coord);
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
 
@@ -118,11 +93,11 @@ void InputBox::refreshrender()
 
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
-        this->x + 10,
-        this->y + this->height / 2.0 - this->text.getGlobalBounds().height / 2.f - 2
+        this->coord.x + 10,
+        this->coord.y + this->height / 2.0 - this->text.getGlobalBounds().height / 2.f - 2
     );
     
-    this->listColor[this->status].Coloring(shape, text);
+    palette->getColor(this->status).Coloring(this->shape, this->text);
 }
 
 void InputBox::render(sf::RenderWindow* window) {

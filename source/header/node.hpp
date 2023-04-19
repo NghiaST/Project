@@ -12,9 +12,14 @@ const int NOD_SKIP = 10;
 
 struct Node : Style {
     bool running = false;
+    
+    // visualization
+    double fulltime = 1;
+    double time;
+    double ratioColor;
+    int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, appear node, recolor node, disappear node
 public :
-    Node(int x, int y, sf::Font* font, std::string word, int sizeText, std::vector<ElementColor> listColor);
-    Node(int x, int y, sf::Font* font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
+    Node(sf::Vector2f coord, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
     ~Node();
     
     // Functions
@@ -26,18 +31,10 @@ struct CircleNode : Node {
 private:
     int radius;
     sf::CircleShape shape;
-
-    // visualization
-    // bool running = false;
-    double ratioColor;
-    int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, appear node, recolor node, disappear node
-    double fulltime = 1;
-    double time;
-    sf::Vector2f startPoint, endPoint;
+    sf::Vector2f startPoint, endPoint;  // center
 
 public:
-    CircleNode(int x, int y, int radius, sf::Font* font, std::string word, int sizeText, std::vector<ElementColor> Color);
-    CircleNode(int x, int y, int radius, sf::Font* font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
+    CircleNode(sf::Vector2f coord, float diameter, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
     ~CircleNode();
 
     // Functions
@@ -58,8 +55,7 @@ private:
     int width, height;
     sf::RectangleShape shape;
 public:
-    RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, int sizeText, std::vector<ElementColor> listColor);
-    RectangleNode(int x, int y, int width, int height, sf::Font* font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2);
+    RectangleNode(sf::Vector2f coord, float width, float height, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
     ~RectangleNode();
 
     // Functions

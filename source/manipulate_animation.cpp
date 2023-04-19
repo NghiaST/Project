@@ -133,6 +133,7 @@ void Manipulate_Animation_ArrayNode::runStep(int step, double time)
 
 void Manipulate_Animation_ArrayNode::clearStep()
 {
+    node = nullptr;
     listStep.clear();
     previous_step = -1;
     status = 0;
@@ -271,6 +272,7 @@ void Manipulate_Animation_ArrayArrow::runStep(int step, double time)
 
 void Manipulate_Animation_ArrayArrow::clearStep()
 {
+    arrow = nullptr;
     listStep.clear();
     previous_step = -1;
 }

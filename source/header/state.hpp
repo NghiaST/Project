@@ -9,15 +9,15 @@
 #include "inputbox.hpp"
 #include "ElementColor.hpp"
 #include "themes.hpp"
-
-enum MOUSE{MSE_NONE = 0, MSE_LEFTCLICK, MSE_RIGHTCLICK, MSE_LEFTHOLD, MSE_RIGHTHOLD};
+#include "StateCategory.hpp"
+#include "enum.hpp"
 
 struct State {
 private:    
     // value
     sf::RenderWindow* window;
+    PublicThemes* theme;
     sf::Font font;
-    Themes* theme;
     // std::vector<sf::Texture> textures;
     bool quit;
     int cntManipulate;
@@ -27,22 +27,17 @@ private:
     sf::Vector2i mousePosWindow;
     sf::Vector2f mousePosView;
 
+    std::vector<StateCategory> sCategory;
+    std::vector<Button> btnTheme;
+
     // state of button
     int typeCategory;
-    int typeManipulate;
-    int typesubManipulate;
-
-    std::vector<Button> buttonCategory;
-    std::vector<Button> buttonManipulate;
-    std::vector<std::vector<Button>> subbuttonManipulate;
-    std::vector<std::vector<InputBox>> boxarr;
     
 public:
     // Init
-    State(sf::RenderWindow* window, Themes* theme);
+    State(sf::RenderWindow* window, PublicThemes* theme);
     ~State();
 
-    void setNewDS(int ds_new);
     void checkforQuit();
     // setvalue
     void updateInputBox(int pos, int value);
@@ -56,13 +51,6 @@ public:
     // Accessors
     sf::Vector2i update(int mouseType, int keyboardType);
     void render();
-
-    // Box
-    // void Input_Add_InsertTheMiddle();
-    // void Input_Delete_DeleteAtTheMiddle();
-    // void Input_Update_Update();
-    // void Input_Search_Search();
-    // void Build_Input();
 };
 
 #endif

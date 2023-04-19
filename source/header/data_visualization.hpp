@@ -16,7 +16,10 @@ struct DataVisualization {
 private:
     // Varibles
     sf::RenderWindow* window;
-    Themes *LightMode, *DarkMode, presentMode;
+    Themes *LightMode, *DarkMode;
+    Themes *listTheme[2];
+    PublicThemes *theme;
+    int typetheme;
     bool active;
     int keyboardType;
     int mouseType;

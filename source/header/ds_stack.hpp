@@ -17,7 +17,7 @@ protected:
     std::vector<ArrowNode> listArrow;
 
 public:
-    StructStack(sf::RenderWindow* window, bool active);
+    StructStack(sf::RenderWindow* window, PublicThemes* theme, bool active);
     ~StructStack();
     void run(int manipulate, int way, std::string str1, std::string str2);
 

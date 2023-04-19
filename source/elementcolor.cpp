@@ -69,3 +69,22 @@ void ElementColor::Coloring(sf::CircleShape &shape, sf::Text &text, double ratio
     text.setFillColor(this->TextColor * ratio);
     shape.setOutlineColor(this->OutlineColor * ratio);
 }
+
+void ElementColor::Coloring(sf::RectangleShape &shape, sf::Text &text, double ratio)
+{
+    shape.setFillColor(this->FillColor * ratio);
+    text.setFillColor(this->TextColor * ratio);
+    shape.setOutlineColor(this->OutlineColor * ratio);
+}
+
+void ElementColor::Coloring(sf::RectangleShape &shape)
+{
+    shape.setFillColor(this->FillColor);
+    shape.setOutlineColor(this->OutlineColor);
+}
+
+void ElementColor::Coloring(sf::ConvexShape &shape)
+{
+    shape.setFillColor(this->FillColor);
+    shape.setOutlineColor(this->OutlineColor);
+}

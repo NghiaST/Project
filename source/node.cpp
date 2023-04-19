@@ -3,14 +3,8 @@
 ///--------------------------------------------------------------------
 ///--------------------------------Node--------------------------------
 
-Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, std::vector<ElementColor> listColor)
-    : Style(x, y, font, word, sizeText, listColor)
-{
-
-}
-
-Node::Node(int x, int y, sf::Font *font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
-    : Style(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
+Node::Node(sf::Vector2f coord, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette)
+    : Style(coord, sizeText, thickness, word, font, palette)
 {
 
 }
@@ -56,17 +50,10 @@ bool Node::getRunning()
 ///--------------------------------------------------------------------
 ///-----------------------------CircleNode-----------------------------
 
-CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, std::vector<ElementColor> listColor)
-    : Node(x, y, font, word, sizeText, listColor)
+CircleNode::CircleNode(sf::Vector2f coord, float diameter, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette)
+    : Node(coord, sizeText, thickness, word, font, palette)
 {
-    this->radius = radius;
-    this->refreshrender();
-}
-
-CircleNode::CircleNode(int x, int y, int radius, sf::Font *font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
-    : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
-{
-    this->radius = radius;
+    this->radius = diameter / 2;
     this->refreshrender();
 }
 
@@ -84,7 +71,7 @@ int CircleNode::update(sf::Vector2f mousePos, int mouseType, int keyboardType) /
 }
 void CircleNode::refreshrender()
 {
-    this->shape.setPosition(sf::Vector2f(this->x - this->radius, this->y - this->radius));
+    this->shape.setPosition(this->coord - sf::Vector2f(this->radius, this->radius));
     this->shape.setRadius(this->radius);
     this->shape.setOutlineThickness(this->thickness);
 
@@ -92,24 +79,22 @@ void CircleNode::refreshrender()
     this->text.setString((this->word).c_str());
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
-        this->x - this->text.getGlobalBounds().width / 2.f - 1,
-        this->y - this->text.getGlobalBounds().height / 2.f - 4
+        this->coord.x - this->text.getGlobalBounds().width / 2.f - 1,
+        this->coord.y - this->text.getGlobalBounds().height / 2.f - 4
     );
 
     if (this->running == false) {
-        this->listColor[this->status].Coloring(this->shape, this->text);
+        palette->getColor(this->status).Coloring(this->shape, this->text);
     }
     else {
-        this->listColor[this->status].Coloring(this->shape, this->text, this->ratioColor);
+        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
     }
-    // debug here
 }
 void CircleNode::render(sf::RenderWindow* window) 
 {
-    if (this->running == true && this->statusAnimation == -1)
-        return;
     this->refreshrender();
-
+    if (this->running == true && this->statusAnimation == NOD_NOPE)
+        return;
     window->draw(this->shape);
     window->draw(this->text);
 }
@@ -128,10 +113,10 @@ void CircleNode::prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint
 }
 void CircleNode::stopAnimation()
 {
+    this->running = false;
     this->setXY(this->endPoint);
     this->startPoint = this->endPoint = sf::Vector2f(0, 0);
     this->status = 0;
-    this->running = false;
     this->ratioColor = 1;
     this->statusAnimation = NOD_NOPE;
 }
@@ -181,21 +166,14 @@ void CircleNode::renderAnimation(sf::RenderWindow *window, int statusAnimation, 
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
 
-RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, std::vector<ElementColor> listColor)
-    : Node(x, y, font, word, sizeText, listColor)
+RectangleNode::RectangleNode(sf::Vector2f coord, float width, float height, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette)
+    : Node(coord, sizeText, thickness, word, font, palette)
 {
     this->width = width;
     this->height = height;
     this->refreshrender();
 }
 
-RectangleNode::RectangleNode(int x, int y, int width, int height, sf::Font *font, std::string word, int sizeText, ElementColor idleColor, ElementColor hoverColor, ElementColor activeColor, ElementColor runColor, ElementColor runColor2)
-    : Node(x, y, font, word, sizeText, idleColor, hoverColor, activeColor, runColor, runColor2)
-{
-    this->width = width;
-    this->height = height;
-    this->refreshrender();
-}
 RectangleNode::~RectangleNode()
 {
 
@@ -208,24 +186,30 @@ int RectangleNode::update(sf::Vector2f mousePos, int mouseType, int keyboardType
 }
 void RectangleNode::refreshrender()
 {
-    this->shape.setPosition(sf::Vector2f(this->x - this->width / 2.f, this->y - this->height / 2.f));
+    this->shape.setPosition(this->coord - sf::Vector2f(this->width, this->height) / 2);
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
 
     this->text.setFont(*this->font);
     this->text.setString((this->word).c_str());
-
     this->text.setCharacterSize(this->sizeText);
     this->text.setPosition(
-        this->x - this->text.getGlobalBounds().width / 2.f,
-        this->y - this->text.getGlobalBounds().height / 2.f - 4
+        this->coord.x - this->text.getGlobalBounds().width / 2.f - 1,
+        this->coord.y - this->text.getGlobalBounds().height / 2.f - 4
     );
 
-    this->listColor[this->status].Coloring(this->shape, this->text);
+    if (this->running == false) {
+        palette->getColor(this->status).Coloring(this->shape, this->text);
+    }
+    else {
+        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
+    }
 }
 void RectangleNode::render(sf::RenderWindow* window) 
 {
     this->refreshrender();
+    if (this->running == true && this->statusAnimation == NOD_NOPE)
+        return;
 
     window->draw(this->shape);
     window->draw(this->text);

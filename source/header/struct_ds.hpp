@@ -7,11 +7,13 @@
 
 #include "node.hpp"
 #include "support_function.hpp"
+#include "themes.hpp"
 
 struct StructDataStructure {
 protected:
     // window
     sf::RenderWindow* window;
+    PublicThemes* theme;
     bool active;
 
     // font
@@ -30,18 +32,22 @@ protected:
     std::vector<int> elements;
 
     // data for node
-    int sizeNode;   /// rectangle: length, area: diameter 
-    int distance;
-    int diffx;
-    int diffy;
-    std::vector<ElementColor> listColor;
+    float sizeNode;   /// rectangle: length, area: diameter 
+    float diffx;
+    float diffy;
+    float distance;
+    unsigned int sizeText;
+    float thickness;
 
     // animation
     bool running = false;
+    bool pause = false;
+    bool step_step = false;
     double totaltime;
     sf::Clock clock;
     double speed = 1;
 
+    std::vector<sf::Vector2f> listPoint;
     std::vector<int> printElements;
     int count_nodePrint;
 
@@ -56,7 +62,7 @@ protected:
     int Pos = -1;
 
 public:
-    StructDataStructure(sf::RenderWindow* window, bool active);
+    StructDataStructure(sf::RenderWindow* window, PublicThemes* theme, bool active);
     ~StructDataStructure();
 
     void Initialize_Empty();
