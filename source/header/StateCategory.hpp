@@ -7,12 +7,12 @@
 #include <vector>
 #include "button.hpp"
 #include "inputbox.hpp"
-#include "themes.hpp"
-#include "enum.hpp"
+#include "settings.hpp"
+#include "mouseKey.hpp"
 
 struct StateCategory {
     sf::RenderWindow* window;
-    PublicThemes* theme;
+    Themes* theme;
     sf::Font* font;
     int cntCategory;
     int cntManipulate;
@@ -25,12 +25,12 @@ struct StateCategory {
     std::vector<std::vector<Button>> buttonsubManipulate;
     std::vector<std::vector<InputBox>> boxarr;
 
-    StateCategory(sf::RenderWindow* window, PublicThemes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::vector<std::string>> strInputBox);
+    StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::vector<std::string>> strInputBox);
     ~StateCategory();
 
     void Clean();
 
-    sf::Vector2i update(int mouseType, int keyboardType, sf::Vector2f mousePosView);
+    sf::Vector2i update(MOUSE mouseType, KEYBOARD keyboardType, sf::Vector2f mousePosView);
     void updateInputBox(int pos, int value);
     std::string getValueButton(int typeManipulate, int id);
 

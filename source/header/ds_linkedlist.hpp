@@ -21,14 +21,14 @@ protected:
     std::vector<Manipulate_Animation_ArrayArrow> arrowAnimation;
 
 public:
-    StructLinkedList(sf::RenderWindow* window, PublicThemes* theme, bool active);
+    StructLinkedList(VisualizationSettings* settings, bool active);
     ~StructLinkedList();
 
     std::vector<sf::Vector2f> getPosition(int size);
     void run(int manipulate, int way, std::string str1, std::string str2);
 
     // render
-    sf::Vector2i updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    sf::Vector2i updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     void refreshNode();
     void refreshrender();
     void render();
@@ -43,7 +43,6 @@ public:
     void Animation_Update();
     void Animation_Search();
 
-    void activeAnimation();
     void stopAnimation();
 
 

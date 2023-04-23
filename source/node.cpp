@@ -14,11 +14,10 @@ Node::~Node()
 
 }
 
-int Node::updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, bool isMouseInside) // check if Style is active
+int Node::updateNode(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside) // check if Style is active
 {
     const static int KBD_ENTER = 13;
     const static int KBD_DELETE = 127;
-    const static int MSE_LEFTCLICK = 1;
     switch (this->status)
     {
         case 0 :
@@ -62,7 +61,7 @@ CircleNode::~CircleNode()
 
 }
 
-int CircleNode::update(sf::Vector2f mousePos, int mouseType, int keyboardType) // check if CircleNode is active
+int CircleNode::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType) // check if CircleNode is active
 {
     if (this->running == true) 
         return -1;
@@ -179,7 +178,7 @@ RectangleNode::~RectangleNode()
 
 }
 
-int RectangleNode::update(sf::Vector2f mousePos, int mouseType, int keyboardType) // check if CircleNode is active
+int RectangleNode::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType) // check if CircleNode is active
 {
     bool isMouseInside = this->shape.getGlobalBounds().contains(mousePos);
     return this->Node::updateNode(mousePos, mouseType, keyboardType, isMouseInside);

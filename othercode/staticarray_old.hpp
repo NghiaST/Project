@@ -8,7 +8,7 @@ StructStaticArray2::StructStaticArray2(sf::RenderWindow* window, bool active)
     : StructDataStructure(window, active)
 {
     for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, &this->font, "", 15, this->Color[0], this->Color[1], this->Color[2], this->Color[3], this->Color[4]));
+        listNode.push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, this->font "", 15, this->Color[0], this->Color[1], this->Color[2], this->Color[3], this->Color[4]));
     }
     this->updatePositionNode();
     this->refreshrender();
@@ -48,7 +48,7 @@ void StructStaticArray2::run(int manipulate, int way, std::string str1, std::str
     this->updatePositionNode();
 }
 
-sf::Vector2i StructStaticArray2::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructStaticArray2::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->maxsize; i++) {

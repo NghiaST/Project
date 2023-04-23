@@ -23,9 +23,9 @@ std::string InputBox::getWordInput()
     return this->wordInput;
 }
 
-void InputBox::Add_Character(int keyboardType)
+void InputBox::Add_Character(KEYBOARD keyboardType)
 {
-    this->wordInput += (char) keyboardType;
+    this->wordInput += static_cast<char> (keyboardType);
 }
 
 void InputBox::Del_Character()
@@ -35,7 +35,7 @@ void InputBox::Del_Character()
     }
 }
 
-void InputBox::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
+void InputBox::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
 {
     if (this->view == false) return;
     const static int MSE_LEFTCLICK = 1;
@@ -64,18 +64,12 @@ void InputBox::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
     }
     this->active = (this->status == 3);
 
-    const static int KBD_NONE = 0;
-    const static int KBD_BACKSPACE = 8;
-    const static int KBD_NEWLINE = 10;
-    const static int KBD_ENTER = 13;
-    const static int KBD_DEL = 127;
-
     if (this->active == true) {
         if (keyboardType == KBD_BACKSPACE) 
             this->Del_Character();
         else if (keyboardType == KBD_NONE || keyboardType == KBD_NEWLINE || keyboardType == KBD_ENTER) 
             ; // do nothing
-        else if ('0' <= keyboardType && keyboardType <= '9') 
+        else if ('0' <= static_cast<int>(keyboardType) && static_cast<int>(keyboardType) <= '9') 
             this->Add_Character(keyboardType);
         else 
             this->Add_Character(keyboardType);

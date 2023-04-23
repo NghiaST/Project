@@ -4,8 +4,8 @@
 #include "support_function.hpp"
 #include "struct_ds.hpp"
 
-StructQueue::StructQueue(sf::RenderWindow* window, PublicThemes* theme, bool active) 
-    : StructDataStructure(window, theme, active)
+StructQueue::StructQueue(VisualizationSettings* settings, bool active) 
+    : StructDataStructure(settings, active)
 {
     return;
     this->maxsize = 12;
@@ -15,8 +15,8 @@ StructQueue::StructQueue(sf::RenderWindow* window, PublicThemes* theme, bool act
     this->distance = this->sizeNode + this->diffx;
 
     this->elements = std::vector<int>(maxsize, 0);
-    listNode = std::vector<CircleNode> (this->maxsize, CircleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeText, this->thickness, "", &this->font, &this->theme->node));
-    listArrow = std::vector<ArrowNode> (this->maxsize, ArrowNode(this->sizeNode, &this->theme->arrow));
+    listNode = std::vector<CircleNode> (this->maxsize, CircleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeText, this->thickness, "", this->font, this->theme->getNode()));
+    listArrow = std::vector<ArrowNode> (this->maxsize, ArrowNode(this->sizeNode, this->theme->getArrow()));
     if (this->active)
         turn_on();
 }
@@ -86,7 +86,7 @@ void StructQueue::Dequeue()
     sizearray--;
 }
 
-sf::Vector2i StructQueue::updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructQueue::updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->sizearray; i++) {

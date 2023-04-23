@@ -1,6 +1,6 @@
 #include "StateCategory.hpp"
 
-StateCategory::StateCategory(sf::RenderWindow* window, PublicThemes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::vector<std::string>> strInputBox)
+StateCategory::StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::vector<std::string>> strInputBox)
 {
     this->window = window;
     this->font = font;
@@ -16,7 +16,7 @@ StateCategory::StateCategory(sf::RenderWindow* window, PublicThemes* theme, sf::
     sizeRec = sf::Vector2f(100, velocity.y - 5);
 
     for(std::string strname : strCategory) {
-        buttonCategory.push_back(Button(coord, sizeRec.x, sizeRec.y, 13, 2, true, true, strname, this->font, &this->theme->button_ds));
+        buttonCategory.push_back(Button(coord, sizeRec.x, sizeRec.y, 13, 2, true, true, strname, this->font, this->theme->getButtonDS()));
         coord += velocity;
     }
 
@@ -30,7 +30,7 @@ StateCategory::StateCategory(sf::RenderWindow* window, PublicThemes* theme, sf::
     sizeRec = sf::Vector2f(80, velocity.y - 5);
     for(std::string strname : strManipulate) 
     {
-        buttonManipulate.push_back(Button(coord, sizeRec.x, sizeRec.y, 13, 2, true, false, strname, this->font, &this->theme->button_manipulate));
+        buttonManipulate.push_back(Button(coord, sizeRec.x, sizeRec.y, 13, 2, true, false, strname, this->font, this->theme->getButtonManipulate()));
         coord += velocity;
     }
 
@@ -42,7 +42,7 @@ StateCategory::StateCategory(sf::RenderWindow* window, PublicThemes* theme, sf::
     {
         sf::Vector2f coord2 = coord;
         for(std::string strname : strsubManipulate[i]) {
-            buttonsubManipulate[i].push_back(Button(coord2, sizeRec.x, sizeRec.y, 11, 2, false, false, strname, this->font, &this->theme->button_submanipulate));
+            buttonsubManipulate[i].push_back(Button(coord2, sizeRec.x, sizeRec.y, 11, 2, false, false, strname, this->font, this->theme->getButtonSubmanipulate()));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
@@ -56,7 +56,7 @@ StateCategory::StateCategory(sf::RenderWindow* window, PublicThemes* theme, sf::
     {
         sf::Vector2f coord2 = coord;
         for(std::string strname : strInputBox[i]) {
-            boxarr[i].push_back(InputBox(coord2, sizeRec.x, sizeRec.y, 11, 2, false, false, strname, this->font, &this->theme->button_inputbox));
+            boxarr[i].push_back(InputBox(coord2, sizeRec.x, sizeRec.y, 11, 2, false, false, strname, this->font, this->theme->getButtonInputbox()));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
@@ -85,13 +85,12 @@ void StateCategory::Clean()
     }
 }
 
-sf::Vector2i StateCategory::update(int mouseType, int keyboardType, sf::Vector2f mousePosView)
+sf::Vector2i StateCategory::update(MOUSE mouseType, KEYBOARD keyboardType, sf::Vector2f mousePosView)
 {
     sf::Vector2i ret = sf::Vector2i(-1, -1);
     int cnt = 0;
     for(Button& btn : this->buttonCategory) {
-        btn.update(mousePosView, mouseType);
-        if (btn.isPressed()) {
+        if (btn.updateCheckClick(mousePosView, mouseType)) {
             ret.x = cnt;
             ret.y = -1;
         }
@@ -100,8 +99,7 @@ sf::Vector2i StateCategory::update(int mouseType, int keyboardType, sf::Vector2f
     
     cnt = 200;
     for(Button& btn : this->buttonManipulate) {
-        btn.update(mousePosView, mouseType);
-        if (btn.isPressed()) {
+        if (btn.updateCheckClick(mousePosView, mouseType)) {
             ret.x = cnt;
             ret.y = -1;
         }
@@ -113,8 +111,7 @@ sf::Vector2i StateCategory::update(int mouseType, int keyboardType, sf::Vector2f
     {
         int cnt2 = 0;
         for(Button& btn : buttonsubManipulate[i]) {
-            btn.update(mousePosView, mouseType);
-            if (btn.isPressed()) {
+            if (btn.updateCheckClick(mousePosView, mouseType)) {
                 ret.x = i + cnt;
                 ret.y = cnt2;
             }

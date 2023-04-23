@@ -7,17 +7,20 @@
 
 #include "node.hpp"
 #include "support_function.hpp"
-#include "themes.hpp"
+#include "settings.hpp"
+#include "mouseKey.hpp"
+
+enum ANIMATION_TYPE {ANIMATION_PAUSE = 0, ANIMATION_PLAY, ANIMATION_STEP_DOWN, ANIMATION_STEP_UP};
 
 struct StructDataStructure {
 protected:
     // window
     sf::RenderWindow* window;
-    PublicThemes* theme;
+    Themes* theme;
     bool active;
 
     // font
-    sf::Font font;
+    sf::Font* font;
 
     // point
     sf::Vector2f centerVisual;
@@ -43,7 +46,14 @@ protected:
     bool running = false;
     bool pause = false;
     bool step_step = false;
+    ANIMATION_TYPE type_running = ANIMATION_PAUSE;   // 0, 1, 2, 3, 4 : none, common, pause, step by step <-, step by step ->
+    double steptime = 1.3;
     double totaltime;
+    double time;
+
+    int step_total;
+    int step_present;
+    int step_next;
     sf::Clock clock;
     double speed = 1;
 
@@ -62,7 +72,7 @@ protected:
     int Pos = -1;
 
 public:
-    StructDataStructure(sf::RenderWindow* window, PublicThemes* theme, bool active);
+    StructDataStructure(VisualizationSettings* settings, bool active);
     ~StructDataStructure();
 
     void Initialize_Empty();
@@ -87,12 +97,16 @@ public:
     void turn_off();
     const bool& isActive() const;
 
+    void activeAnimation();
+
+    void updateTypeAnimation(int type);
+    void updateTimeAnimation();
     virtual void run(int manipulate, int way, std::string str1, std::string str2) = 0;
     virtual void refreshrender() = 0;
     virtual void render() = 0;
 
     // render
-    // sf::Vector2i update(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    // sf::Vector2i update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
 };
 
 #endif

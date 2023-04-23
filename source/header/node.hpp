@@ -5,6 +5,8 @@
 #include "ElementColor.hpp"
 #include "style.hpp"
 #include "support_function.hpp"
+#include "mouseKey.hpp"
+
 const int NOD_NOPE = -1, NOD_STABLE = 0, NOD_RECOLOR = 1, NOD_APPEAR = 2, NOD_DEL = 3, NOD_MOVE = 4;   /// manipulate visual
 const int NOD_NORMAL = 5;   /// -> NOD_STABLE
 const int NOD_SHOW = 6, NOD_SOLVE = 7, NOD_UNSHOW = 8, NOD_ACTIVE = 9;  /// NOD_RECOLOR, manipulate: stable -> change color
@@ -23,7 +25,7 @@ public :
     ~Node();
     
     // Functions
-    int updateNode(sf::Vector2f mousePos, int mouseType, int keyboardType, bool isMouseInside);
+    int updateNode(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside);
     bool getRunning();
 };
 
@@ -38,7 +40,7 @@ public:
     ~CircleNode();
 
     // Functions
-    int update(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    int update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     void refreshrender();
     void render(sf::RenderWindow* window);
 
@@ -59,7 +61,7 @@ public:
     ~RectangleNode();
 
     // Functions
-    int update(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    int update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     void refreshrender();
     void render(sf::RenderWindow* window);
 };

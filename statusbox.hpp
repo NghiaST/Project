@@ -8,7 +8,7 @@ protected:
     bool canEnable; // check if mouse to be pressed inside or outside the button
 
 public:
-    void updateStatus(sf::Vector2f mousePos, int mouseType, bool isMouseWithin);
+    void updateStatus(sf::Vector2f mousePos, MOUSE mouseType, bool isMouseWithin);
     // mouseType 0, 1, 2 -> NONE, LEFTCLICK, RIGHTCLICK
 };
 

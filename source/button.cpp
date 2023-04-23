@@ -24,7 +24,7 @@ const bool Button::isPressed() const {
     return false;
 }
 
-void Button::update(sf::Vector2f mousePos, int mouseType) 
+void Button::update(sf::Vector2f mousePos, MOUSE mouseType) 
 {
     // enum MOUSE{MSE_NONE = 0, MSE_LEFTCLICK, MSE_RIGHTCLICK, MSE_LEFTHOLD, MSE_RIGHTHOLD};
     if (this->view == false) return;
@@ -56,6 +56,13 @@ void Button::update(sf::Vector2f mousePos, int mouseType)
         default :
             exit(2);
     }
+}
+
+bool Button::updateCheckClick(sf::Vector2f mousePos, MOUSE mouseType)
+{
+    const static int MSE_LEFTCLICK = 1;
+    update(mousePos, mouseType);
+    return (mouseType == MSE_LEFTCLICK && this->status == 2);
 }
 
 void Button::refreshrender()

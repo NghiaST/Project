@@ -4,8 +4,8 @@
 #include "support_function.hpp"
 #include "struct_ds.hpp"
 
-StructLinkedList::StructLinkedList(sf::RenderWindow* window, PublicThemes* theme, bool active) 
-    : StructDataStructure(window, theme, active)
+StructLinkedList::StructLinkedList(VisualizationSettings* settings, bool active) 
+    : StructDataStructure(settings, active)
 {
     this->speed = 3;
     this->maxsize = 14;
@@ -25,8 +25,8 @@ StructLinkedList::StructLinkedList(sf::RenderWindow* window, PublicThemes* theme
     float thickness;
 
     this->elements = std::vector<int>(this->maxsize, 0);
-    listNode = std::vector<CircleNode> (this->maxsize, CircleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeText, this->thickness, "", &this->font, &this->theme->node));
-    listArrow = std::vector<ArrowNode> (this->maxsize, ArrowNode(this->sizeNode, &this->theme->arrow));
+    listNode = std::vector<CircleNode> (this->maxsize, CircleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeText, this->thickness, "", this->font, this->theme->getNode()));
+    listArrow = std::vector<ArrowNode> (this->maxsize, ArrowNode(this->sizeNode, this->theme->getArrow()));
     listPoint = std::vector<sf::Vector2f> (this->maxsize, sf::Vector2f(0, 0));
     nodeAnimation = std::vector<Manipulate_Animation_ArrayNode> (this->maxsize, Manipulate_Animation_ArrayNode());
     arrowAnimation = std::vector<Manipulate_Animation_ArrayArrow> (this->maxsize, Manipulate_Animation_ArrayArrow());
@@ -58,13 +58,9 @@ std::vector<sf::Vector2f> StructLinkedList::getPosition(int size)
 
 void StructLinkedList::run(int manipulate, int way, std::string str1, std::string str2)
 {
-    double time = clock.getElapsedTime().asSeconds() * speed;
-    if (this->running == true && (time > this->totaltime || manipulate != -1))
+    if (this->running == true && manipulate != -1)
         stopAnimation();
-    // this->Manipulate = manipulate;
-    // this->Way = way;
 
-    /* debug */ 
     if (this->active == false) {
         std::cout << "Error StructLinkedList::run\n";
         exit(2);
@@ -72,7 +68,6 @@ void StructLinkedList::run(int manipulate, int way, std::string str1, std::strin
     if (manipulate == -1) return;
 
     this->preSize = this->sizearray;
-    // this->printElements = elements;
     this->Str1 = str1;
     this->Str2 = str2;
     
@@ -99,15 +94,10 @@ void StructLinkedList::run(int manipulate, int way, std::string str1, std::strin
     }
 }
 
-void StructLinkedList::activeAnimation()
-{
-    this->running = true;
-    clock.restart();
-}
-
 void StructLinkedList::stopAnimation()
 {
     this->running = false;
+    this->type_running = ANIMATION_PAUSE;
     this->totaltime = 0;
     for(int i = 0; i < this->count_nodePrint; i++) {
         listNode[i].stopAnimation();
@@ -121,7 +111,7 @@ void StructLinkedList::stopAnimation()
     refreshNode();
 }
 
-sf::Vector2i StructLinkedList::updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructLinkedList::updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->sizearray; i++) {
@@ -145,9 +135,7 @@ void StructLinkedList::refreshNode()
 
 void StructLinkedList::refreshrender()
 {
-    double time = clock.getElapsedTime().asSeconds() * speed;
-    if (this->running == true && time > this->totaltime)
-        stopAnimation();
+    updateTimeAnimation();
 
     if (this->running == true)
     {
@@ -243,6 +231,7 @@ void StructLinkedList::Animation_Insert_First()
         }
     }
     this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 void StructLinkedList::Animation_Insert_Last()
 {
@@ -319,6 +308,7 @@ void StructLinkedList::Animation_Insert_Last()
         }   
     }
     this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 void StructLinkedList::Animation_Insert_Manual()
 {
@@ -443,6 +433,7 @@ void StructLinkedList::Animation_Insert_Manual()
         }
     }
     this->totaltime = nodeAnimation[0].getTotaltime() + Delay * 10;
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 
 void StructLinkedList::Animation_Del_First()
@@ -508,6 +499,7 @@ void StructLinkedList::Animation_Del_First()
         }
     }
     this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 void StructLinkedList::Animation_Del_Last()
 {
@@ -597,6 +589,7 @@ void StructLinkedList::Animation_Del_Last()
         }
     }
     this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 void StructLinkedList::Animation_Del_Manual()
 {
@@ -604,11 +597,10 @@ void StructLinkedList::Animation_Del_Manual()
     int pos = string_to_int(this->Str1);
     if (pos <= 0) return void(Animation_Del_First());
     if (pos >= this->sizearray) return void(Animation_Del_Last());
-
     Del_Manual(pos);
-    clock.restart();
-    this->running = true;
+    
     count_nodePrint = preSize;
+    activeAnimation();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
@@ -705,6 +697,7 @@ void StructLinkedList::Animation_Del_Manual()
         }
     }
     this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 
 void StructLinkedList::Animation_Initialize(int way)
@@ -715,9 +708,8 @@ void StructLinkedList::Animation_Initialize(int way)
     if (way == 3) this->Initialize_ExternalFile(this->Str2);
     this->printElements = this->elements;
 
-    clock.restart();
-    this->running = true;
-    this->count_nodePrint = this->sizearray;
+    count_nodePrint = sizearray;
+    activeAnimation();
 
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
 
@@ -730,6 +722,7 @@ void StructLinkedList::Animation_Initialize(int way)
         }
     }
     this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 
 void StructLinkedList::Animation_Update()
@@ -793,6 +786,7 @@ void StructLinkedList::Animation_Update()
     }
 
     this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 
 void StructLinkedList::Animation_Search()
@@ -854,4 +848,5 @@ void StructLinkedList::Animation_Search()
     }
 
     this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }

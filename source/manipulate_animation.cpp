@@ -138,9 +138,15 @@ void Manipulate_Animation_ArrayNode::clearStep()
     previous_step = -1;
     status = 0;
 }
+
+double Manipulate_Animation_ArrayNode::getTotalstep()
+{
+    return this->listStep.size();
+}
+
 double Manipulate_Animation_ArrayNode::getTotaltime()
 {
-    return this->listStep.size() * steptime + delay * 5;
+    return this->listStep.size() * steptime;
 }
 
 // Manipulate_Animation_Arrow

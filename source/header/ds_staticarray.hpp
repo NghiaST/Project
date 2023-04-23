@@ -15,14 +15,14 @@ protected:
     std::vector<RectangleNode> listNode;
 
 public:
-    StructStaticArray(sf::RenderWindow* window, PublicThemes* theme, bool active);
+    StructStaticArray(VisualizationSettings* settings, bool active);
     ~StructStaticArray();
 
     void run(int manipulate, int way, std::string str1, std::string str2);
 
     // render
     void updatePositionNode();
-    sf::Vector2i updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    sf::Vector2i updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     void refreshrender();
     void render();
 };

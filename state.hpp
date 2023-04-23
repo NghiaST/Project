@@ -55,7 +55,7 @@ public:
     void updateMousePositions();
 
     // Accessors
-    sf::Vector2i update(int mouseType, int keyboardType);
+    sf::Vector2i update(MOUSE mouseType, KEYBOARD keyboardType);
     void render();
 
     // Box

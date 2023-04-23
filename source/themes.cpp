@@ -21,15 +21,17 @@ ElementColor Palette::getColor(int status)
     return this->listColor[status];
 }
 
-PublicThemes::PublicThemes(sf::Color background, Palette node, Palette arrow, Palette button_ds, Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox, Palette button_step) 
+Themes::Themes(sf::Color background, Palette node, Palette arrow, Palette button_ds, Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox, Palette button_step) 
     : background(background), node(node), arrow(arrow),
       button_ds(button_ds), button_manipulate(button_manipulate),
       button_submanipulate(button_submanipulate),
       button_inputbox(button_inputbox),
       button_step(button_step) {}
 
-Themes::Themes(sf::Color background, Palette node, Palette arrow, Palette button_ds, Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox, Palette button_step)
-    : PublicThemes(background, node, arrow, button_ds, button_manipulate, button_submanipulate, button_inputbox, button_step) {}
+void Themes::setTheme(Themes *theme)
+{
+    *this = *theme;
+}
 
 void Themes::setBackground(sf::Color newBackground) {
     background = newBackground;
@@ -64,46 +66,34 @@ void Themes::setButtonStep(Palette newButtonStep) {
     button_step = newButtonStep;
 }
 
-sf::Color Themes::getBackground() {
-    return background;
+sf::Color* Themes::getBackground() {
+    return &background;
 }
 
-Palette Themes::getNode() {
-    return node;
+Palette* Themes::getNode() {
+    return &node;
 }
 
-Palette Themes::getArrow() {
-    return arrow;
+Palette* Themes::getArrow() {
+    return &arrow;
 }
 
-Palette Themes::getButtonDS() {
-    return button_ds;
+Palette* Themes::getButtonDS() {
+    return &button_ds;
 }
 
-Palette Themes::getButtonManipulate() {
-    return button_manipulate;
+Palette* Themes::getButtonManipulate() {
+    return &button_manipulate;
 }
 
-Palette Themes::getButtonSubmanipulate() {
-    return button_submanipulate;
+Palette* Themes::getButtonSubmanipulate() {
+    return &button_submanipulate;
 }
 
-Palette Themes::getButtonInputbox() {
-    return button_inputbox;
+Palette* Themes::getButtonInputbox() {
+    return &button_inputbox;
 }
 
-Palette Themes::getButtonStep() {
-    return button_step;
-}
-
-void PublicThemes::getThemes(Themes* theme)
-{
-    this->background = theme->getBackground();
-    this->node = theme->getNode();
-    this->arrow = theme->getArrow();
-    this->button_ds = theme->getButtonDS();
-    this->button_manipulate = theme->getButtonManipulate();
-    this->button_submanipulate = theme->getButtonSubmanipulate();
-    this->button_inputbox = theme->getButtonInputbox();
-    this->button_step = theme->getButtonStep();
+Palette* Themes::getButtonStep() {
+    return &button_step;
 }

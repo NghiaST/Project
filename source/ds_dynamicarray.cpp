@@ -4,8 +4,8 @@
 #include "support_function.hpp"
 #include "struct_ds.hpp"
 
-StructDynamicArray::StructDynamicArray(sf::RenderWindow* window, PublicThemes* theme, bool active) 
-    : StructDataStructure(window, theme, active)
+StructDynamicArray::StructDynamicArray(VisualizationSettings* settings, bool active) 
+    : StructDataStructure(settings, active)
 {
     this->maxsize = 15;
     this->sizeNode = 50;
@@ -14,7 +14,7 @@ StructDynamicArray::StructDynamicArray(sf::RenderWindow* window, PublicThemes* t
 
     this->elements = std::vector<int>(maxsize, 0);
     for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(RectangleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeNode, 12, 2, "", &this->font, &this->theme->node));
+        listNode.push_back(RectangleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeNode, 12, 2, "", this->font, this->theme->getNode()));
     }
     if (this->active)
         turn_on();
@@ -54,7 +54,7 @@ void StructDynamicArray::run(int manipulate, int way, std::string str1, std::str
     this->updatePositionNode();
 }
 
-sf::Vector2i StructDynamicArray::updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructDynamicArray::updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->sizearray; i++) {

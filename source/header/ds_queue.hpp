@@ -17,7 +17,7 @@ protected:
     std::vector<ArrowNode> listArrow;
 
 public:
-    StructQueue(sf::RenderWindow* window, PublicThemes* theme, bool active);
+    StructQueue(VisualizationSettings* settings, bool active);
     ~StructQueue();
 
     void run(int manipulate, int way, std::string str1, std::string str2);
@@ -28,7 +28,7 @@ public:
     void Dequeue();
     // render
     void updatePositionNode();
-    sf::Vector2i updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    sf::Vector2i updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     void refreshrender();
     void render();
 };

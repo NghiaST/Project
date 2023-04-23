@@ -55,6 +55,7 @@ public:
     void runStep(int step, double time);
 
     void clearStep();
+    double getTotalstep();
     double getTotaltime();
 };
 

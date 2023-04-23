@@ -4,10 +4,11 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
-
+#include <memory>
 #include "node.hpp"
 #include "support_function.hpp"
 #include "struct_ds.hpp"
+#include "mouseKey.hpp"
 
 struct StructDynamicArray : StructDataStructure {
 protected:
@@ -15,14 +16,14 @@ protected:
     std::vector<RectangleNode> listNode;
 
 public:
-    StructDynamicArray(sf::RenderWindow* window, PublicThemes* theme, bool active);
+    StructDynamicArray(VisualizationSettings* settings, bool active);
     ~StructDynamicArray();
 
     void run(int manipulate, int way, std::string str1, std::string str2);
 
     // render
     void updatePositionNode();
-    sf::Vector2i updateKBM(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    sf::Vector2i updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     void refreshrender();
     void render();
 };

@@ -2,6 +2,7 @@
 #define __button_hpp__
 #include <SFML/Graphics.hpp>
 #include "style.hpp"
+#include "mouseKey.hpp"
 
 struct Button : Style {
 protected:
@@ -18,7 +19,8 @@ public:
     const bool isPressed() const;
 
     //Functions
-    void update(sf::Vector2f mousePos, int mouseType);
+    void update(sf::Vector2f mousePos, MOUSE mouseType);
+    bool updateCheckClick(sf::Vector2f mousePos, MOUSE mouseType);
     virtual void refreshrender();
     virtual void render(sf::RenderWindow* window);
 };

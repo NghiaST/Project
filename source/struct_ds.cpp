@@ -3,17 +3,15 @@
 #include <algorithm>
 #include "struct_ds.hpp"
 
-StructDataStructure::StructDataStructure(sf::RenderWindow* window, PublicThemes* theme, bool active) 
+StructDataStructure::StructDataStructure(VisualizationSettings* settings, bool active) 
 {
     // window
-    this->window = window;
-    this->theme = theme;
+    this->window = settings->getWindow();
+    this->theme = settings->getTheme();
     this->active = active;
-
+    
     // font
-    if (!this->font.loadFromFile("dat/arial_bold.ttf")) {
-        std::cout << "Error Load Font haha\n";
-    }
+    this->font = settings->getFont();
 
     // point
     this->centerVisual = sf::Vector2f(this->window->getSize().x / 2, 150);
@@ -173,4 +171,84 @@ void StructDataStructure::turn_off()
 const bool &StructDataStructure::isActive() const
 {
     return this->active;
+}
+
+void StructDataStructure::updateTimeAnimation()
+{
+    double addTime = clock.getElapsedTime().asSeconds() * speed;
+    clock.restart();
+
+    switch (this->type_running)
+    {
+        case ANIMATION_PAUSE : break;
+        case ANIMATION_PLAY :
+            time = std::min(time + addTime, totaltime);
+            step_present = (int) time / steptime;
+            break;
+        case ANIMATION_STEP_DOWN : 
+            time = std::max(step_next * steptime - 0.01, time - addTime);
+            break;
+        case ANIMATION_STEP_UP : 
+            time = std::min(step_next * steptime - 0.01, time + addTime);
+            break;
+        default :
+            std::cout << "Error struct_ds.hpp\n";
+            exit(20);
+    }
+}
+
+void StructDataStructure::updateTypeAnimation(int newTypeRunning)
+{
+    /// 0, 1, 2, 3, 4, 5 : <<, <, ||, play, >, >>
+    if (this->running == false)
+        return;
+    ANIMATION_TYPE type_next = static_cast<ANIMATION_TYPE>(newTypeRunning);
+    switch (newTypeRunning)
+    {
+        case 0 : 
+            this->time = 0;
+            this->step_present = (int) time / steptime;
+            this->type_running = ANIMATION_PAUSE;
+            break;
+        case 5 : 
+            this->time = step_total * steptime;
+            this->step_present = (int) time / steptime;
+            this->type_running = ANIMATION_PAUSE;
+            break;
+        case 2 :
+            this->step_present = (int) time / steptime;
+            this->type_running = ANIMATION_PAUSE;
+            break;
+        case 3 :
+            this->step_present = (int) time / steptime;
+            this->type_running = ANIMATION_PLAY;
+            break;
+        case 1 :
+            this->step_present = (int) time / steptime;
+            if (this->type_running == ANIMATION_STEP_DOWN || this->type_running == ANIMATION_STEP_UP)
+            {
+                this->step_present = this->step_next;
+            }
+            this->step_next = std::max(step_present - 1, 0);
+            this->type_running = ANIMATION_STEP_DOWN;
+            break;
+        case 4 :
+            this->step_present = (int) time / steptime;
+            if (this->type_running == ANIMATION_STEP_DOWN || this->type_running == ANIMATION_STEP_UP)
+            {
+                this->step_present = this->step_next;
+            }
+            this->step_next = std::min(step_present + 1, step_total);
+            this->type_running = ANIMATION_STEP_UP;
+            break;
+    }
+}
+
+void StructDataStructure::activeAnimation()
+{
+    this->running = true;
+    this->time = 0;
+    this->type_running = ANIMATION_PLAY;
+    this->step_present = 0;
+    clock.restart();
 }

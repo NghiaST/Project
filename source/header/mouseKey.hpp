@@ -1,0 +1,7 @@
+#ifndef __constants_hpp__
+#define __constants_hpp__
+
+enum MOUSE{MSE_NONE = 0, MSE_LEFTCLICK, MSE_RIGHTCLICK, MSE_LEFTHOLD, MSE_RIGHTHOLD};
+enum KEYBOARD{KBD_NONE = 0, KBD_BACKSPACE = 8, KBD_NEWLINE = 10, KBD_ENTER = 13, KBD_DELETE = 127};
+
+#endif

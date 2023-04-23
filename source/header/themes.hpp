@@ -4,7 +4,6 @@
 #include "ElementColor.hpp"
 #include <vector>
 
-struct PublicThemes;
 struct Themes;
 
 struct Palette {
@@ -17,8 +16,8 @@ public :
     ElementColor getColor(int status);
 };
 
-struct PublicThemes {
-public :
+struct Themes {
+private:
     sf::Color background;
     Palette node;
     Palette arrow;
@@ -27,20 +26,12 @@ public :
     Palette button_submanipulate;
     Palette button_inputbox;
     Palette button_step;
-
-    PublicThemes() {}
-    PublicThemes(sf::Color background, Palette node, Palette arrow, Palette button_ds,
-                Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox,
-                Palette button_step);
-    void getThemes(Themes* theme);
-};
-
-struct Themes : private PublicThemes {
 public :
-    Themes() {}
+    Themes() {};
     Themes(sf::Color background, Palette node, Palette arrow, Palette button_ds,
            Palette button_manipulate, Palette button_submanipulate, Palette button_inputbox,
            Palette button_step);
+    void setTheme(Themes* theme);
     
     void setBackground(sf::Color newBackground);
     void setNode(Palette newNode);
@@ -51,14 +42,14 @@ public :
     void setButtonInputbox(Palette newButtonInputbox);
     void setButtonStep(Palette newButtonStep);
 
-    sf::Color getBackground();
-    Palette getNode();
-    Palette getArrow();
-    Palette getButtonDS();
-    Palette getButtonManipulate();
-    Palette getButtonSubmanipulate();
-    Palette getButtonInputbox();
-    Palette getButtonStep();
+    sf::Color* getBackground();
+    Palette* getNode();
+    Palette* getArrow();
+    Palette* getButtonDS();
+    Palette* getButtonManipulate();
+    Palette* getButtonSubmanipulate();
+    Palette* getButtonInputbox();
+    Palette* getButtonStep();
 };
 
 #endif

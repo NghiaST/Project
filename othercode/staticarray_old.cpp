@@ -26,7 +26,7 @@ StructStaticArray::StructStaticArray(sf::RenderWindow* window, bool active)
     TripleColor activeColor(sf::Color::Green);
 
     for(int i = 0; i < maxsize; i++) {
-        staticarr.push_back(RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, &this->font, "", 15, idleColor, hoverColor, activeColor, TripleColor(), TripleColor()));
+        staticarr.push_back(RectangleNode(coord.x, coord.y, velocity.x - 2, velocity.x - 2, this->font "", 15, idleColor, hoverColor, activeColor, TripleColor(), TripleColor()));
         coord += velocity;
     }
     Initialize_Random();
@@ -208,7 +208,7 @@ void StructStaticArray::run(int manipulate, int way, std::string str1, std::stri
     }
 }
 
-sf::Vector2i StructStaticArray::update(sf::Vector2f mousePos, int mouseType, int keyboardType)
+sf::Vector2i StructStaticArray::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->maxsize; i++) {

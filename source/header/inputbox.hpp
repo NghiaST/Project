@@ -20,9 +20,9 @@ public:
     void setWordInput(std::string wordInput);
     std::string getWordInput();
 
-    void Add_Character(int keyboardType);
+    void Add_Character(KEYBOARD keyboardType);
     void Del_Character();
-    void update(sf::Vector2f mousePos, int mouseType, int keyboardType);
+    void update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     
     void refreshrender() override;
     void render(sf::RenderWindow* window) override;

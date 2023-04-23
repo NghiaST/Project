@@ -10,15 +10,16 @@
 #include "ElementColor.hpp"
 #include "themes.hpp"
 #include "StateCategory.hpp"
-#include "enum.hpp"
+#include "mouseKey.hpp"
+#include "settings.hpp"
 
 struct State {
 private:    
     // value
+    VisualizationSettings* settings;
     sf::RenderWindow* window;
-    PublicThemes* theme;
-    sf::Font font;
-    // std::vector<sf::Texture> textures;
+    Themes* theme;
+    sf::Font* font;
     bool quit;
     int cntManipulate;
     
@@ -29,14 +30,16 @@ private:
 
     std::vector<StateCategory> sCategory;
     std::vector<Button> btnTheme;
+    std::vector<Button> btnAnimation;
 
     // state of button
     int typeCategory;
     
 public:
     // Init
-    State(sf::RenderWindow* window, PublicThemes* theme);
+    State(VisualizationSettings* settings);
     ~State();
+    void InitAllButton();
 
     void checkforQuit();
     // setvalue
@@ -49,7 +52,7 @@ public:
     void updateMousePositions();
 
     // Accessors
-    sf::Vector2i update(int mouseType, int keyboardType);
+    sf::Vector2i update(MOUSE mouseType, KEYBOARD keyboardType);
     void render();
 };
 
