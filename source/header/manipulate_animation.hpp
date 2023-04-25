@@ -15,10 +15,11 @@ private:
     sf::Vector2f startPoint;
     sf::Vector2f endPoint;
     int statusAnimation;
+    int preStatus;
     int status;
     std::string word;
 public:
-    Manipulate_Animation_Node(int statusAnimation, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word);
+    Manipulate_Animation_Node(int statusAnimation, int preStatus, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word);
     void build(CircleNode* node);
 };
 
@@ -27,6 +28,7 @@ private:
     CircleNode* node;
     sf::Vector2f presentPoint;
     int statusAnimation;
+    int preStatus;
     int status;
     std::string word;
 

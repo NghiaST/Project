@@ -25,10 +25,12 @@ private:
 
     // Constants
     std::vector<Themes*> listTheme;
+    std::vector<double> listSpeed;
 
     // Status
     bool active;
     int typetheme;
+    int typespeed;
     DATA_STRUCTURE ds_present;
     State* states;
 
@@ -49,6 +51,7 @@ private:
     void InitThemes();
     void InitWindow();
     void InitFont();
+    void InitSpeed();
 
     // Functions
     void processEvents();

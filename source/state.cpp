@@ -3,6 +3,7 @@
 State::State(VisualizationSettings* settings)
 {
     // setup text
+    this->settings = settings;
     this->window = settings->getWindow();
     this->theme = settings->getTheme();
     this->font = settings->getFont();
@@ -11,6 +12,8 @@ State::State(VisualizationSettings* settings)
 }
 State::~State()
 {
+    delete sBtnSpeed;
+    delete sBtnStep;
 }
 
 void State::InitAllButton()
@@ -21,6 +24,7 @@ void State::InitAllButton()
     std::vector<std::vector<std::vector<std::string>>> listStrSubManipulate;
     std::vector<std::vector<std::vector<std::string>>> listStrInputBox;
     std::vector<std::string> strAnimation;
+    std::vector<std::vector<std::vector<std::vector<std::string>>>> listStrStep;
 
     strCategory = {"Static Array", "Dynamic Array", "Linked List", "Stack", "Queue"};
     listStrManipulate = {
@@ -103,6 +107,134 @@ void State::InitAllButton()
     strAnimation = {
         "<<", "<", "||", "Play", ">", ">>"
     };
+    listStrStep = {
+        {
+            {
+                
+            },
+            {
+
+            },
+            {
+
+            },
+            {
+
+            },
+            {
+
+            }
+        },
+        {
+            {
+                
+            },
+            {
+
+            },
+            {
+
+            },
+            {
+
+            },
+            {
+                
+            }
+        },
+        {
+            {
+                {}, {}, {}, {}
+            },
+            {
+                {"Node* cur = new Node(value)", "cur->next = head", "head = cur"}, 
+                {"Node* cur = new Node(value)", "tail->next = cur", "tail = cur"}, 
+                {
+                    "Node* pre = head",
+                    "for (int i = 0; i < pos - 1; i++)",
+                    "   pre = pre->next",
+                    "Node* cur = new Node(value)",
+                    "cur->next = pre->next",
+                    "pre->next = cur"
+                }
+            },
+            {
+                {
+                    "if (head == nullptr) return",
+                    "Node* cur = head",
+                    "head = cur->next",
+                    "delete cur"
+                }, 
+                {
+                    "if (head == nullptr) return",
+                    "Node* pre = nullptr, *cur = head",
+                    "while (cur != tail)",
+                    "   pre = cur, cur = cur->next",
+                    "if (pre) pre->next = nullptr",
+                    "delete cur"
+                }, 
+                {
+                    "Node* pre = head",
+                    "for(int i = 0; i < pos - 1; i++)",
+                    "   pre = pre->next",
+                    "Node* tmp = pre->next",
+                    "pre->next = tmp->next",
+                    "delete tmp"
+                }
+            },
+            {
+                {
+                    "Node* cur = head",
+                    "for(int i = 0; i < pos; i++)",
+                    "   cur = cur->next",
+                    "cur->value = value"
+                }
+            },
+            {
+                {
+                    "Node* cur = head",
+                    "while (cur != nullptr && cur->value != value)",
+                    "   cur = cur->next",
+                    "if (tmp == nullptr) return NOT_FOUND",
+                    "return cur"
+                }
+            }
+        },
+        {
+            {
+                
+            },
+            {
+
+            },
+            {
+
+            },
+            {
+
+            },
+            {
+                
+            }
+        },
+        {
+            {
+                
+            },
+            {
+
+            },
+            {
+
+            },
+            {
+
+            },
+            {
+                
+            }
+        }
+    };
 
     sf::Vector2f coord, velocity, sizeRec;
     coord = sf::Vector2f(300, 650);
@@ -119,10 +251,12 @@ void State::InitAllButton()
     }
 
     this->typeCategory = 0;
-
     btnTheme.push_back(Button(sf::Vector2f(5, 635), 80, 40, 11, 2, true, true, "Light Mode", this->font, this->theme->getButtonDS()));
     btnTheme.push_back(Button(sf::Vector2f(85, 635), 80, 40, 11, 2, true, true, "Dark Mode", this->font, this->theme->getButtonDS()));
     btnTheme[0].setStatus(3);
+
+    sBtnSpeed = new ButtonSpeed(window, theme, font, settings->getSpeed());
+    sBtnStep = new ButtonStep(window, theme, font, listStrStep);
 }
 
 void State::checkforQuit()
@@ -160,30 +294,45 @@ sf::Vector2i State::update(MOUSE mouseType, KEYBOARD keyboardType)
     if (this->getQuit()) return sf::Vector2i(-1, -1);
 
     sf::Vector2i ret = sCategory[this->typeCategory].update(mouseType, keyboardType, mousePosView);
+    sf::Vector2i ret2 = sBtnSpeed->update(mouseType, keyboardType, mousePosView);
+    if (ret2.x != -1) ret = ret2;
+
     if (0 <= ret.x && ret.x < 100)
     {
         this->typeCategory = ret.x;
     }
+    if (100 <= ret.x && ret.x < 200)
+    {
+        sBtnStep->assign(typeCategory, ret.x - 100, ret.y);
+    }
     for(int i = 0; i < btnAnimation.size(); i++)
     {
         if (btnAnimation[i].updateCheckClick(mousePosView, mouseType))
-            ret.x = 300 + i;
+            ret = {300, i};
     }
 
     for(int i = 0; i < 2; i++)
     {
         if (btnTheme[i].updateCheckClick(mousePosView, mouseType))
         {
-            ret.x = 200 + i;
+            ret = {200, i};
             btnTheme[i ^ 1].setStatus(0);
         }
     }
     return ret;
 }
+
+void State::updateBtnStep(int typeStep)
+{
+    sBtnStep->update(typeStep);
+}
+
 void State::render()
 {
     if (this->getQuit()) return;
     sCategory[this->typeCategory].render();
+    sBtnSpeed->render();
+    sBtnStep->render();
     for(Button& btn : btnTheme)
         btn.render(window);
     for(Button& btn : btnAnimation)

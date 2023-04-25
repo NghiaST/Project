@@ -16,8 +16,6 @@ Node::~Node()
 
 int Node::updateNode(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside) // check if Style is active
 {
-    const static int KBD_ENTER = 13;
-    const static int KBD_DELETE = 127;
     switch (this->status)
     {
         case 0 :
@@ -85,8 +83,11 @@ void CircleNode::refreshrender()
     if (this->running == false) {
         palette->getColor(this->status).Coloring(this->shape, this->text);
     }
-    else {
+    else if (this->statusAnimation == NOD_APPEAR || this->statusAnimation == NOD_DEL) {
         palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
+    }
+    else {
+        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor, palette->getColor(this->preStatus));
     }
 }
 void CircleNode::render(sf::RenderWindow* window) 
@@ -99,9 +100,10 @@ void CircleNode::render(sf::RenderWindow* window)
 }
 
 // visualization
-void CircleNode::prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int status)
+void CircleNode::prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status)
 {
     this->statusAnimation = statusAnimation;
+    this->preStatus = preStatus;
     this->status = status;
     this->startPoint = startPoint;
     this->setXY(this->startPoint);

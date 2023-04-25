@@ -28,9 +28,9 @@ void VisualizationSettings::setFontNode(sf::Font* fontNode) {
     *this->fontNode = *fontNode;
 }
 
-void VisualizationSettings::setSpeed(double* speed)
+void VisualizationSettings::setSpeed(double speed)
 {
-    this->speed = speed;
+    *this->speed = speed;
 }
 
 sf::RenderWindow* VisualizationSettings::getWindow() {

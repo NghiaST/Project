@@ -21,6 +21,13 @@ void DataVisualization::InitFont()
         std::cout << "Error Load Font\n";
     if (!this->fontNode.loadFromFile("dat/arial_bold.ttf"))
         std::cout << "Error Load Font 2\n";
+    for(int i = 0; i < 30; i++)
+    {
+        sf::Texture& texture = const_cast<sf::Texture&>(font.getTexture(i));
+        texture.setSmooth(false);
+        sf::Texture& texture2 = const_cast<sf::Texture&>(fontNode.getTexture(i));
+        texture2.setSmooth(false);
+    }
 }
 
 void DataVisualization::InitThemes()
@@ -29,13 +36,12 @@ void DataVisualization::InitThemes()
     Themes* DarkMode = new Themes();
 
     LightMode->setBackground(sf::Color(220, 220, 220));
-
     LightMode->setNode(Palette(
         ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::Black),
-        ElementColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96) , sf::Color::Black),
-        ElementColor(sf::Color(255, 109, 96) , sf::Color(243, 239, 159), sf::Color::Black),
+        ElementColor(sf::Color::White        , sf::Color(255, 79, 5)   , sf::Color(255, 79, 5)),
+        ElementColor(sf::Color(255, 100, 0)  , sf::Color::White        , sf::Color(255, 100, 0)),
         ElementColor(sf::Color::Cyan         , sf::Color::Blue         , sf::Color(39, 154, 248)),
-        ElementColor(sf::Color(126, 244, 19) , sf::Color(210, 19, 18)  , sf::Color(210, 19, 18))
+        ElementColor(sf::Color::Green        , sf::Color::Red          , sf::Color::Green)
     ));
     LightMode->setArrow(Palette(
         ElementColor(sf::Color::Black        , sf::Color::Transparent  , sf::Color::Black),
@@ -73,8 +79,8 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color(126, 244, 19) , sf::Color::Red          , sf::Color::Black)
     ));
     LightMode->setButtonStep(Palette(
-        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
-        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
+        ElementColor(sf::Color(15, 234, 108) , sf::Color::Black        , sf::Color::Black),
+        ElementColor(sf::Color(34, 137, 221) , sf::Color::Black        , sf::Color::Black),
         ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
         ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black),
         ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::Black)
@@ -83,17 +89,17 @@ void DataVisualization::InitThemes()
     DarkMode->setBackground(sf::Color(40, 40, 40));
     DarkMode->setNode(Palette(
         ElementColor(sf::Color::Black        , sf::Color::White          , sf::Color::White),
-        ElementColor(sf::Color(247, 239, 159), sf::Color(255, 109, 96) , sf::Color::Black),
-        ElementColor(sf::Color(255, 109, 96) , sf::Color(243, 239, 159), sf::Color::Black),
+        ElementColor(sf::Color::White        , sf::Color(255, 79, 5)   , sf::Color(255, 79, 5)),
+        ElementColor(sf::Color(255, 100, 0)  , sf::Color::White        , sf::Color(255, 100, 0)),
         ElementColor(sf::Color::Cyan         , sf::Color::Blue         , sf::Color(39, 154, 248)),
-        ElementColor(sf::Color(126, 244, 19) , sf::Color(210, 19, 18)  , sf::Color(210, 19, 18))
+        ElementColor(sf::Color::Green        , sf::Color::Red          , sf::Color::Green)
     ));
     DarkMode->setArrow(Palette(
         ElementColor(sf::Color::White        , sf::Color::Transparent  , sf::Color::White),
         ElementColor(sf::Color(128, 255, 0)  , sf::Color::Transparent  , sf::Color(128, 255, 0)),
         ElementColor(sf::Color::White        , sf::Color::White        , sf::Color::White),
         ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White),
-        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White)  
+        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White)
     ));
     DarkMode->setButtonDs(Palette(
         ElementColor(sf::Color(183, 30, 56), sf::Color::White        , sf::Color::White),
@@ -139,6 +145,12 @@ void DataVisualization::InitThemes()
     theme->setTheme(listTheme[typetheme]);
 }
 
+void DataVisualization::InitSpeed()
+{
+    listSpeed = {0.1, 0.25, 0.5, 1, 2, 3, 4, 8, 16, 32};
+    typespeed = 5;
+    speed = listSpeed[typespeed];
+}
 //// Initializations functions
 // Constructors/Destructors
 DataVisualization::DataVisualization()
@@ -147,7 +159,7 @@ DataVisualization::DataVisualization()
     this->InitWindow();
     this->InitThemes(); // LightMode, DarkMode
     this->InitFont();
-    this->speed = 1;
+    this->InitSpeed();
     this->settings = new VisualizationSettings(window, &font, &fontNode, theme, &speed);
 
     this->states = new State(settings);
@@ -182,7 +194,6 @@ void DataVisualization::processEvents()
     while (this->window->pollEvent(sfEvent)) {
         if (sfEvent.type == sf::Event::Closed) this->window->close();
         if (sfEvent.type == sf::Event::TextEntered)
-            // keyboard = static_cast<MOUSE> (sfEvent.text.unicode);
             keyboard = static_cast<KEYBOARD> (sfEvent.text.unicode);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) this->window->close();
@@ -267,21 +278,38 @@ void DataVisualization::update()
             }
             //get_DS(ds_present)->run(typePress.x, typePress.y, str1, str2);
         }
-        else if (200 <= typePress.x && typePress.x < 300) {
-            typetheme = typePress.x - 200;
-            theme->setTheme(listTheme[typetheme]);
+        else if (typePress.x == 200) {
+            typetheme = typePress.y;
+            settings->setTheme(listTheme[typetheme]);
         }
-        else if (300 <= typePress.x && typePress.x < 400) {
+        else if (typePress.x == 300) {
             switch (ds_present) {
-                case DS_STATICARRAY  : StaticArray ->updateTypeAnimation(typePress.x - 300); break;
-                case DS_DYNAMICARRAY : DynamicArray->updateTypeAnimation(typePress.x - 300); break;
-                case DS_LINKEDLIST   : LinkedList  ->updateTypeAnimation(typePress.x - 300); break;
-                case DS_STACK        : Stack       ->updateTypeAnimation(typePress.x - 300); break;
-                case DS_QUEUE        : Queue       ->updateTypeAnimation(typePress.x - 300); break;
+                case DS_STATICARRAY  : StaticArray ->updateTypeAnimation(typePress.y); break;
+                case DS_DYNAMICARRAY : DynamicArray->updateTypeAnimation(typePress.y); break;
+                case DS_LINKEDLIST   : LinkedList  ->updateTypeAnimation(typePress.y); break;
+                case DS_STACK        : Stack       ->updateTypeAnimation(typePress.y); break;
+                case DS_QUEUE        : Queue       ->updateTypeAnimation(typePress.y); break;
                 default: std::cout << "Error datavisualization 3 \n"; exit(2);
             }
         }
+        else if (typePress.x == 400) {
+            if (typePress.y == 1) typespeed = std::min(typespeed + 1, (int)listSpeed.size() - 1);
+            else typespeed = std::max(typespeed - 1, 0);
+            settings->setSpeed(listSpeed[typespeed]);
+        }
     }
+
+    int step;
+    switch (ds_present) {
+        case DS_STATICARRAY  : step = StaticArray ->update(); break;
+        case DS_DYNAMICARRAY : step = DynamicArray->update(); break;
+        case DS_LINKEDLIST   : step = LinkedList  ->update(); break;
+        case DS_STACK        : step = Stack       ->update(); break;
+        case DS_QUEUE        : step = Queue       ->update(); break;
+        default : exit(2);
+    }
+
+    states->updateBtnStep(step);
 }
 
 void DataVisualization::render()

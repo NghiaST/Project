@@ -13,10 +13,19 @@ sf::Vector2f operator/(const sf::Vector2f &vector, const double &div)
     return sf::Vector2f(vector.x / div, vector.y / div);
 }
 
-sf::Color operator*(const sf::Color &color, const double &ratio)
+sf::Color appearColor(const sf::Color &color, const double &multiply)
 {
-    return sf::Color(color.r, color.g, color.b, sf::Uint8(255 * ratio));
-    // return sf::Color(color.r * multiply, color.g * multiply, color.b * multiply);
+    return sf::Color(color.r, color.g, color.b, sf::Uint8(color.a * multiply));
+}
+
+sf::Color convertColor(sf::Color colorStart, sf::Color colorStop, const double ratio)
+{
+    return sf::Color(
+        colorStart.r + ((int)colorStop.r - colorStart.r) * ratio,
+        colorStart.g + ((int)colorStop.g - colorStart.g) * ratio,
+        colorStart.b + ((int)colorStop.b - colorStart.b) * ratio,
+        colorStart.a + ((int)colorStop.a - colorStart.a) * ratio
+    );
 }
 
 int Rand(int l, int r)

@@ -18,6 +18,8 @@ Palette::Palette(std::vector<ElementColor> listColor)
 
 ElementColor Palette::getColor(int status)
 {
+    if (status == -1)
+        return ElementColor();
     return this->listColor[status];
 }
 

@@ -12,6 +12,8 @@
 #include "StateCategory.hpp"
 #include "mouseKey.hpp"
 #include "settings.hpp"
+#include "buttonspeed.hpp"
+#include "buttonstep.hpp"
 
 struct State {
 private:    
@@ -31,6 +33,8 @@ private:
     std::vector<StateCategory> sCategory;
     std::vector<Button> btnTheme;
     std::vector<Button> btnAnimation;
+    ButtonSpeed* sBtnSpeed;
+    ButtonStep* sBtnStep;
 
     // state of button
     int typeCategory;
@@ -53,6 +57,7 @@ public:
 
     // Accessors
     sf::Vector2i update(MOUSE mouseType, KEYBOARD keyboardType);
+    void updateBtnStep(int step);
     void render();
 };
 

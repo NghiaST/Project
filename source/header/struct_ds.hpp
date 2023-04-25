@@ -17,10 +17,9 @@ protected:
     // window
     sf::RenderWindow* window;
     Themes* theme;
-    bool active;
-
-    // font
     sf::Font* font;
+    double* speed;
+    bool active;
 
     // point
     sf::Vector2f centerVisual;
@@ -55,7 +54,6 @@ protected:
     int step_present;
     int step_next;
     sf::Clock clock;
-    double speed = 1;
 
     std::vector<sf::Vector2f> listPoint;
     std::vector<int> printElements;
@@ -68,8 +66,8 @@ protected:
 
     // type animation
     int Manipulate = -1;
-    int Way = -1;
-    int Pos = -1;
+    int subManipulate = -1;
+    std::vector<int> listStep;
 
 public:
     StructDataStructure(VisualizationSettings* settings, bool active);
@@ -100,8 +98,9 @@ public:
     void activeAnimation();
 
     void updateTypeAnimation(int type);
-    void updateTimeAnimation();
+    virtual void updateTimeAnimation();
     virtual void run(int manipulate, int way, std::string str1, std::string str2) = 0;
+    virtual int update();   /// return step
     virtual void refreshrender() = 0;
     virtual void render() = 0;
 

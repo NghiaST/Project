@@ -77,6 +77,7 @@ void Button::refreshrender()
         this->coord.x + this->width / 2.f - this->text.getGlobalBounds().width / 2.f,
         this->coord.y + this->height / 2.f - this->text.getGlobalBounds().height / 2.f - 2
     );
+
     palette->getColor(this->status).Coloring(this->shape, this->text);
 }
 

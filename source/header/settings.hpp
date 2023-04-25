@@ -18,7 +18,7 @@ public:
     void setTheme(Themes* theme);
     void setFont(sf::Font* font);
     void setFontNode(sf::Font* fontNode);
-    void setSpeed(double* speed);
+    void setSpeed(double speed);
 
     sf::RenderWindow* getWindow();
     Themes* getTheme();

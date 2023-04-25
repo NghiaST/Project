@@ -8,6 +8,7 @@ StructDataStructure::StructDataStructure(VisualizationSettings* settings, bool a
     // window
     this->window = settings->getWindow();
     this->theme = settings->getTheme();
+    this->speed = settings->getSpeed();
     this->active = active;
     
     // font
@@ -37,7 +38,7 @@ void StructDataStructure::Initialize_Empty()
 }
 void StructDataStructure::Initialize_Random()
 {
-    this->sizearray = Rand(1, this->maxsize);
+    this->sizearray = Rand(2, this->maxsize);
     for(int i = 0; i < this->sizearray; i++) elements[i] = Rand(0, 999);
 }
 void StructDataStructure::Initialize_Manual(std::vector<int> arr) 
@@ -175,15 +176,15 @@ const bool &StructDataStructure::isActive() const
 
 void StructDataStructure::updateTimeAnimation()
 {
-    double addTime = clock.getElapsedTime().asSeconds() * speed;
+    double addTime = clock.getElapsedTime().asSeconds() * *speed;
     clock.restart();
+    step_present = (int) ((time - 0.001) / steptime);
 
     switch (this->type_running)
     {
         case ANIMATION_PAUSE : break;
         case ANIMATION_PLAY :
             time = std::min(time + addTime, totaltime);
-            step_present = (int) time / steptime;
             break;
         case ANIMATION_STEP_DOWN : 
             time = std::max(step_next * steptime - 0.01, time - addTime);
@@ -197,6 +198,13 @@ void StructDataStructure::updateTimeAnimation()
     }
 }
 
+int StructDataStructure::update()
+{
+    if (this->running == false) return -1;
+    updateTimeAnimation();
+    return listStep[step_present];
+}
+
 void StructDataStructure::updateTypeAnimation(int newTypeRunning)
 {
     /// 0, 1, 2, 3, 4, 5 : <<, <, ||, play, >, >>
@@ -207,36 +215,38 @@ void StructDataStructure::updateTypeAnimation(int newTypeRunning)
     {
         case 0 : 
             this->time = 0;
-            this->step_present = (int) time / steptime;
+            this->step_present = (int) ((time - 0.001) / steptime);
             this->type_running = ANIMATION_PAUSE;
             break;
         case 5 : 
             this->time = step_total * steptime;
-            this->step_present = (int) time / steptime;
+            this->step_present = (int) ((time - 0.001) / steptime);
             this->type_running = ANIMATION_PAUSE;
             break;
         case 2 :
-            this->step_present = (int) time / steptime;
+            this->step_present = (int) ((time - 0.001) / steptime);
             this->type_running = ANIMATION_PAUSE;
             break;
         case 3 :
-            this->step_present = (int) time / steptime;
+            this->step_present = (int) ((time - 0.001) / steptime);
             this->type_running = ANIMATION_PLAY;
             break;
         case 1 :
-            this->step_present = (int) time / steptime;
+            this->step_present = (int) ((time - 0.001) / steptime);
             if (this->type_running == ANIMATION_STEP_DOWN || this->type_running == ANIMATION_STEP_UP)
             {
                 this->step_present = this->step_next;
+                this->time = step_present * steptime;
             }
             this->step_next = std::max(step_present - 1, 0);
             this->type_running = ANIMATION_STEP_DOWN;
             break;
         case 4 :
-            this->step_present = (int) time / steptime;
+            this->step_present = (int) ((time - 0.001) / steptime);
             if (this->type_running == ANIMATION_STEP_DOWN || this->type_running == ANIMATION_STEP_UP)
             {
                 this->step_present = this->step_next;
+                this->time = step_present * steptime;
             }
             this->step_next = std::min(step_present + 1, step_total);
             this->type_running = ANIMATION_STEP_UP;

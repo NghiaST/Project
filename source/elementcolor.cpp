@@ -4,21 +4,21 @@
 
 ElementColor::ElementColor()
 {
-    this->FillColor = sf::Color::White;
-    this->TextColor = sf::Color::Black;
-    this->OutlineColor = sf::Color::Black;
+    this->FillColor = sf::Color(0, 0, 0, 0);
+    this->TextColor = sf::Color(0, 0, 0, 0);
+    this->OutlineColor = sf::Color(0, 0, 0, 0);
 }
 ElementColor::ElementColor(sf::Color FillColor)
 {
     this->FillColor = FillColor;
-    this->TextColor = sf::Color::Black;
-    this->OutlineColor = sf::Color::Black;
+    this->TextColor = sf::Color::Transparent;
+    this->OutlineColor = sf::Color::Transparent;
 }
 ElementColor::ElementColor(sf::Color FillColor, sf::Color TextColor)
 {
     this->FillColor = FillColor;
     this->TextColor = TextColor;
-    this->OutlineColor = sf::Color::Black;
+    this->OutlineColor = sf::Color::Transparent;
 }
 ElementColor::ElementColor(sf::Color FillColor, sf::Color TextColor, sf::Color OutlineColor)
 {
@@ -42,49 +42,42 @@ void ElementColor::changeOutlineColor(sf::Color OutlineColor)
     this->OutlineColor = OutlineColor;
 }
 
-void ElementColor::changeColor(sf::Color FillColor, sf::Color TextColor, sf::Color OutlineColor)
+sf::Color ElementColor::getFillColor()
 {
-    this->FillColor = FillColor;
-    this->TextColor = TextColor;
-    this->OutlineColor = OutlineColor;
+    return this->FillColor;
+}
+sf::Color ElementColor::getTextColor()
+{
+    return this->TextColor;
+}
+sf::Color ElementColor::getOutlineColor()
+{
+    return this->OutlineColor;
 }
 
-void ElementColor::Coloring(sf::RectangleShape &shape, sf::Text &text)
+void ElementColor::Coloring(sf::Shape &shape)
+{
+    shape.setFillColor(this->FillColor);
+    shape.setOutlineColor(this->OutlineColor);
+}
+
+void ElementColor::Coloring(sf::Shape &shape, sf::Text &text)
 {
     shape.setFillColor(this->FillColor);
     text.setFillColor(this->TextColor);
     shape.setOutlineColor(this->OutlineColor);
 }
 
-void ElementColor::Coloring(sf::CircleShape &shape, sf::Text &text)
+void ElementColor::Coloring(sf::Shape &shape, sf::Text &text, double ratio)
 {
-    shape.setFillColor(this->FillColor);
-    text.setFillColor(this->TextColor);
-    shape.setOutlineColor(this->OutlineColor);
+    shape.setFillColor(appearColor(this->FillColor, ratio));
+    text.setFillColor(appearColor(this->TextColor, ratio));
+    shape.setOutlineColor(appearColor(this->OutlineColor, ratio));
 }
 
-void ElementColor::Coloring(sf::CircleShape &shape, sf::Text &text, double ratio)
+void ElementColor::Coloring(sf::Shape &shape, sf::Text &text, double ratio, ElementColor eColor)
 {
-    shape.setFillColor(this->FillColor * ratio);
-    text.setFillColor(this->TextColor * ratio);
-    shape.setOutlineColor(this->OutlineColor * ratio);
-}
-
-void ElementColor::Coloring(sf::RectangleShape &shape, sf::Text &text, double ratio)
-{
-    shape.setFillColor(this->FillColor * ratio);
-    text.setFillColor(this->TextColor * ratio);
-    shape.setOutlineColor(this->OutlineColor * ratio);
-}
-
-void ElementColor::Coloring(sf::RectangleShape &shape)
-{
-    shape.setFillColor(this->FillColor);
-    shape.setOutlineColor(this->OutlineColor);
-}
-
-void ElementColor::Coloring(sf::ConvexShape &shape)
-{
-    shape.setFillColor(this->FillColor);
-    shape.setOutlineColor(this->OutlineColor);
+    shape.setFillColor(convertColor(eColor.getFillColor(), this->FillColor, ratio));
+    text.setFillColor(convertColor(eColor.getTextColor(), this->TextColor, ratio));
+    shape.setOutlineColor(convertColor(eColor.getOutlineColor(), this->OutlineColor, ratio));
 }

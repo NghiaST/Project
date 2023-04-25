@@ -20,6 +20,7 @@ struct Node : Style {
     double time;
     double ratioColor;
     int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, appear node, recolor node, disappear node
+    int preStatus;
 public :
     Node(sf::Vector2f coord, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
     ~Node();
@@ -45,9 +46,10 @@ public:
     void render(sf::RenderWindow* window);
 
     // visualization
-    void prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int status);
+    void prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status);
     void stopAnimation();
-    void updateAnimation_Moving(double time);
+    void updateAnimation_Coloring(double ratio);
+    void updateAnimation_Moving(double ratio);
     void updateAnimation(double time);
     void renderAnimation(sf::RenderWindow* window, int statusAnimation, double time);
 };

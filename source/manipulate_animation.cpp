@@ -1,9 +1,10 @@
 #include "manipulate_animation.hpp"
 
 // Manipulate_Animation_Node
-Manipulate_Animation_Node::Manipulate_Animation_Node(int statusAnimation, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word)
+Manipulate_Animation_Node::Manipulate_Animation_Node(int statusAnimation, int preStatus, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word)
 {
     this->statusAnimation = statusAnimation;
+    this->preStatus = preStatus;
     this->status = status;
     this->startPoint = startPoint;
     this->endPoint = endPoint;
@@ -12,7 +13,7 @@ Manipulate_Animation_Node::Manipulate_Animation_Node(int statusAnimation, int st
 
 void Manipulate_Animation_Node::build(CircleNode* node)
 {
-    node->prepareAnimation(startPoint, endPoint, statusAnimation, status);
+    node->prepareAnimation(startPoint, endPoint, statusAnimation, preStatus, status);
     node->setWord(word);
 }
 
@@ -42,19 +43,20 @@ void Manipulate_Animation_ArrayNode::setWord(std::string word)
 }
 void Manipulate_Animation_ArrayNode::setStatusAnimation(int statusAnimation)
 {
+    preStatus = status;
     switch (statusAnimation)
     {
         case NOD_NOPE : this->status = -1; break;
         case NOD_STABLE : break;
         case NOD_RECOLOR : std::cout << "Error manipulate_animation.cpp getBuildStatusAnimation: shouldn't use it\n"; break;
         case NOD_APPEAR : this->status = 3; break;
-        case NOD_DEL : break;
+        case NOD_DEL : this->status = -1; break;
         case NOD_MOVE : break;
         case NOD_NORMAL : statusAnimation = NOD_STABLE; status = 0; break;
-        case NOD_SHOW : statusAnimation = NOD_RECOLOR; status = 1; break;
-        case NOD_SOLVE : statusAnimation = NOD_RECOLOR; status = 4; break;
-        case NOD_UNSHOW : statusAnimation = NOD_RECOLOR; status = 2; break;
+        case NOD_UNSHOW : statusAnimation = NOD_RECOLOR; status = 1; break;
+        case NOD_SHOW : statusAnimation = NOD_RECOLOR; status = 2; break;
         case NOD_ACTIVE : statusAnimation = NOD_RECOLOR; status = 3; break;
+        case NOD_SOLVE : statusAnimation = NOD_RECOLOR; status = 4; break;
         case NOD_SKIP : 
             switch (this->statusAnimation)
             {
@@ -96,7 +98,7 @@ void Manipulate_Animation_ArrayNode::addStep(int statusAnimation, sf::Vector2f n
 void Manipulate_Animation_ArrayNode::addStep(int statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint)
 {
     setStatusAnimation(statusAnimation);
-    listStep.push_back(Manipulate_Animation_Node(this->statusAnimation, this->status, presentPoint, nextPoint, word));
+    listStep.push_back(Manipulate_Animation_Node(this->statusAnimation, this->preStatus, this->status, presentPoint, nextPoint, word));
     setPresentPoint(nextPoint);
 }
 void Manipulate_Animation_ArrayNode::skipMultiStep(int count)
@@ -254,7 +256,7 @@ void Manipulate_Animation_ArrayArrow::skipMultiStep(int count)
 
 void Manipulate_Animation_ArrayArrow::runTime(double time)
 {
-    int step = (int) (time / this->steptime);
+    int step = (int) ((time - 0.001) / this->steptime);
     if (step >= listStep.size()) step = listStep.size() - 1;
     if (step < 0) step = 0;
     runStep(step, time - step * this->steptime);
