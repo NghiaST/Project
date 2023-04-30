@@ -4,9 +4,13 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <memory>
+
 
 #include "node.hpp"
+#include "arrow.hpp"
 #include "support_function.hpp"
+#include "manipulate_animation.hpp"
 #include "settings.hpp"
 #include "mouseKey.hpp"
 
@@ -58,6 +62,7 @@ protected:
     std::vector<sf::Vector2f> listPoint;
     std::vector<int> printElements;
     int count_nodePrint;
+    int count_arrowPrint;
 
     std::string Str1;
     std::string Str2;
@@ -69,10 +74,20 @@ protected:
     int subManipulate = -1;
     std::vector<int> listStep;
 
+    // shape
+    std::vector<std::unique_ptr<Node>> listNode;
+    std::vector<ArrowNode> listArrow;
+    std::vector<Manipulate_Animation_ArrayNode> nodeAnimation;
+    std::vector<Manipulate_Animation_ArrayArrow> arrowAnimation;
+
 public:
     StructDataStructure(VisualizationSettings* settings, bool active);
     ~StructDataStructure();
 
+    int getManipulate();
+    int getsubManipulate();
+
+    // manipulate
     void Initialize_Empty();
     void Initialize_Random();
     void Initialize_Manual(std::vector<int> arr);
@@ -96,6 +111,7 @@ public:
     const bool& isActive() const;
 
     void activeAnimation();
+    // vỉtual void stopAnimation() = 0;
 
     void updateTypeAnimation(int type);
     virtual void updateTimeAnimation();

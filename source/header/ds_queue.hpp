@@ -11,11 +11,6 @@
 #include "arrow.hpp"
 
 struct StructQueue : StructDataStructure {
-protected:
-    // value
-    std::vector<CircleNode> listNode;
-    std::vector<ArrowNode> listArrow;
-
 public:
     StructQueue(VisualizationSettings* settings, bool active);
     ~StructQueue();

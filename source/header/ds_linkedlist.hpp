@@ -1,25 +1,8 @@
 #ifndef __ds_linkedlist_hpp__
 #define __ds_linkedlist_hpp__
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <cstring>
-#include <vector>
-
-#include "node.hpp"
-#include "support_function.hpp"
 #include "struct_ds.hpp"
-#include "arrow.hpp"
-#include "manipulate_animation.hpp"
 
 struct StructLinkedList : StructDataStructure {
-protected:
-    // value
-    std::vector<CircleNode> listNode;
-    std::vector<ArrowNode> listArrow;
-
-    std::vector<Manipulate_Animation_ArrayNode> nodeAnimation;
-    std::vector<Manipulate_Animation_ArrayArrow> arrowAnimation;
-
 public:
     StructLinkedList(VisualizationSettings* settings, bool active);
     ~StructLinkedList();

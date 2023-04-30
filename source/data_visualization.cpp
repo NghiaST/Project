@@ -276,6 +276,30 @@ void DataVisualization::update()
                 case DS_QUEUE        : Queue       ->run(typePress.x, typePress.y, str1, str2); break;
                 default: std::cout << "Error datavisualization 3 \n"; exit(2);
             }
+            int Manipulate, subManipulate;
+            switch (ds_present) {
+                case DS_STATICARRAY  : 
+                    Manipulate = StaticArray ->getManipulate(); 
+                    subManipulate = StaticArray->getsubManipulate();
+                    break;
+                case DS_DYNAMICARRAY : 
+                    Manipulate = DynamicArray ->getManipulate(); 
+                    subManipulate = DynamicArray->getsubManipulate();
+                    break;
+                case DS_LINKEDLIST   : 
+                    Manipulate = LinkedList ->getManipulate(); 
+                    subManipulate = LinkedList->getsubManipulate();
+                    break;
+                case DS_STACK        : 
+                    Manipulate = Stack ->getManipulate(); 
+                    subManipulate = Stack->getsubManipulate();
+                    break;
+                case DS_QUEUE        : 
+                    Manipulate = Queue ->getManipulate(); 
+                    subManipulate = Queue->getsubManipulate();
+                    break;
+            }
+            states->updateBtnCode(Manipulate, subManipulate);
             //get_DS(ds_present)->run(typePress.x, typePress.y, str1, str2);
         }
         else if (typePress.x == 200) {

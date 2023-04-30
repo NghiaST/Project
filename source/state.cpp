@@ -322,6 +322,11 @@ sf::Vector2i State::update(MOUSE mouseType, KEYBOARD keyboardType)
     return ret;
 }
 
+void State::updateBtnCode(int Manipulate, int subManipulate)
+{
+    sBtnStep->assign(typeCategory, Manipulate, subManipulate);
+}
+
 void State::updateBtnStep(int typeStep)
 {
     sBtnStep->update(typeStep);

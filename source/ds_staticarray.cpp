@@ -7,15 +7,17 @@
 StructStaticArray::StructStaticArray(VisualizationSettings* settings, bool active) 
     : StructDataStructure(settings, active)
 {    
-    this->maxsize = 12;
-    this->sizeNode = 50;
+    this->sizeText = 13;
+    this->maxsize = 15;
+    this->sizeNode = 40;
     this->distance = 4;
     this->diffy = 2;
+    this->thickness = 3;
 
     this->elements = std::vector<int>(maxsize, 0);
-    for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(RectangleNode(sf::Vector2f(0, 0), this->sizeNode, this->sizeNode, 12, 2, "", this->font, this->theme->getNode()));
-    }
+    listNode = std::vector<std::unique_ptr<Node>> (this->maxsize);
+    for(auto &ptr : listNode)
+        ptr = std::make_unique<RectangleNode>(sf::Vector2f(0, 0), this->sizeNode, this->sizeText, this->thickness, "", this->font, this->theme->getNode());
     if (this->active)
         turn_on();
 }
@@ -58,8 +60,8 @@ sf::Vector2i StructStaticArray::updateKBM(sf::Vector2f mousePos, MOUSE mouseType
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->maxsize; i++) {
-        listNode[i].update(mousePos, mouseType, keyboardType);
-        if (i < this->sizearray && listNode[i].getStatus() == 2) 
+        listNode[i]->update(mousePos, mouseType, keyboardType);
+        if (i < this->sizearray && listNode[i]->getStatus() == 2) 
             ret = sf::Vector2i(i, this->elements[i]);
     }
     return ret;
@@ -76,7 +78,7 @@ void StructStaticArray::updatePositionNode()
 
 
     for(int i = 0; i < this->maxsize; i++) {
-        this->listNode[i].setXY(coord.x, coord.y);
+        this->listNode[i]->setXY(coord.x, coord.y);
         coord += velocity;
     }
 }
@@ -85,9 +87,9 @@ void StructStaticArray::refreshrender()
 {
     for(int i = 0; i < this->maxsize; i++) {
         if (i < sizearray)
-            this->listNode[i].setWord(std::to_string(this->elements[i]));
+            this->listNode[i]->setWord(std::to_string(this->elements[i]));
         else
-            this->listNode[i].setWord("");
+            this->listNode[i]->setWord("");
     }
 }
 void StructStaticArray::render()
@@ -95,5 +97,5 @@ void StructStaticArray::render()
     if (!this->isActive()) return;
     this->refreshrender();
     for(int i = 0; i < maxsize; i++)
-        listNode[i].render(window);
+        listNode[i]->render(window);
 }

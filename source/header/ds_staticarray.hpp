@@ -10,10 +10,6 @@
 #include "struct_ds.hpp"
 
 struct StructStaticArray : StructDataStructure {
-protected:
-    // value
-    std::vector<RectangleNode> listNode;
-
 public:
     StructStaticArray(VisualizationSettings* settings, bool active);
     ~StructStaticArray();

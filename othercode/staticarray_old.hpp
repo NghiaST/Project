@@ -8,7 +8,7 @@ StructStaticArray2::StructStaticArray2(sf::RenderWindow* window, bool active)
     : StructDataStructure(window, active)
 {
     for(int i = 0; i < this->maxsize; i++) {
-        listNode.push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, this->font "", 15, this->Color[0], this->Color[1], this->Color[2], this->Color[3], this->Color[4]));
+        listNode[i]->push_back(RectangleNode(0, 0, this->sizeNode, this->sizeNode, this->font "", 15, this->Color[0], this->Color[1], this->Color[2], this->Color[3], this->Color[4]));
     }
     this->updatePositionNode();
     this->refreshrender();
@@ -52,8 +52,8 @@ sf::Vector2i StructStaticArray2::update(sf::Vector2f mousePos, MOUSE mouseType, 
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->maxsize; i++) {
-        listNode[i].update(mousePos, mouseType, keyboardType);
-        if (i < this->sizearray && listNode[i].getStatus() == 2) 
+        listNode[i]->update(mousePos, mouseType, keyboardType);
+        if (i < this->sizearray && listNode[i]->getStatus() == 2) 
             ret = sf::Vector2i(i, this->elements[i]);
     }
     return ret;
@@ -70,7 +70,7 @@ void StructStaticArray2::updatePositionNode()
 
 
     for(int i = 0; i < this->maxsize; i++) {
-        this->listNode[i].setXY(coord.x, coord.y);
+        this->listNode[i]->setXY(coord.x, coord.y);
         coord += velocity;
     }
 }
@@ -79,9 +79,9 @@ void StructStaticArray2::refreshrender()
 {
     for(int i = 0; i < this->maxsize; i++) {
         if (i < sizearray)
-            this->listNode[i].setWord(std::to_string(this->elements[i]));
+            this->listNode[i]->setWord(std::to_string(this->elements[i]));
         else
-            this->listNode[i].setWord("");
+            this->listNode[i]->setWord("");
     }
 }
 void StructStaticArray2::render()
@@ -89,5 +89,5 @@ void StructStaticArray2::render()
     if (!this->isActive()) return;
     this->refreshrender();
     for(int i = 0; i < maxsize; i++)
-        listNode[i].render(window);
+        listNode[i]->render(window);
 }

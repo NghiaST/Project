@@ -21,51 +21,53 @@ struct Node : Style {
     double ratioColor;
     int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, appear node, recolor node, disappear node
     int preStatus;
+    sf::Vector2f startPoint, endPoint;
+
+    // shape
+    int radius;
+    sf::CircleShape shape;
+
 public :
     Node(sf::Vector2f coord, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
     ~Node();
-    
-    // Functions
-    int updateNode(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside);
-    bool getRunning();
-};
 
-struct CircleNode : Node {
-private:
-    int radius;
-    sf::CircleShape shape;
-    sf::Vector2f startPoint, endPoint;  // center
-
-public:
-    CircleNode(sf::Vector2f coord, float diameter, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
-    ~CircleNode();
+    // other
+    virtual bool isMouseInside(sf::Vector2f mousePos) = 0;
 
     // Functions
+    int updateNode(MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside);
     int update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
+    bool getRunning();
+
+    // Functions
     void refreshrender();
     void render(sf::RenderWindow* window);
 
     // visualization
-    void prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status);
+    void startAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status);
     void stopAnimation();
-    void updateAnimation_Coloring(double ratio);
+    // void updateAnimation_Coloring(double ratio);
     void updateAnimation_Moving(double ratio);
     void updateAnimation(double time);
     void renderAnimation(sf::RenderWindow* window, int statusAnimation, double time);
 };
 
-struct RectangleNode : Node {
-private:
-    int width, height;
-    sf::RectangleShape shape;
+struct CircleNode : Node {
 public:
-    RectangleNode(sf::Vector2f coord, float width, float height, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
+    CircleNode(sf::Vector2f coord, float diameter, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
+    ~CircleNode();
+
+    // other
+    bool isMouseInside(sf::Vector2f mousePos) override;
+};
+
+struct RectangleNode : Node {
+    int halflength;
+public:
+    RectangleNode(sf::Vector2f coord, float length, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
     ~RectangleNode();
 
-    // Functions
-    int update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
-    void refreshrender();
-    void render(sf::RenderWindow* window);
+    bool isMouseInside(sf::Vector2f mousePos) override;
 };
 
 #endif

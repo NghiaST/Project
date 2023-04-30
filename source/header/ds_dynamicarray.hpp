@@ -11,10 +11,6 @@
 #include "mouseKey.hpp"
 
 struct StructDynamicArray : StructDataStructure {
-protected:
-    // value
-    std::vector<RectangleNode> listNode;
-
 public:
     StructDynamicArray(VisualizationSettings* settings, bool active);
     ~StructDynamicArray();

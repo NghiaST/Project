@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <cstring>
+#include <memory>
 #include "node.hpp"
 #include "arrow.hpp"
 
@@ -20,12 +21,12 @@ private:
     std::string word;
 public:
     Manipulate_Animation_Node(int statusAnimation, int preStatus, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word);
-    void build(CircleNode* node);
+    void build(Node* node);
 };
 
 struct Manipulate_Animation_ArrayNode {
 private:
-    CircleNode* node;
+    Node* node;
     sf::Vector2f presentPoint;
     int statusAnimation;
     int preStatus;
@@ -41,8 +42,8 @@ private:
 
 public:
     //Manipulate_Animation_ArrayNode() {}
-    void setup(CircleNode* node, sf::Vector2f presentPoint, int word, bool view);
-    void setNode(CircleNode* node);
+    void setup(std::unique_ptr<Node>* node, sf::Vector2f presentPoint, int word, bool view);
+    void setNode(std::unique_ptr<Node>* node);
     void setWord(int number);
     void setWord(std::string word);
     void setStatusAnimation(int statusAnimation);

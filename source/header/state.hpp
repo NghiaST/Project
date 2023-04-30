@@ -57,6 +57,7 @@ public:
 
     // Accessors
     sf::Vector2i update(MOUSE mouseType, KEYBOARD keyboardType);
+    void updateBtnCode(int Manipulate, int subManipulate);
     void updateBtnStep(int step);
     void render();
 };

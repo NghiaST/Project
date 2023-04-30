@@ -14,7 +14,7 @@ Node::~Node()
 
 }
 
-int Node::updateNode(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside) // check if Style is active
+int Node::updateNode(MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside) // check if Style is active
 {
     switch (this->status)
     {
@@ -39,6 +39,14 @@ int Node::updateNode(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardTy
     return this->status;
 }
 
+int Node::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
+{
+    if (this->running == true) 
+        return -1;
+    bool isMouseInside = this->isMouseInside(mousePos);
+    return this->updateNode(mouseType, keyboardType, isMouseInside);
+}
+
 bool Node::getRunning()
 {
     return this->running;
@@ -59,26 +67,31 @@ CircleNode::~CircleNode()
 
 }
 
-int CircleNode::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType) // check if CircleNode is active
+bool CircleNode::isMouseInside(sf::Vector2f mousePos)
 {
-    if (this->running == true) 
-        return -1;
-    bool isMouseInside = this->shape.getGlobalBounds().contains(mousePos);
-    return this->Node::updateNode(mousePos, mouseType, keyboardType, isMouseInside);
+    return (coord.x - mousePos.x) * (coord.x - mousePos.x) + (coord.y - mousePos.y) * (coord.y - mousePos.y) <= this->radius * this->radius;
 }
-void CircleNode::refreshrender()
+
+void Node::refreshrender()
 {
-    this->shape.setPosition(this->coord - sf::Vector2f(this->radius, this->radius));
     this->shape.setRadius(this->radius);
     this->shape.setOutlineThickness(this->thickness);
+    this->shape.setOrigin(this->radius, this->radius);
+    this->shape.setPosition(this->coord);
 
     this->text.setFont(*this->font);
     this->text.setString((this->word).c_str());
     this->text.setCharacterSize(this->sizeText);
-    this->text.setPosition(
-        this->coord.x - this->text.getGlobalBounds().width / 2.f - 1,
-        this->coord.y - this->text.getGlobalBounds().height / 2.f - 4
-    );
+    this->text.setOrigin(text.getLocalBounds().left + this->text.getGlobalBounds().width / 2.f,
+                        text.getLocalBounds().top + this->text.getGlobalBounds().height / 2.f);
+    this->text.setPosition(this->coord);
+
+    if (this->running == false) {
+        palette->getColor(this->status).Coloring(this->shape, this->text);
+    }
+    else {
+        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
+    }
 
     if (this->running == false) {
         palette->getColor(this->status).Coloring(this->shape, this->text);
@@ -90,7 +103,7 @@ void CircleNode::refreshrender()
         palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor, palette->getColor(this->preStatus));
     }
 }
-void CircleNode::render(sf::RenderWindow* window) 
+void Node::render(sf::RenderWindow* window) 
 {
     this->refreshrender();
     if (this->running == true && this->statusAnimation == NOD_NOPE)
@@ -100,7 +113,7 @@ void CircleNode::render(sf::RenderWindow* window)
 }
 
 // visualization
-void CircleNode::prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status)
+void Node::startAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status)
 {
     this->statusAnimation = statusAnimation;
     this->preStatus = preStatus;
@@ -112,7 +125,7 @@ void CircleNode::prepareAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint
     this->running = true;
     this->ratioColor = 1;
 }
-void CircleNode::stopAnimation()
+void Node::stopAnimation()
 {
     this->running = false;
     this->setXY(this->endPoint);
@@ -121,12 +134,12 @@ void CircleNode::stopAnimation()
     this->ratioColor = 1;
     this->statusAnimation = NOD_NOPE;
 }
-void CircleNode::updateAnimation_Moving(double ratio)
+void Node::updateAnimation_Moving(double ratio)
 {
     sf::Vector2f presentPoint = startPoint + (endPoint - startPoint) * ratio;
     this->setXY(presentPoint);
 }
-void CircleNode::updateAnimation(double time)
+void Node::updateAnimation(double time)
 {
     if (time < 0) time = 0;
     if (time > this->fulltime) time = this->fulltime;
@@ -158,7 +171,7 @@ void CircleNode::updateAnimation(double time)
             //exit(1);
     }
 }
-void CircleNode::renderAnimation(sf::RenderWindow *window, int statusAnimation, double time)
+void Node::renderAnimation(sf::RenderWindow *window, int statusAnimation, double time)
 {
     this->updateAnimation(time);
     this->render(window);
@@ -167,11 +180,13 @@ void CircleNode::renderAnimation(sf::RenderWindow *window, int statusAnimation, 
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
 
-RectangleNode::RectangleNode(sf::Vector2f coord, float width, float height, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette)
-    : Node(coord, sizeText, thickness, word, font, palette)
+RectangleNode::RectangleNode(sf::Vector2f coord, float length, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette)
+    : Node(coord, sizeText, thickness, word, font, palette), halflength(length / 2) // initialize halflength data member
 {
-    this->width = width;
-    this->height = height;
+    this->radius = this->halflength * 1.41421;
+    shape.setOrigin(this->radius, this->radius);
+    shape.setPointCount(4);
+    shape.rotate(45.f);
     this->refreshrender();
 }
 
@@ -180,38 +195,8 @@ RectangleNode::~RectangleNode()
 
 }
 
-int RectangleNode::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType) // check if CircleNode is active
+bool RectangleNode::isMouseInside(sf::Vector2f mousePos)
 {
-    bool isMouseInside = this->shape.getGlobalBounds().contains(mousePos);
-    return this->Node::updateNode(mousePos, mouseType, keyboardType, isMouseInside);
-}
-void RectangleNode::refreshrender()
-{
-    this->shape.setPosition(this->coord - sf::Vector2f(this->width, this->height) / 2);
-    this->shape.setSize(sf::Vector2f(this->width, this->height));
-    this->shape.setOutlineThickness(this->thickness);
-
-    this->text.setFont(*this->font);
-    this->text.setString((this->word).c_str());
-    this->text.setCharacterSize(this->sizeText);
-    this->text.setPosition(
-        this->coord.x - this->text.getGlobalBounds().width / 2.f - 1,
-        this->coord.y - this->text.getGlobalBounds().height / 2.f - 4
-    );
-
-    if (this->running == false) {
-        palette->getColor(this->status).Coloring(this->shape, this->text);
-    }
-    else {
-        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
-    }
-}
-void RectangleNode::render(sf::RenderWindow* window) 
-{
-    this->refreshrender();
-    if (this->running == true && this->statusAnimation == NOD_NOPE)
-        return;
-
-    window->draw(this->shape);
-    window->draw(this->text);
+    return (this->coord.x - this->halflength <= mousePos.x && mousePos.x <= this->coord.x + this->halflength)
+        && (this->coord.y - this->halflength <= mousePos.y && mousePos.y <= this->coord.y + this->halflength);
 }

@@ -11,11 +11,6 @@
 #include "arrow.hpp"
 
 struct StructStack : StructDataStructure {
-protected:
-    // value
-    std::vector<CircleNode> listNode;
-    std::vector<ArrowNode> listArrow;
-
 public:
     StructStack(VisualizationSettings* settings, bool active);
     ~StructStack();

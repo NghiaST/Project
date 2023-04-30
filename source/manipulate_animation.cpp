@@ -11,15 +11,16 @@ Manipulate_Animation_Node::Manipulate_Animation_Node(int statusAnimation, int pr
     this->word = word;
 }
 
-void Manipulate_Animation_Node::build(CircleNode* node)
+void Manipulate_Animation_Node::build(Node* node)
 {
-    node->prepareAnimation(startPoint, endPoint, statusAnimation, preStatus, status);
+    node->startAnimation(startPoint, endPoint, statusAnimation, preStatus, status);
     node->setWord(word);
 }
 
 // Manipulate_Animation_ArrayNode
-void Manipulate_Animation_ArrayNode::setup(CircleNode *node, sf::Vector2f presentPoint, int word, bool view)
+void Manipulate_Animation_ArrayNode::setup(std::unique_ptr<Node>* node, sf::Vector2f presentPoint, int word, bool view)
 {
+
     clearStep();
     setNode(node);
     setPresentPoint(presentPoint);
@@ -29,9 +30,9 @@ void Manipulate_Animation_ArrayNode::setup(CircleNode *node, sf::Vector2f presen
     else
         setStatusAnimation(AR_NOPE);
 }
-void Manipulate_Animation_ArrayNode::setNode(CircleNode *node)
+void Manipulate_Animation_ArrayNode::setNode(std::unique_ptr<Node>* node)
 {
-    this->node = node;
+    this->node = node->get();
 }
 void Manipulate_Animation_ArrayNode::setWord(int word)
 {
@@ -72,7 +73,7 @@ void Manipulate_Animation_ArrayNode::setStatusAnimation(int statusAnimation)
             }
             break;
         default :
-            std::cout << "Error node.cpp prepareAnimation statusAnimation out of range\n";
+            std::cout << "Error node.cpp startAnimation statusAnimation out of range\n";
             exit(12);
             break;
     }

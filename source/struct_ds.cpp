@@ -31,6 +31,16 @@ StructDataStructure::~StructDataStructure()
 {
 }
 
+int StructDataStructure::getManipulate()
+{
+    return this->Manipulate;
+}
+
+int StructDataStructure::getsubManipulate()
+{
+    return this->subManipulate;
+}
+
 // Initialize
 void StructDataStructure::Initialize_Empty() 
 {
@@ -38,7 +48,7 @@ void StructDataStructure::Initialize_Empty()
 }
 void StructDataStructure::Initialize_Random()
 {
-    this->sizearray = Rand(2, this->maxsize);
+    this->sizearray = Rand(2, this->maxsize - 1);
     for(int i = 0; i < this->sizearray; i++) elements[i] = Rand(0, 999);
 }
 void StructDataStructure::Initialize_Manual(std::vector<int> arr) 
@@ -82,7 +92,7 @@ void StructDataStructure::Insert_First(int value)
     elements[0] = value;
     sizearray++;
 }
-void StructDataStructure::Insert_Last(int value) 
+void StructDataStructure::Insert_Last(int value)
 {
     if (sizearray == maxsize) {
         std::cout << "The array has full of elements. Can't Insert new elements\n";
