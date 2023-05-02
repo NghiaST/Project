@@ -24,17 +24,17 @@ private :
     std::vector<Button> buttonCategory;
     std::vector<Button> buttonManipulate;
     std::vector<std::vector<Button>> buttonsubManipulate;
-    std::vector<std::vector<InputBox>> boxarr;
+    std::vector<InputBox> listBox;
 
 public :
-    StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::vector<std::string>> strInputBox);
+    StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::string> strInputBox);
     ~StateCategory();
 
     void Clean();
 
     sf::Vector2i update(MOUSE mouseType, KEYBOARD keyboardType, sf::Vector2f mousePosView);
     void updateInputBox(int pos, int value);
-    std::string getValueButton(int typeManipulate, int id);
+    std::vector<std::string> getInputBox(int typeManipulate);
 
     void render();
 };

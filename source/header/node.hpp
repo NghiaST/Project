@@ -25,6 +25,7 @@ struct Node : Style {
 
     // shape
     int radius;
+    int halflength;
     sf::CircleShape shape;
 
 public :
@@ -33,15 +34,10 @@ public :
 
     // other
     virtual bool isMouseInside(sf::Vector2f mousePos) = 0;
-
-    // Functions
-    int updateNode(MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside);
-    int update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     bool getRunning();
 
     // Functions
-    void refreshrender();
-    void render(sf::RenderWindow* window);
+    int updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
 
     // visualization
     void startAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status);
@@ -50,6 +46,10 @@ public :
     void updateAnimation_Moving(double ratio);
     void updateAnimation(double time);
     void renderAnimation(sf::RenderWindow* window, int statusAnimation, double time);
+
+    // print
+    void refreshrender();
+    void render(sf::RenderWindow* window);
 };
 
 struct CircleNode : Node {
@@ -62,11 +62,11 @@ public:
 };
 
 struct RectangleNode : Node {
-    int halflength;
 public:
     RectangleNode(sf::Vector2f coord, float length, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette);
     ~RectangleNode();
 
+    // override
     bool isMouseInside(sf::Vector2f mousePos) override;
 };
 

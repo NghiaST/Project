@@ -1,27 +1,15 @@
-#include <SFML/Graphics.hpp>
-#include <fstream>
 #include "ds_linkedlist.hpp"
-#include "support_function.hpp"
-#include "struct_ds.hpp"
 
 StructLinkedList::StructLinkedList(VisualizationSettings* settings, bool active) 
     : StructDataStructure(settings, active)
 {
     this->maxsize = 15;
-
     this->sizeText = 13;
     this->sizeNode = 35;
-    this->diffx = 15;
+    this->diffx = 50;
     this->diffy = 0;
     this->distance = this->sizeNode + this->diffx;
     this->thickness = 3;
-
-    float sizeNode;   /// rectangle: length, area: diameter 
-    float distance;
-    float diffx;
-    float diffy;
-    unsigned int sizeText;
-    float thickness;
 
     this->elements = std::vector<int>(this->maxsize, 0);
     listNode = std::vector<std::unique_ptr<Node>> (this->maxsize);
@@ -39,40 +27,31 @@ StructLinkedList::~StructLinkedList()
 {
 }
 
-std::vector<sf::Vector2f> StructLinkedList::getPosition(int size)
+void StructLinkedList::refreshAnimation()
 {
-    std::vector<sf::Vector2f> listP;
-
-    sf::Vector2f velocity, coord;
-    velocity.x = this->distance + this->sizeNode;
-    velocity.y = this->diffy;
-
-    coord.x = this->centerVisual.x - velocity.x / 2 * (size - 1);
-    coord.y = this->centerVisual.y - velocity.y / 2 * (size - 1);
-
-    for(int i = 0; i < size; i++) {
-        listP.push_back(coord);
-        coord += velocity;
+    std::vector<sf::Vector2f> listP = this->getPosition(this->sizearray);
+    count_nodePrint = this->sizearray;
+    count_arrowPrint = count_nodePrint - 1;
+    for(int i = 0; i < this->count_nodePrint; i++) {
+        this->listNode[i]->setXY(listP[i]);
+        this->listNode[i]->setWord(std::to_string(this->elements[i]));
     }
-    return listP;
+    for(int i = 0; i < this->count_arrowPrint; i++)
+        this->listArrow[i].setPoint(listP[i], listP[i + 1]);
 }
-
-void StructLinkedList::run(int manipulate, int way, std::string str1, std::string str2)
+void StructLinkedList::run(int manipulate, int way, std::vector<std::string> vecStr)
 {
+    if (manipulate == -1) return;
     if (this->running == true && manipulate != -1)
-        stopAnimation();
+        stopAnimationDS();
 
     if (this->active == false) {
         std::cout << "Error StructLinkedList::run\n";
         exit(2);
     }
-    if (manipulate == -1) return;
 
     this->preSize = this->sizearray;
-    this->Str1 = str1;
-    this->Str2 = str2;
-    
-    clock.restart();
+    this->vecStr = vecStr;
 
     if (manipulate == 0) {
         this->Animation_Initialize(way);
@@ -95,85 +74,46 @@ void StructLinkedList::run(int manipulate, int way, std::string str1, std::strin
     }
 }
 
-void StructLinkedList::stopAnimation()
+void StructLinkedList::Animation_Initialize(int way)
 {
-    this->running = false;
-    this->type_running = ANIMATION_PAUSE;
-    this->totaltime = 0;
-    for(int i = 0; i < this->count_nodePrint; i++) {
-        listNode[i]->stopAnimation();
-        listArrow[i].setStatusAnimation(0);
-
-        nodeAnimation[i].clearStep();
-        arrowAnimation[i].clearStep();
+    if (way == 0) this->Initialize_Empty();
+    if (way == 1) this->Initialize_Random();
+    if (way == 2) this->Initialize_Manual(string_to_array(vecStr[1]));
+    if (way == 3) {
+        if (this->Initialize_ExternalFile(vecStr[0]) == -1)
+            return;
     }
-    this->count_nodePrint = this->sizearray;
     this->printElements = this->elements;
-    this->listStep.clear();
-    refreshNode();
-}
 
-sf::Vector2i StructLinkedList::updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
-{
-    sf::Vector2i ret(-1, -1);
-    for(int i = 0; i < this->sizearray; i++) {
-        listNode[i]->update(mousePos, mouseType, keyboardType);
-        if (listNode[i]->getRunning() == false && listNode[i]->getStatus() == 2) 
-            ret = sf::Vector2i(i, this->elements[i]);
-    }
-    return ret;
-}
+    count_nodePrint = sizearray;
+    count_arrowPrint = count_nodePrint - 1;
+    Manipulate = 0; subManipulate = way;
+    startAnimationDS();
 
-void StructLinkedList::refreshNode()
-{
-    std::vector<sf::Vector2f> listP = this->getPosition(this->sizearray);
-    for(int i = 0; i < this->sizearray; i++) {
-        this->listNode[i]->setXY(listP[i]);
-        if (i)
-            this->listArrow[i - 1].setPoint(listP[i - 1], listP[i]);
-        this->listNode[i]->setWord(std::to_string(this->elements[i]));
-    }
-}
+    std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
 
-void StructLinkedList::refreshrender()
-{
-    if (this->running == true)
-    {
-        for(int i = 0; i < this->count_nodePrint; i++)
-        {
-            nodeAnimation[i].runTime(time);
-            if (i < count_arrowPrint) 
-                arrowAnimation[i].runTime(time);
+    for(int i = 0; i < count_nodePrint; i++) {
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
+        nodeAnimation[i].addStep(NOD_APPEAR);
+        if (i < count_arrowPrint) {
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+            arrowAnimation[i].addStep(AR_CREATE);
         }
     }
-}
-
-void StructLinkedList::render()
-{
-    if (!this->isActive()) return;
-    this->refreshrender();
-    for(int i = 0; i < count_arrowPrint; i++) {
-        listArrow[i].render(window);
-    }
-    for(int i = 0; i < count_nodePrint; i++)
-        listNode[i]->render(window);
+    this->listStep = std::vector<int>{0};
+    this->totaltime = nodeAnimation[0].getTotaltime();
+    this->step_total = nodeAnimation[0].getTotalstep();
 }
 
 void StructLinkedList::Animation_Insert_First()
 {
-    Insert_First(string_to_int(this->Str2));
-    this->printElements = this->elements;
-    if (this->preSize == this->maxsize)
-    {
-        std::cout << "Error. The size of linked list is maximum. Can't add\n";
-        // Manipulate = -1;
-        // subManipulate = -1;
+    if (Insert_First(string_to_int(vecStr[3])) == -1)
         return;
-    }
+    this->printElements = this->elements;
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 1; subManipulate = 0;
-    activeAnimation();
+    startAnimationDS();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(sizearray - 1);
@@ -239,19 +179,13 @@ void StructLinkedList::Animation_Insert_First()
 }
 void StructLinkedList::Animation_Insert_Last()
 {
-    Insert_Last(string_to_int(Str2));
-    this->printElements = this->elements;
-    if (this->preSize == this->maxsize)
-    {
-        std::cout << "Error. The size of linked list is maximum. Can't add\n";
-        // Manipulate = -1;
-        // subManipulate = -1;
+    if (Insert_Last(string_to_int(vecStr[3])) == -1)
         return;
-    }
+    this->printElements = this->elements;
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
-    activeAnimation();
     Manipulate = 1; subManipulate = 1;
+    startAnimationDS();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(sizearray - 1);
@@ -320,27 +254,16 @@ void StructLinkedList::Animation_Insert_Last()
 }
 void StructLinkedList::Animation_Insert_Manual()
 {
-    int pos = string_to_int(this->Str1);
+    int pos = string_to_int(vecStr[2]);
     if (pos == 0) return void(Animation_Insert_First());
     if (pos == this->sizearray) return void(Animation_Insert_Last());
-
-    if (pos >= this->sizearray) {
-        std::cout << "Error. The position must be in range [1, N - 1]\n";
+    if (Insert_Manual(pos, string_to_int(vecStr[3])) == -1)
         return;
-    }
-    Manipulate = 1; subManipulate = 2;
-    Insert_Manual(pos, string_to_int(this->Str2));
     this->printElements = this->elements;
-    if (this->preSize == this->maxsize)
-    {
-        std::cout << "Error. The size of linked list is maximum. Can't add\n";
-        // Manipulate = -1;
-        // subManipulate = -1;
-        return;
-    }
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
-    activeAnimation();
+    Manipulate = 1; subManipulate = 2;
+    startAnimationDS();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(sizearray - 1);
@@ -469,19 +392,19 @@ void StructLinkedList::Animation_Insert_Manual()
 void StructLinkedList::Animation_Del_First()
 {
     this->printElements = this->elements;
-    Del_First();
-    if (this->preSize == 0)
-    {
-        std::cout << "Error. The size of linked list is none. Can't remove\n";
-        // Manipulate = -1;
-        // subManipulate = -1;
-        return;
-    }
-    
+    Del_First();    
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 2; subManipulate = 0;
-    activeAnimation();
+    startAnimationDS();
+
+    if (preSize == 0)
+    {
+        listStep.push_back(0);
+        this->totaltime = 0;
+        this->step_total = 0;
+        return;
+    }
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
@@ -505,7 +428,6 @@ void StructLinkedList::Animation_Del_First()
         if (i < count_arrowPrint)
             arrowAnimation[i].skipMultiStep(1);
     }
-    listStep.push_back(1);
 
     for(int i = 0; i < count_nodePrint; i++)
     {
@@ -541,7 +463,7 @@ void StructLinkedList::Animation_Del_First()
         }
     }
     
-    this->listStep = std::vector<int>{1, 2, 3};
+    this->listStep = std::vector<int>{1, 1, 2, 3, 3};
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
@@ -549,18 +471,18 @@ void StructLinkedList::Animation_Del_Last()
 {
     this->printElements = this->elements;
     Del_Last();
-    if (this->preSize == 0)
-    {
-        std::cout << "Error. The size of linked list is none. Can't remove\n";
-        // Manipulate = -1;
-        // subManipulate = -1;
-        return;
-    }
-
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 2; subManipulate = 1;
-    activeAnimation();
+    startAnimationDS();
+    
+    if (preSize == 0)
+    {
+        listStep.push_back(0);
+        this->totaltime = 0;
+        this->step_total = 0;
+        return;
+    }
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
@@ -657,15 +579,15 @@ void StructLinkedList::Animation_Del_Last()
 void StructLinkedList::Animation_Del_Manual()
 {
     this->printElements = this->elements;
-    int pos = string_to_int(this->Str1);
-    if (pos <= 0) return void(Animation_Del_First());
-    if (pos >= this->sizearray) return void(Animation_Del_Last());
-    Del_Manual(pos);
+    int pos = string_to_int(vecStr[2]);
+    if (pos == 0) return void(Animation_Del_First());
+    if (Del_Manual(pos) == -1) 
+        return;
     
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 2; subManipulate = 2;
-    activeAnimation();
+    startAnimationDS();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
@@ -775,46 +697,17 @@ void StructLinkedList::Animation_Del_Manual()
     this->step_total = nodeAnimation[0].getTotalstep();
 }
 
-void StructLinkedList::Animation_Initialize(int way)
-{
-    if (way == 0) this->Initialize_Empty();
-    if (way == 1) this->Initialize_Random();
-    if (way == 2) this->Initialize_Manual(string_to_array(this->Str1));
-    if (way == 3) this->Initialize_ExternalFile(this->Str2);
-    this->printElements = this->elements;
-
-    count_nodePrint = sizearray;
-    count_arrowPrint = count_nodePrint - 1;
-    Manipulate = 0; subManipulate = way;
-    activeAnimation();
-
-    std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
-
-    for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
-        nodeAnimation[i].addStep(NOD_APPEAR);
-        if (i < count_arrowPrint) {
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
-            arrowAnimation[i].addStep(AR_CREATE);
-        }
-    }
-    this->listStep = std::vector<int>{0};
-    this->totaltime = nodeAnimation[0].getTotaltime();
-    this->step_total = nodeAnimation[0].getTotalstep();
-}
-
 void StructLinkedList::Animation_Update()
 {
     this->printElements = this->elements;
-    int pos = string_to_int(this->Str1);
-    int value = string_to_int(this->Str2);
-    if (pos < 0) pos = 0; 
-    if (pos >= this->sizearray) pos = this->sizearray - 1;
-    this->Update(pos, value);
+    int pos = string_to_int(vecStr[2]);
+    int value = string_to_int(vecStr[3]);
+    if (this->Update(pos, value) == -1) 
+        return;
     count_nodePrint = this->sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 3; subManipulate = 0;
-    activeAnimation();
+    startAnimationDS();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
@@ -887,12 +780,11 @@ void StructLinkedList::Animation_Update()
 void StructLinkedList::Animation_Search()
 {
     this->printElements = this->elements;
-    int pos = Search(string_to_int(this->Str1));
-    if (pos == -1) pos = this->sizearray;
+    int pos = Search(string_to_int(vecStr[2]));
     count_nodePrint = this->sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 4; subManipulate = 0;
-    activeAnimation();
+    startAnimationDS();
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
@@ -939,7 +831,7 @@ void StructLinkedList::Animation_Search()
         listStep.push_back(2);
     }
 
-    if (pos != count_nodePrint)
+    if (pos != sizearray)
     {
         for(int istep = 0; istep < 3; istep++)
         {

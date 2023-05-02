@@ -22,87 +22,60 @@ void State::InitAllButton()
     std::vector<std::string> strCategory;
     std::vector<std::vector<std::string>> listStrManipulate;
     std::vector<std::vector<std::vector<std::string>>> listStrSubManipulate;
-    std::vector<std::vector<std::vector<std::string>>> listStrInputBox;
+    std::vector<std::vector<std::string>> listStrInputBox;
     std::vector<std::string> strAnimation;
     std::vector<std::vector<std::vector<std::vector<std::string>>>> listStrStep;
 
     strCategory = {"Static Array", "Dynamic Array", "Linked List", "Stack", "Queue"};
     listStrManipulate = {
+        {"Initialize", "Insert", "Remove", "Update", "Access & Search"},
+        {"Initialize", "Insert", "Remove", "Update & Allocate", "Access & Search"},
         {"Initialize", "Insert", "Remove", "Update", "Search"},
-        {"Initialize", "Insert", "Remove", "Update", "Search"},
-        {"Initialize", "Insert", "Remove", "Update", "Search"},
-        {"Initialize", "Peek", "Push", "Pop"},
-        {"Initialize", "Peek", "Enqueue", "Dequeue"}
+        {"Initialize", "Push", "Pop", "Peek", "Clear"},
+        {"Initialize", "Enqueue", "Dequeue", "Clear"}
     };
     listStrSubManipulate = {
         {
             {"Empty", "Random", "Manual", "File"},
-            {"First", "Last", "Manual"},
-            {"First", "Last", "Manual"},
-            {"Manual"},
-            {"Manual"}
+            {"First", "Last", "Middle"},
+            {"First", "Last", "Middle"},
+            {"Update"},
+            {"Access", "Search"}
         },
         {
             {"Empty", "Random", "Manual", "File"},
-            {"First", "Last", "Manual"},
-            {"First", "Last", "Manual"},
-            {"Manual"},
-            {"Manual"}
+            {"First", "Last", "Middle"},
+            {"First", "Last", "Middle"},
+            {"Update", "Allocate"},
+            {"Access", "Search"}
         },
         {
             {"Empty", "Random", "Manual", "File"},
-            {"First", "Last", "Manual"},
-            {"First", "Last", "Manual"},
-            {"Manual"},
-            {"Manual"}
+            {"First", "Last", "Middle"},
+            {"First", "Last", "Middle"},
+            {"Update"},
+            {"Search"}
         },
         {
             {"Empty", "Random", "Manual", "File"},
-            {"Peek"},
             {"Push"},
             {"Pop"},
+            {"Peek"},
+            {"Clear"}
         },
         {
             {"Empty", "Random", "Manual", "File"},
-            {"Front", "Back"},
             {"Enqueue"},
-            {"Dequeue"}
+            {"Dequeue"},
+            {"Clear"}
         }
     };
     listStrInputBox = {
-        {
-            {"Array=", "FileName="},
-            {"Pos=", "Value="},
-            {"Pos="},
-            {"Pos=", "Value="},
-            {"Value="}
-        },
-        {
-            {"Array=", "FileName="},
-            {"Pos=", "Value="},
-            {"Pos="},
-            {"Pos=", "Value="},
-            {"Value="}
-        },
-        {
-            {"Array=", "FileName="},
-            {"Pos=", "Value="},
-            {"Pos="},
-            {"Pos=", "Value="},
-            {"Value="}
-        },
-        {
-            {"Array=", "FileName="},
-            {},
-            {"Value="},
-            {}
-        },
-        {
-            {"Array=", "FileName="},
-            {},
-            {"Value="},
-            {}
-        }
+        {"Fixed size = ", "Filename = ", "Array = ", "Pos = ", "Value = "},
+        {"Filename = ", "Array = ", "Pos = ", "Value = ", "Size allocate = "},
+        {"Filename = ", "Array = ", "Pos = ", "Value = "},
+        {"Filename = ", "Array = ", "Pos = ", "Value = "},
+        {"Filename = ", "Array = ", "Pos = ", "Value = "}
     };
     strAnimation = {
         "<<", "<", "||", "Play", ">", ">>"
@@ -110,36 +83,91 @@ void State::InitAllButton()
     listStrStep = {
         {
             {
-                
+                {}, {}, {}, {}
             },
             {
-
+                {
+                    "if (N == fixedSize) return",
+                    "for(int i = N - 1; i >= 0; i--)",
+                    "   elements[i + 1] = elements[i]"
+                    "N++"
+                    "elements[0] = value"
+                },
+                {
+                    "if (N == fixedSize) return",
+                    "N++"
+                    "elements[N - 1] = value"
+                },
+                {
+                    "if (N == fixedSize) return",
+                    "for(int i = pos - 1; i >= 0; i--)",
+                    "   elements[i + 1] = elements[i]"
+                    "N++"
+                    "elements[pos] = value"
+                }
             },
             {
-
+                {
+                    "if (N == 0) return",
+                    "for(int i = N - 1; i > 0; i--)",
+                    "   elements[i - 1] = elements[i]",
+                    "N--"
+                }, 
+                {
+                    "if (N == 0) return",
+                    "N--",
+                }, 
+                {
+                    "if (N == 0) return",
+                    "for(int i = N - 1; i > pos; i--)",
+                    "   elements[i - 1] = elements[i]",
+                    "N--"
+                }
             },
             {
-
+                {
+                    "elements[pos] = value"
+                }
             },
             {
-
+                {
+                    "return elements[pos]"
+                }, 
+                {
+                    "for(int i = 0; i < N; i++)",
+                    "   if (elements[i] == value)",
+                    "       return i",
+                    "return NOT_FOUND"
+                }
             }
         },
         {
             {
-                
+                {}, {}, {}, {}
             },
             {
-
+                {}, {}, {}
             },
             {
-
+                {}, {}, {}
+            },
+            
+            {
+                {
+                    "elements[pos] = value"
+                },
+                {}
             },
             {
-
-            },
-            {
-                
+                {
+                    "return elements[pos]"
+                }, 
+                {
+                    "for(int i = 0; i < N; i++)",
+                    "   if (elements[i] == value)",
+                    "       return i",
+                    "return NOT_FOUND"
+                }
             }
         },
         {
@@ -202,36 +230,59 @@ void State::InitAllButton()
         },
         {
             {
-                
+                {}, {}, {}, {}
             },
             {
-
+                {"Node* cur = new Node(value)", "cur->next = head", "head = cur"}, 
             },
             {
-
+                {
+                    "if (head == nullptr) return",
+                    "Node* cur = head",
+                    "head = head->next",
+                    "delete cur"
+                }
             },
             {
-
+                {
+                    "if (head == nullptr) return NOT_FOUND",
+                    "return head"
+                }
             },
             {
-                
+                {
+                    "while (head != nullptr)",
+                    "   Node* tmp = head",
+                    "   head = head->next",
+                    "   delete cur"
+                }   
             }
         },
         {
             {
-                
+                {}, {}, {}, {}
             },
             {
-
+                {
+                    "if (head == nullptr) return",
+                    "Node* cur = head",
+                    "head = head->next",
+                    "delete cur"
+                }
             },
             {
-
+                {
+                    "if (tail == nullptr) return NOT_FOUND",
+                    "return tail"
+                }
             },
             {
-
-            },
-            {
-                
+                {
+                    "while (head != nullptr)",
+                    "   Node* tmp = head",
+                    "   head = head->next",
+                    "   delete cur"
+                }   
             }
         }
     };
@@ -276,9 +327,9 @@ const bool &State::getQuit() const
 {
     return this->quit;
 }
-std::string State::getValueButton(int typeManipulate, int id)
+std::vector<std::string> State::getInputBox(int typeManipulate)
 {
-    return sCategory[typeCategory].getValueButton(typeManipulate, id);
+    return sCategory[typeCategory].getInputBox(typeManipulate);
 }
 
 void State::updateMousePositions()

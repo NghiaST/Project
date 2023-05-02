@@ -1,29 +1,24 @@
 #ifndef __ds_stack_hpp__
 #define __ds_stack_hpp__
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <cstring>
-#include <vector>
-
-#include "node.hpp"
-#include "support_function.hpp"
 #include "struct_ds.hpp"
-#include "arrow.hpp"
 
 struct StructStack : StructDataStructure {
 public:
     StructStack(VisualizationSettings* settings, bool active);
     ~StructStack();
-    void run(int manipulate, int way, std::string str1, std::string str2);
 
-    void Peek();
-    void Push(int value);
+    void refreshAnimation() override;
+    void run(int manipulate, int way, std::vector<std::string> vecStr) override;
+
+    int Push(int value);
     void Pop();
-    // render
-    void updatePositionNode();
-    sf::Vector2i updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
-    void refreshrender();
-    void render();
+    void Clear();
+
+    void Animation_Initialize(int way);
+    void Animation_Push();
+    void Animation_Pop();
+    void Animation_Peek();
+    void Animation_Clear();
 };
 
 #endif

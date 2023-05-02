@@ -180,7 +180,7 @@ const bool &StructStaticArray::isActive() const
     return this->active;
 }
 
-void StructStaticArray::run(int manipulate, int way, std::string str1, std::string str2) {
+void StructStaticArray::run(int manipulate, int way, std::vector<std::string> vecStr) {
     if (!this->active) 
         exit(2);
     if (manipulate == -1) return;

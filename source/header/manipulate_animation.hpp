@@ -43,6 +43,7 @@ private:
 public:
     //Manipulate_Animation_ArrayNode() {}
     void setup(std::unique_ptr<Node>* node, sf::Vector2f presentPoint, int word, bool view);
+    void setup(std::unique_ptr<Node>* node, sf::Vector2f presentPoint, std::string word, bool view);
     void setNode(std::unique_ptr<Node>* node);
     void setWord(int number);
     void setWord(std::string word);

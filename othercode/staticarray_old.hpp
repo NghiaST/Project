@@ -18,7 +18,7 @@ StructStaticArray2::~StructStaticArray2()
 {
 }
 
-void StructStaticArray2::run(int manipulate, int way, std::string str1, std::string str2) {
+void StructStaticArray2::run(int manipulate, int way, std::vector<std::string> vecStr) {
     if (!this->active) 
         exit(2);
     if (manipulate == -1) ;
@@ -52,7 +52,7 @@ sf::Vector2i StructStaticArray2::update(sf::Vector2f mousePos, MOUSE mouseType, 
 {
     sf::Vector2i ret(-1, -1);
     for(int i = 0; i < this->maxsize; i++) {
-        listNode[i]->update(mousePos, mouseType, keyboardType);
+        listNode[i]->updateKBM(mousePos, mouseType, keyboardType);
         if (i < this->sizearray && listNode[i]->getStatus() == 2) 
             ret = sf::Vector2i(i, this->elements[i]);
     }

@@ -266,14 +266,13 @@ void DataVisualization::update()
         }
         else if (100 <= typePress.x && typePress.x < 200) {
             typePress.x -= 100;
-            std::string str1 = states->getValueButton(typePress.x, 0);
-            std::string str2 = states->getValueButton(typePress.x, 1);
+            std::vector<std::string> vecStr = states->getInputBox(typePress.x);
             switch (ds_present) {
-                case DS_STATICARRAY  : StaticArray ->run(typePress.x, typePress.y, str1, str2); break;
-                case DS_DYNAMICARRAY : DynamicArray->run(typePress.x, typePress.y, str1, str2); break;
-                case DS_LINKEDLIST   : LinkedList  ->run(typePress.x, typePress.y, str1, str2); break;
-                case DS_STACK        : Stack       ->run(typePress.x, typePress.y, str1, str2); break;
-                case DS_QUEUE        : Queue       ->run(typePress.x, typePress.y, str1, str2); break;
+                case DS_STATICARRAY  : StaticArray ->run(typePress.x, typePress.y, vecStr); break;
+                case DS_DYNAMICARRAY : DynamicArray->run(typePress.x, typePress.y, vecStr); break;
+                case DS_LINKEDLIST   : LinkedList  ->run(typePress.x, typePress.y, vecStr); break;
+                case DS_STACK        : Stack       ->run(typePress.x, typePress.y, vecStr); break;
+                case DS_QUEUE        : Queue       ->run(typePress.x, typePress.y, vecStr); break;
                 default: std::cout << "Error datavisualization 3 \n"; exit(2);
             }
             int Manipulate, subManipulate;

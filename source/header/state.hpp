@@ -16,7 +16,7 @@
 #include "buttonstep.hpp"
 
 struct State {
-private:    
+private:
     // value
     VisualizationSettings* settings;
     sf::RenderWindow* window;
@@ -50,7 +50,7 @@ public:
     void updateInputBox(int pos, int value);
     // getvalue
     const bool& getQuit() const;
-    std::string getValueButton(int typeManipulate, int id);
+    std::vector<std::string> getInputBox(int typeManipulate);
 
     // Mouse
     void updateMousePositions();

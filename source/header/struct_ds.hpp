@@ -6,7 +6,6 @@
 #include <vector>
 #include <memory>
 
-
 #include "node.hpp"
 #include "arrow.hpp"
 #include "support_function.hpp"
@@ -38,7 +37,7 @@ protected:
     std::vector<int> elements;
 
     // data for node
-    float sizeNode;   /// rectangle: length, area: diameter 
+    float sizeNode;   /// rectangle: length, circle: diameter 
     float diffx;
     float diffy;
     float distance;
@@ -64,8 +63,7 @@ protected:
     int count_nodePrint;
     int count_arrowPrint;
 
-    std::string Str1;
-    std::string Str2;
+    std::vector<std::string> vecStr;
     int Val;
     int preSize;/// size of array, number of elements (previous)
 
@@ -84,44 +82,45 @@ public:
     StructDataStructure(VisualizationSettings* settings, bool active);
     ~StructDataStructure();
 
+    // setup
+    void turn_on();
+    void turn_off();
+    void startAnimationDS();
+    void stopAnimationDS();
+
+    // get
     int getManipulate();
     int getsubManipulate();
+    const bool& isActive() const;
+    std::vector<sf::Vector2f> getPosition(int size);
 
     // manipulate
     void Initialize_Empty();
     void Initialize_Random();
     void Initialize_Manual(std::vector<int> arr);
-    void Initialize_ExternalFile(std::string filename);
-
-    void Insert_First(int value);
-    void Insert_Last(int value);
-    void Insert_Manual(int pos, int value);
-
+    int Initialize_ExternalFile(std::string filename);
+    int Insert_First(int value);
+    int Insert_Last(int value);
+    int Insert_Manual(int pos, int value);
     void Del_First();
     void Del_Last();
-    void Del_Manual(int pos);
-
-    void Update(int pos, int value);
-
+    int Del_Manual(int pos);
+    int Update(int pos, int value);
+    int Access(int pos);
     int Search(int value);
 
-    // virtual void updatePositionNode() = 0;
-    void turn_on();
-    void turn_off();
-    const bool& isActive() const;
-
-    void activeAnimation();
-    // vỉtual void stopAnimation() = 0;
-
+    // update
+    virtual void refreshAnimation() {}
+    sf::Vector2i updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
     void updateTypeAnimation(int type);
-    virtual void updateTimeAnimation();
-    virtual void run(int manipulate, int way, std::string str1, std::string str2) = 0;
-    virtual int update();   /// return step
-    virtual void refreshrender() = 0;
-    virtual void render() = 0;
+    virtual void run(int manipulate, int way, std::vector<std::string> vecStr) = 0;
 
-    // render
-    // sf::Vector2i update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
+    void updateTimeAnimation();
+    virtual int update();   /// return step
+
+    // print
+    virtual void refreshrender();
+    virtual void render();
 };
 
 #endif

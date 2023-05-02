@@ -14,8 +14,17 @@ Node::~Node()
 
 }
 
-int Node::updateNode(MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside) // check if Style is active
+bool Node::getRunning()
 {
+    return this->running;
+}
+
+int Node::updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType) // check if Style is active
+{
+    if (this->running == true) 
+        return -1;
+    bool isMouseInside = this->isMouseInside(mousePos);
+
     switch (this->status)
     {
         case 0 :
@@ -37,79 +46,6 @@ int Node::updateNode(MOUSE mouseType, KEYBOARD keyboardType, bool isMouseInside)
             break;
     }
     return this->status;
-}
-
-int Node::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
-{
-    if (this->running == true) 
-        return -1;
-    bool isMouseInside = this->isMouseInside(mousePos);
-    return this->updateNode(mouseType, keyboardType, isMouseInside);
-}
-
-bool Node::getRunning()
-{
-    return this->running;
-}
-
-///--------------------------------------------------------------------
-///-----------------------------CircleNode-----------------------------
-
-CircleNode::CircleNode(sf::Vector2f coord, float diameter, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette)
-    : Node(coord, sizeText, thickness, word, font, palette)
-{
-    this->radius = diameter / 2;
-    this->refreshrender();
-}
-
-CircleNode::~CircleNode()
-{
-
-}
-
-bool CircleNode::isMouseInside(sf::Vector2f mousePos)
-{
-    return (coord.x - mousePos.x) * (coord.x - mousePos.x) + (coord.y - mousePos.y) * (coord.y - mousePos.y) <= this->radius * this->radius;
-}
-
-void Node::refreshrender()
-{
-    this->shape.setRadius(this->radius);
-    this->shape.setOutlineThickness(this->thickness);
-    this->shape.setOrigin(this->radius, this->radius);
-    this->shape.setPosition(this->coord);
-
-    this->text.setFont(*this->font);
-    this->text.setString((this->word).c_str());
-    this->text.setCharacterSize(this->sizeText);
-    this->text.setOrigin(text.getLocalBounds().left + this->text.getGlobalBounds().width / 2.f,
-                        text.getLocalBounds().top + this->text.getGlobalBounds().height / 2.f);
-    this->text.setPosition(this->coord);
-
-    if (this->running == false) {
-        palette->getColor(this->status).Coloring(this->shape, this->text);
-    }
-    else {
-        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
-    }
-
-    if (this->running == false) {
-        palette->getColor(this->status).Coloring(this->shape, this->text);
-    }
-    else if (this->statusAnimation == NOD_APPEAR || this->statusAnimation == NOD_DEL) {
-        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
-    }
-    else {
-        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor, palette->getColor(this->preStatus));
-    }
-}
-void Node::render(sf::RenderWindow* window) 
-{
-    this->refreshrender();
-    if (this->running == true && this->statusAnimation == NOD_NOPE)
-        return;
-    window->draw(this->shape);
-    window->draw(this->text);
 }
 
 // visualization
@@ -177,12 +113,74 @@ void Node::renderAnimation(sf::RenderWindow *window, int statusAnimation, double
     this->render(window);
 }
 
+// print
+void Node::refreshrender()
+{
+    this->shape.setRadius(this->radius);
+    this->shape.setOutlineThickness(this->thickness);
+    this->shape.setOrigin(this->radius, this->radius);
+    this->shape.setPosition(this->coord);
+
+    this->text.setFont(*this->font);
+    this->text.setString((this->word).c_str());
+    this->text.setCharacterSize(this->sizeText);
+    this->text.setOrigin(text.getLocalBounds().left + this->text.getGlobalBounds().width / 2.f,
+                        text.getLocalBounds().top + this->text.getGlobalBounds().height / 2.f);
+    this->text.setPosition(this->coord);
+
+    if (this->running == false) {
+        palette->getColor(this->status).Coloring(this->shape, this->text);
+    }
+    else {
+        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
+    }
+
+    if (this->running == false) {
+        palette->getColor(this->status).Coloring(this->shape, this->text);
+    }
+    else if (this->statusAnimation == NOD_APPEAR || this->statusAnimation == NOD_DEL) {
+        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor);
+    }
+    else {
+        palette->getColor(this->status).Coloring(this->shape, this->text, this->ratioColor, palette->getColor(this->preStatus));
+    }
+}
+void Node::render(sf::RenderWindow* window) 
+{
+    this->refreshrender();
+    if (this->running == true && this->statusAnimation == NOD_NOPE)
+        return;
+    window->draw(this->shape);
+    window->draw(this->text);
+}
+
+///--------------------------------------------------------------------
+///-----------------------------CircleNode-----------------------------
+
+CircleNode::CircleNode(sf::Vector2f coord, float diameter, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette)
+    : Node(coord, sizeText, thickness, word, font, palette)
+{
+    this->radius = diameter / 2;
+    this->refreshrender();
+}
+
+CircleNode::~CircleNode()
+{
+
+}
+
+bool CircleNode::isMouseInside(sf::Vector2f mousePos)
+{
+    return (coord.x - mousePos.x) * (coord.x - mousePos.x) + (coord.y - mousePos.y) * (coord.y - mousePos.y) <= this->radius * this->radius;
+}
+
 ///--------------------------------------------------------------------
 ///----------------------------RectangleNode---------------------------
 
 RectangleNode::RectangleNode(sf::Vector2f coord, float length, unsigned int sizeText, float thickness, std::string word, sf::Font* font, Palette* palette)
-    : Node(coord, sizeText, thickness, word, font, palette), halflength(length / 2) // initialize halflength data member
+    : Node(coord, sizeText, thickness, word, font, palette) // initialize halflength data member
 {
+    this->halflength = length / 2;
     this->radius = this->halflength * 1.41421;
     shape.setOrigin(this->radius, this->radius);
     shape.setPointCount(4);

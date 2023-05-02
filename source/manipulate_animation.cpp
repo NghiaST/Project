@@ -30,6 +30,18 @@ void Manipulate_Animation_ArrayNode::setup(std::unique_ptr<Node>* node, sf::Vect
     else
         setStatusAnimation(AR_NOPE);
 }
+void Manipulate_Animation_ArrayNode::setup(std::unique_ptr<Node>* node, sf::Vector2f presentPoint, std::string word, bool view)
+{
+
+    clearStep();
+    setNode(node);
+    setPresentPoint(presentPoint);
+    setWord(word);
+    if (view)
+        setStatusAnimation(AR_NORMAL);
+    else
+        setStatusAnimation(AR_NOPE);
+}
 void Manipulate_Animation_ArrayNode::setNode(std::unique_ptr<Node>* node)
 {
     this->node = node->get();

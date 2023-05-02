@@ -1,26 +1,32 @@
 #ifndef __ds_staticarray_hpp__
 #define __ds_staticarray_hpp__
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <cstring>
-#include <vector>
-
-#include "node.hpp"
-#include "support_function.hpp"
 #include "struct_ds.hpp"
 
 struct StructStaticArray : StructDataStructure {
+private:
+    int size_fixed;
 public:
     StructStaticArray(VisualizationSettings* settings, bool active);
     ~StructStaticArray();
 
-    void run(int manipulate, int way, std::string str1, std::string str2);
+    void refreshAnimation() override;
+    void run(int manipulate, int way, std::vector<std::string> vecStr);
 
-    // render
-    void updatePositionNode();
-    sf::Vector2i updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
-    void refreshrender();
-    void render();
+    void Initialize_Empty_Fixedsize(int size_fixed);
+    void Initialize_Random_Unfixedsize();
+    void Initialize_Manual_Fixedsize(int size_fixed, std::vector<int> arr);
+    int Initialize_ExternalFile_Fixedsize(int size_fixed, std::string filename);
+
+    void Animation_Initialize(int way);
+    void Animation_Insert_First();
+    void Animation_Insert_Last();
+    void Animation_Insert_Manual();
+    void Animation_Del_First();
+    void Animation_Del_Last();
+    void Animation_Del_Manual();
+    void Animation_Update();
+    void Animation_Access();
+    void Animation_Search();
 };
 
 #endif
