@@ -48,7 +48,7 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color(255, 165, 0)  , sf::Color::Transparent  , sf::Color(255, 165, 0)),
         ElementColor(sf::Color::White        , sf::Color::White        , sf::Color::White),
         ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White),
-        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White)
+        ElementColor(sf::Color::Transparent  , sf::Color::Transparent  , sf::Color::Transparent)
     ));
     LightMode->setButtonDs(Palette(
         ElementColor(sf::Color(255, 255, 153), sf::Color::Black        , sf::Color::Black),
@@ -99,7 +99,7 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color(128, 255, 0)  , sf::Color::Transparent  , sf::Color(128, 255, 0)),
         ElementColor(sf::Color::White        , sf::Color::White        , sf::Color::White),
         ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White),
-        ElementColor(sf::Color::White        , sf::Color::Red          , sf::Color::White)
+        ElementColor(sf::Color::Transparent  , sf::Color::Transparent  , sf::Color::Transparent)
     ));
     DarkMode->setButtonDs(Palette(
         ElementColor(sf::Color(183, 30, 56), sf::Color::White        , sf::Color::White),
@@ -130,11 +130,11 @@ void DataVisualization::InitThemes()
         ElementColor(sf::Color(126, 244, 19) , sf::Color::Red          , sf::Color::White)
     ));
     DarkMode->setButtonStep(Palette(
-        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::White),
+        ElementColor(sf::Color(57, 72, 103)  , sf::Color::White        , sf::Color::White),
         ElementColor(sf::Color::Green        , sf::Color::Red          , sf::Color::White),
-        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::White),
-        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::White),
-        ElementColor(sf::Color::Transparent  , sf::Color::Blue         , sf::Color::White)
+        ElementColor(sf::Color::Blue         , sf::Color::Red          , sf::Color::White),
+        ElementColor(sf::Color::Blue         , sf::Color::Red          , sf::Color::White),
+        ElementColor(sf::Color::Blue         , sf::Color::Red          , sf::Color::White)
     )); /// should be change
 
     listTheme.push_back(LightMode);
@@ -165,22 +165,13 @@ DataVisualization::DataVisualization()
     this->states = new State(settings);
     theme->setTheme(listTheme[typetheme]);
     this->ds_present = DS_STATICARRAY;
-    this->StaticArray  = new StructStaticArray(settings, true);
-    this->DynamicArray = new StructDynamicArray(settings, false);
-    this->LinkedList   = new StructLinkedList(settings, false);
-    this->Stack        = new StructStack(settings, false);
-    this->Queue        = new StructQueue(settings, false);
+    this->DataStructure = std::make_unique<StructStaticArray>(settings, true);
 }
 
 DataVisualization::~DataVisualization()
 {
     delete this->window;
     delete this->states;
-    delete this->StaticArray;
-    delete this->DynamicArray;
-    delete this->LinkedList;
-    delete this->Stack;
-    delete this->Queue;
     for(Themes *theme : this->listTheme)
         delete theme;
 }
@@ -196,7 +187,6 @@ void DataVisualization::processEvents()
         if (sfEvent.type == sf::Event::TextEntered)
             keyboard = static_cast<KEYBOARD> (sfEvent.text.unicode);
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) this->window->close();
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) mouse = MSE_LEFTCLICK;
     if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) mouse = MSE_LEFTHOLD;
 
@@ -227,93 +217,42 @@ void DataVisualization::processEvents()
 void DataVisualization::update()
 {
     if (!window->isOpen()) return;
-    sf::Vector2i DataNode;
-    switch (ds_present) {
-        case DS_STATICARRAY  : DataNode = StaticArray ->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
-        case DS_DYNAMICARRAY : DataNode = DynamicArray->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
-        case DS_LINKEDLIST   : DataNode = LinkedList  ->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
-        case DS_STACK        : DataNode = Stack       ->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
-        case DS_QUEUE        : DataNode = Queue       ->updateKBM(this->mousePosView, this->mouseType, this->keyboardType); break;
-        default: exit(2);
-    }
-    //sf::Vector2i DataNode = get_DS(ds_present)->update(this->mousePosView, this->mouseType, this->keyboardType);
+    sf::Vector2i DataNode = DataStructure->updateKBM(mousePosView, mouseType, keyboardType);
     if (DataNode.x != -1)
-        this->states->updateInputBox(DataNode.x, DataNode.y);
-    sf::Vector2i typePress = this->states->update(this->mouseType, this->keyboardType);
+        states->updateInputBox(DataNode.x, DataNode.y);
+    sf::Vector2i typePress = states->update(mouseType, keyboardType);
 
     if (typePress.x != -1) {
         std::cout << "Press " << typePress.x << ' ' << typePress.y << '\n';
         if (0 <= typePress.x && typePress.x < 100) {
-            switch (ds_present) {
-                case DS_STATICARRAY  : StaticArray ->turn_off(); break;
-                case DS_DYNAMICARRAY : DynamicArray->turn_off(); break;
-                case DS_LINKEDLIST   : LinkedList  ->turn_off(); break;
-                case DS_STACK        : Stack       ->turn_off(); break;
-                case DS_QUEUE        : Queue       ->turn_off(); break;
-                default: std::cout << "Error datavisualization 1 \n"; exit(2);
-            }
-            //get_DS(ds_present)->turn_off();
             ds_present = static_cast<DATA_STRUCTURE>(typePress.x);
-            switch (ds_present) {
-                case DS_STATICARRAY  : StaticArray ->turn_on(); break;
-                case DS_DYNAMICARRAY : DynamicArray->turn_on(); break;
-                case DS_LINKEDLIST   : LinkedList  ->turn_on(); break;
-                case DS_STACK        : Stack       ->turn_on(); break;
-                case DS_QUEUE        : Queue       ->turn_on(); break;
-                default: std::cout << "Error datavisualization 2 \n"; exit(2);
+            switch(ds_present) {
+                case DS_STATICARRAY        : DataStructure = std::make_unique<StructStaticArray>(settings, true); break;
+                case DS_DYNAMICARRAY       : DataStructure = std::make_unique<StructDynamicArray>(settings, true); break;
+                case DS_SIMPLYLINKEDLIST   : DataStructure = std::make_unique<StructSimplyLinkedList>(settings, true); break;
+                case DS_DOUBLYLINKEDLIST   : DataStructure = std::make_unique<StructDoublyLinkedList>(settings, true); break;
+                case DS_CIRCULARLINKEDLIST : DataStructure = std::make_unique<StructCircularLinkedList>(settings, true); break;
+                case DS_STACK              : DataStructure = std::make_unique<StructStack>(settings, true); break;
+                case DS_QUEUE              : DataStructure = std::make_unique<StructQueue>(settings, true); break;
+                default : break;
             }
-            //get_DS(ds_present)->turn_on();
         }
         else if (100 <= typePress.x && typePress.x < 200) {
             typePress.x -= 100;
             std::vector<std::string> vecStr = states->getInputBox(typePress.x);
-            switch (ds_present) {
-                case DS_STATICARRAY  : StaticArray ->run(typePress.x, typePress.y, vecStr); break;
-                case DS_DYNAMICARRAY : DynamicArray->run(typePress.x, typePress.y, vecStr); break;
-                case DS_LINKEDLIST   : LinkedList  ->run(typePress.x, typePress.y, vecStr); break;
-                case DS_STACK        : Stack       ->run(typePress.x, typePress.y, vecStr); break;
-                case DS_QUEUE        : Queue       ->run(typePress.x, typePress.y, vecStr); break;
-                default: std::cout << "Error datavisualization 3 \n"; exit(2);
-            }
-            int Manipulate, subManipulate;
-            switch (ds_present) {
-                case DS_STATICARRAY  : 
-                    Manipulate = StaticArray ->getManipulate(); 
-                    subManipulate = StaticArray->getsubManipulate();
-                    break;
-                case DS_DYNAMICARRAY : 
-                    Manipulate = DynamicArray ->getManipulate(); 
-                    subManipulate = DynamicArray->getsubManipulate();
-                    break;
-                case DS_LINKEDLIST   : 
-                    Manipulate = LinkedList ->getManipulate(); 
-                    subManipulate = LinkedList->getsubManipulate();
-                    break;
-                case DS_STACK        : 
-                    Manipulate = Stack ->getManipulate(); 
-                    subManipulate = Stack->getsubManipulate();
-                    break;
-                case DS_QUEUE        : 
-                    Manipulate = Queue ->getManipulate(); 
-                    subManipulate = Queue->getsubManipulate();
-                    break;
-            }
+            DataStructure->run(typePress.x, typePress.y, vecStr);
+
+            int Manipulate = DataStructure->getManipulate();
+            int subManipulate = DataStructure->getsubManipulate();
+
             states->updateBtnCode(Manipulate, subManipulate);
-            //get_DS(ds_present)->run(typePress.x, typePress.y, str1, str2);
         }
         else if (typePress.x == 200) {
             typetheme = typePress.y;
             settings->setTheme(listTheme[typetheme]);
         }
         else if (typePress.x == 300) {
-            switch (ds_present) {
-                case DS_STATICARRAY  : StaticArray ->updateTypeAnimation(typePress.y); break;
-                case DS_DYNAMICARRAY : DynamicArray->updateTypeAnimation(typePress.y); break;
-                case DS_LINKEDLIST   : LinkedList  ->updateTypeAnimation(typePress.y); break;
-                case DS_STACK        : Stack       ->updateTypeAnimation(typePress.y); break;
-                case DS_QUEUE        : Queue       ->updateTypeAnimation(typePress.y); break;
-                default: std::cout << "Error datavisualization 3 \n"; exit(2);
-            }
+            DataStructure->updateTypeAnimation(typePress.y);
         }
         else if (typePress.x == 400) {
             if (typePress.y == 1) typespeed = std::min(typespeed + 1, (int)listSpeed.size() - 1);
@@ -323,15 +262,7 @@ void DataVisualization::update()
     }
 
     int step;
-    switch (ds_present) {
-        case DS_STATICARRAY  : step = StaticArray ->update(); break;
-        case DS_DYNAMICARRAY : step = DynamicArray->update(); break;
-        case DS_LINKEDLIST   : step = LinkedList  ->update(); break;
-        case DS_STACK        : step = Stack       ->update(); break;
-        case DS_QUEUE        : step = Queue       ->update(); break;
-        default : exit(2);
-    }
-
+    step = DataStructure->update();
     states->updateBtnStep(step);
 }
 
@@ -340,16 +271,7 @@ void DataVisualization::render()
     if (!window->isOpen()) return;
     this->window->clear(*this->theme->getBackground());
 
-    switch (ds_present) {
-        case DS_STATICARRAY  : StaticArray ->render(); break;
-        case DS_DYNAMICARRAY : DynamicArray->render(); break;   
-        case DS_LINKEDLIST   : LinkedList  ->render(); break;
-        case DS_STACK        : Stack       ->render(); break;
-        case DS_QUEUE        : Queue       ->render(); break;
-        default: std::cout << "Error datavisualization 4 \n"; exit(2);
-    }
-    //get_DS(ds_present)->render();
-
+    DataStructure->render();
     this->states->render();
     this->window->display();
 }

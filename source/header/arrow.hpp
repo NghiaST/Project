@@ -2,9 +2,28 @@
 #define __arrow_hpp__
 #include <SFML/Graphics.hpp>
 #include "themes.hpp"
-const int AR_NOPE = -1, AR_NORMAL = 0, AR_ACTIVE = 1, AR_NORMALMOVE = 2, AR_ACTIVEMOVE = 3, AR_CREATE = 4, AR_COLOR_TO = 5, AR_DEL = 6;
-const int AR_SKIP = 7, AR_MOVE = 8;
-struct Arrow {
+
+const double PI = 3.141592653589793238462643383279502;
+
+enum ARROW_ANIMATION{AR_NOPE = -1, AR_NORMAL, AR_ACTIVE, AR_CREATE, AR_COLOR_TO, AR_DEL, AR_SKIP, AR_MOVE};
+enum ARROW_TYPE{ARR_1 = 0, ARR_2, ARR_LOOP};
+
+struct ArrowShape {
+private:
+    const double radius_triangle = 6;
+    const double thickness = 2;
+    double length, ratio;
+    sf::RectangleShape line;
+    sf::ConvexShape triangle;
+public:
+    ArrowShape(sf::Vector2f Point1, sf::Vector2f Point2);
+    ArrowShape& operator = (const ArrowShape& other);
+    void setRatio(double ratio);
+    void setColor(Palette* palette, int status);
+    void render(sf::RenderWindow* window);
+};
+
+struct Arrow_Control {
 protected:
     double fulltime = 1;
     double time = 0;
@@ -16,13 +35,14 @@ protected:
     sf::Vector2f startPoint, endPoint;
     sf::Vector2f nextStartPoint, nextEndPoint;
 
-    int statusAnimation = 0; // -1, 0, 1: do nothing, color normal, create from start to end
-                    // 2, 3, 4, 5 :, move arrow, color from start to end, remove from end to start, color running
+    ARROW_TYPE arrow_type = ARR_1;
+    ARROW_ANIMATION statusAnimation = AR_NORMAL;
 public:
-    void setStatusAnimation(int statusAnimation);
+    void setArrowType(ARROW_TYPE arrow_type);
+    void setStatusAnimation(ARROW_ANIMATION statusAnimation);
     void setTime(double time);
     void setFullTime(double fulltime);
-    void setStatusAnimationTime(int statusAnimation, double time);
+    void setStatusAnimationTime(ARROW_ANIMATION statusAnimation, double time);
 
     void setStartPoint(sf::Vector2f startPoint);
     void setEndPoint(sf::Vector2f endPoint);
@@ -38,15 +58,18 @@ public:
     sf::Vector2f getPresentEndPoint(int time);
 };
 
-struct ArrowNode : Arrow {
+struct ArrowNode : Arrow_Control {
 private:
     int radiusNode;
 public:
     ArrowNode(int diameterNode, Palette* palette);
 
+    void render_Arr1(sf::RenderWindow* window);
+    void render_Arr2(sf::RenderWindow* window);
+    void render_ArrLoop(sf::RenderWindow* window);
     void render(sf::RenderWindow* window);
     void renderTime(sf::RenderWindow* window, double time);
-    void renderStatusAnimationTime(sf::RenderWindow* window, int statusAnimations, double time);
+    void renderStatusAnimationTime(sf::RenderWindow* window, ARROW_ANIMATION statusAnimations, double time);
 };
 
 #endif

@@ -8,20 +8,20 @@ ButtonSpeed::ButtonSpeed(sf::RenderWindow *window, Themes *theme, sf::Font *font
     this->speed = speed;
     std::vector<std::string> strSpeed = {"Speed", "<", "", ">"};
 
-    std::vector<int> listWidth  = {80, 20, 40, 20};
-    int height = 30;
-    std::vector<int> Posx = {650};
-    int posy = 652;
+    std::vector<int> listWidth  = {74, 20, 40, 20};
+    int height = 35;
+    std::vector<int> Posx = {280};
+    int posy = 650;
 
     for(int i = 0; i < 3; i++)
-        Posx.push_back(Posx.back() + listWidth[i] + 5);
+        Posx.push_back(Posx.back() + listWidth[i] + 2);
 
     for(int i = 0; i < 4; i++)
     {
         if (i & 1)
-            listBtn.push_back(Button(sf::Vector2f(Posx[i], posy), listWidth[i], height, 12, 2, true, false, strSpeed[i], font, theme->getButtonDS()));
+            listBtn.push_back(Button(sf::Vector2f(Posx[i], posy), listWidth[i], height, 12, 2, true, false, 0, strSpeed[i], font, theme->getButtonDS()));
         else
-            listBtn.push_back(Button(sf::Vector2f(Posx[i], posy), listWidth[i], height, 12, 2, true, false, strSpeed[i], font, theme->getButtonStep()));
+            listBtn.push_back(Button(sf::Vector2f(Posx[i], posy), listWidth[i], height, 12, 2, true, false, 0, strSpeed[i], font, theme->getButtonStep()));
     }
 }
 

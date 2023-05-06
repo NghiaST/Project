@@ -7,10 +7,11 @@
 #include "support_function.hpp"
 #include "mouseKey.hpp"
 
-const int NOD_NOPE = -1, NOD_STABLE = 0, NOD_RECOLOR = 1, NOD_APPEAR = 2, NOD_DEL = 3, NOD_MOVE = 4;   /// manipulate visual
-const int NOD_NORMAL = 5;   /// -> NOD_STABLE
-const int NOD_SHOW = 6, NOD_SOLVE = 7, NOD_UNSHOW = 8, NOD_ACTIVE = 9;  /// NOD_RECOLOR, manipulate: stable -> change color
-const int NOD_SKIP = 10;
+enum NODE_ANIMATION{NOD_NOPE = -1, NOD_STABLE, NOD_RECOLOR, NOD_APPEAR, NOD_DEL, NOD_MOVE,   /// manipulate visual
+                    NOD_NORMAL,   /// -> NOD_STABLE
+                    NOD_SHOW, NOD_SOLVE, NOD_UNSHOW, NOD_ACTIVE,  /// NOD_RECOLOR, manipulate: stable -> change color
+                    NOD_SKIP
+                    };
 
 struct Node : Style {
     bool running = false;
@@ -19,7 +20,7 @@ struct Node : Style {
     double fulltime = 1;
     double time;
     double ratioColor;
-    int statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, appear node, recolor node, disappear node
+    NODE_ANIMATION statusAnimation; /// -1, 0, 1, 2, 3, 4 : no draw, common, move, appear node, recolor node, disappear node
     int preStatus;
     sf::Vector2f startPoint, endPoint;
 
@@ -40,12 +41,12 @@ public :
     int updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType);
 
     // visualization
-    void startAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status);
+    void startAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, NODE_ANIMATION statusAnimation, int preStatus, int status);
     void stopAnimation();
     // void updateAnimation_Coloring(double ratio);
     void updateAnimation_Moving(double ratio);
     void updateAnimation(double time);
-    void renderAnimation(sf::RenderWindow* window, int statusAnimation, double time);
+    void renderAnimation(sf::RenderWindow* window, NODE_ANIMATION statusAnimation, double time);
 
     // print
     void refreshrender();

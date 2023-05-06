@@ -49,7 +49,7 @@ int Node::updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardTyp
 }
 
 // visualization
-void Node::startAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, int statusAnimation, int preStatus, int status)
+void Node::startAnimation(sf::Vector2f startPoint, sf::Vector2f endPoint, NODE_ANIMATION statusAnimation, int preStatus, int status)
 {
     this->statusAnimation = statusAnimation;
     this->preStatus = preStatus;
@@ -107,7 +107,7 @@ void Node::updateAnimation(double time)
             //exit(1);
     }
 }
-void Node::renderAnimation(sf::RenderWindow *window, int statusAnimation, double time)
+void Node::renderAnimation(sf::RenderWindow *window, NODE_ANIMATION statusAnimation, double time)
 {
     this->updateAnimation(time);
     this->render(window);
@@ -124,8 +124,8 @@ void Node::refreshrender()
     this->text.setFont(*this->font);
     this->text.setString((this->word).c_str());
     this->text.setCharacterSize(this->sizeText);
-    this->text.setOrigin(text.getLocalBounds().left + this->text.getGlobalBounds().width / 2.f,
-                        text.getLocalBounds().top + this->text.getGlobalBounds().height / 2.f);
+    this->text.setOrigin(text.getLocalBounds().left + this->text.getLocalBounds().width / 2.f,
+                        text.getLocalBounds().top + this->text.getLocalBounds().height / 2.f);
     this->text.setPosition(this->coord);
 
     if (this->running == false) {

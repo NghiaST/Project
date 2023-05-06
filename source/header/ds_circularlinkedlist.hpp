@@ -1,11 +1,11 @@
-#ifndef __ds_linkedlist_hpp__
-#define __ds_linkedlist_hpp__
+#ifndef __ds_circularlinkedlist_hpp__
+#define __ds_circularlinkedlist_hpp__
 #include "struct_ds.hpp"
 
-struct StructLinkedList : StructDataStructure {
+struct StructCircularLinkedList : StructDataStructure {
 public:
-    StructLinkedList(VisualizationSettings* settings, bool active);
-    ~StructLinkedList();
+    StructCircularLinkedList(VisualizationSettings* settings, bool active);
+    ~StructCircularLinkedList();
 
     void refreshAnimation() override;
     void run(int manipulate, int way, std::vector<std::string> vecStr) override;

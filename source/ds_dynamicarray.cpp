@@ -175,14 +175,14 @@ void StructDynamicArray::Animation_Insert_First()
             if (i == ipos)
             {
                 nodeAnimation[i].addStep(NOD_SHOW);
-                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].setWord(printElements[i - preSize]);
-                nodeAnimation[i].addStep(NOD_SOLVE);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else {
@@ -190,6 +190,7 @@ void StructDynamicArray::Animation_Insert_First()
             }
         }
         listStep.push_back(1);
+        listStep.push_back(3);
         listStep.push_back(3);
     }
     for(int i = 0; i < count_nodePrint; i++)
@@ -295,14 +296,14 @@ void StructDynamicArray::Animation_Insert_Last()
             if (i == ipos)
             {
                 nodeAnimation[i].addStep(NOD_SHOW);
-                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].setWord(printElements[i - preSize]);
-                nodeAnimation[i].addStep(NOD_SOLVE);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else {
@@ -310,6 +311,7 @@ void StructDynamicArray::Animation_Insert_Last()
             }
         }
         listStep.push_back(1);
+        listStep.push_back(3);
         listStep.push_back(3);
     }
     for(int i = 0; i < count_nodePrint; i++)
@@ -420,14 +422,14 @@ void StructDynamicArray::Animation_Insert_Manual()
             if (i == ipos)
             {
                 nodeAnimation[i].addStep(NOD_SHOW);
-                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].setWord(printElements[i - preSize]);
-                nodeAnimation[i].addStep(NOD_SOLVE);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else {
@@ -435,6 +437,7 @@ void StructDynamicArray::Animation_Insert_Manual()
             }
         }
         listStep.push_back(1);
+        listStep.push_back(3);
         listStep.push_back(3);
     }
     for(int i = 0; i < count_nodePrint; i++)
@@ -548,14 +551,14 @@ void StructDynamicArray::Animation_Del_First()
             if (i == ipos)
             {
                 nodeAnimation[i].addStep(NOD_SHOW);
-                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].setWord(elements[i - preSize]);
-                nodeAnimation[i].addStep(NOD_SOLVE);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else {
@@ -563,6 +566,7 @@ void StructDynamicArray::Animation_Del_First()
             }
         }
         listStep.push_back(2);
+        listStep.push_back(4);
         listStep.push_back(4);
     }
 
@@ -631,7 +635,7 @@ void StructDynamicArray::Animation_Del_Last()
     listStep.push_back(1);
     listStep.push_back(1);
 
-    for(int ipos = 0, ipos2 = 0; ipos < preSize; ipos++, ipos2++)
+    for(int ipos = 0, ipos2 = 0; ipos2 < sizearray; ipos++, ipos2++)
     {
         if (ipos == pos) 
         {
@@ -660,14 +664,14 @@ void StructDynamicArray::Animation_Del_Last()
             if (i == ipos)
             {
                 nodeAnimation[i].addStep(NOD_SHOW);
-                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].setWord(elements[i - preSize]);
-                nodeAnimation[i].addStep(NOD_SOLVE);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else {
@@ -675,6 +679,7 @@ void StructDynamicArray::Animation_Del_Last()
             }
         }
         listStep.push_back(2);
+        listStep.push_back(4);
         listStep.push_back(4);
     }
 
@@ -770,14 +775,14 @@ void StructDynamicArray::Animation_Del_Manual()
             if (i == ipos)
             {
                 nodeAnimation[i].addStep(NOD_SHOW);
-                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].setWord(elements[i - preSize]);
-                nodeAnimation[i].addStep(NOD_SOLVE);
+                nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
             else {
@@ -785,6 +790,7 @@ void StructDynamicArray::Animation_Del_Manual()
             }
         }
         listStep.push_back(2);
+        listStep.push_back(4);
         listStep.push_back(4);
     }
 
@@ -824,46 +830,93 @@ void StructDynamicArray::Animation_Update()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
+        nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
     for(int i = 0; i < count_nodePrint; i++)
     {
         if (i == pos)
         {
-            nodeAnimation[i].addStep(NOD_SHOW);
-            nodeAnimation[i].addStep(NOD_ACTIVE);
+            nodeAnimation[i].addStep(NOD_SOLVE);
             nodeAnimation[i].setWord(value);
             nodeAnimation[i].addStep(NOD_APPEAR);
         }
         else {
-            nodeAnimation[i].skipMultiStep(3);
+            nodeAnimation[i].skipMultiStep(2);
         }
     }
 
     this->listStep.push_back(0);
-    this->listStep.push_back(1);
-    this->listStep.push_back(1);
+    this->listStep.push_back(0);
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
 
 void StructDynamicArray::Animation_Allocate()
 {
-    Allocate(string_to_int(vecStr[4]), string_to_int(vecStr[3]));
     this->printElements = this->elements;
-    count_nodePrint = sizearray;
+    Allocate(string_to_int(vecStr[4]), string_to_int(vecStr[3]));
+    count_nodePrint = preSize + sizearray;
     count_arrowPrint = 0;
     Manipulate = 3; subManipulate = 1;
     startAnimationDS();
 
-    std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
+    std::vector<sf::Vector2f> pStart = getPosition(preSize);
+    std::vector<sf::Vector2f> pNext = getPosition(sizearray);
 
+    // setup
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], elements[i], false);
-        nodeAnimation[i].addStep(NOD_APPEAR);
+        if (i < preSize)
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        else 
+            nodeAnimation[i].setup(&listNode[i], pNext[i - preSize], "?", false);
     }
-    this->listStep = std::vector<int>{0};
+
+    if (preSize > 0)
+    {
+        for(int i = 0; i < count_nodePrint; i++)
+        {
+            if (i < preSize) 
+                nodeAnimation[i].addStep(NOD_DEL);
+            else 
+                nodeAnimation[i].skipMultiStep(1);
+        }
+        listStep.push_back(0);
+    }
+
+    for(int i = 0; i < count_nodePrint; i++)
+    {
+        if (i < preSize) { 
+            nodeAnimation[i].skipMultiStep(2);
+        }
+        else {
+            nodeAnimation[i].addStep(NOD_APPEAR);
+            nodeAnimation[i].addStep(NOD_NORMAL);
+        }
+    }
+    listStep.push_back(1);
+    listStep.push_back(1);
+    
+    for(int ipos = 0; ipos < sizearray; ipos++)
+    {
+        for(int i = 0; i < count_nodePrint; i++)
+        {
+            if (i == preSize + ipos) {
+                nodeAnimation[i].addStep(NOD_SOLVE);
+                nodeAnimation[i].setWord(elements[i - preSize]);
+                nodeAnimation[i].skipMultiStep(1);
+                nodeAnimation[i].addStep(NOD_UNSHOW);
+            }
+            else {
+                nodeAnimation[i].skipMultiStep(3);
+            }
+        }
+        listStep.push_back(2);
+        listStep.push_back(3);
+        listStep.push_back(3);
+    }
+
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
@@ -873,9 +926,9 @@ void StructDynamicArray::Animation_Access()
     this->printElements = this->elements;
     int pos = string_to_int(vecStr[2]);
     int value = string_to_int(vecStr[3]);
-    if (this->Update(pos, value) == -1) 
+    if (this->Access(pos) == -1) 
         return;
-    count_nodePrint = this->sizearray;
+    count_nodePrint = sizearray;
     count_arrowPrint = 0;
     Manipulate = 4; subManipulate = 0;
     startAnimationDS();
@@ -885,14 +938,15 @@ void StructDynamicArray::Animation_Access()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
+        nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
     for(int i = 0; i < count_nodePrint; i++)
     {
         if (i == pos)
         {
-            nodeAnimation[i].addStep(NOD_SHOW);
+            nodeAnimation[i].addStep(NOD_SOLVE);
             nodeAnimation[i].addStep(NOD_APPEAR);
         }
         else {
@@ -901,7 +955,7 @@ void StructDynamicArray::Animation_Access()
     }
 
     this->listStep.push_back(0);
-    this->listStep.push_back(1);
+    this->listStep.push_back(0);
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
@@ -909,7 +963,7 @@ void StructDynamicArray::Animation_Access()
 void StructDynamicArray::Animation_Search()
 {
     this->printElements = this->elements;
-    int pos = Search(string_to_int(vecStr[2]));
+    int pos = Search(string_to_int(vecStr[3]));
     count_nodePrint = this->sizearray;
     count_arrowPrint = 0;
     Manipulate = 4; subManipulate = 1;
@@ -920,15 +974,9 @@ void StructDynamicArray::Animation_Search()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
+        nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
-
-    // step 1
-    for(int i = 0; i < count_nodePrint; i++) {
-        if (i == 0) nodeAnimation[i].addStep(NOD_ACTIVE);
-        else nodeAnimation[i].skipMultiStep(1);
-    }
-    listStep.push_back(0);
 
     for (int ipos = 0; ipos < pos; ipos++)
     {
@@ -943,26 +991,27 @@ void StructDynamicArray::Animation_Search()
                 nodeAnimation[i].skipMultiStep(2);
             }
         }
+        listStep.push_back(0);
         listStep.push_back(1);
-        listStep.push_back(2);
     }
 
     if (pos != sizearray)
     {
-        for(int istep = 0; istep < 3; istep++)
+        for(int i = 0; i < count_nodePrint; i++)
         {
-            for(int i = 0; i < count_nodePrint; i++)
+            if (i == pos)
             {
-                if (i == pos)
-                {
-                    nodeAnimation[i].addStep(NOD_APPEAR);
-                }
-                else {
-                    nodeAnimation[i].skipMultiStep(1);
-                }
+                nodeAnimation[i].addStep(NOD_SHOW);
+                nodeAnimation[i].addStep(NOD_SOLVE);
+                nodeAnimation[i].addStep(NOD_APPEAR);
             }
-            listStep.push_back(4);
+            else {
+                nodeAnimation[i].skipMultiStep(3);
+            }
         }
+        listStep.push_back(0);
+        listStep.push_back(1);
+        listStep.push_back(2);
     }
     else {
         for(int i = 0; i < count_nodePrint; i++)

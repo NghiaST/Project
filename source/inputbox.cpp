@@ -1,7 +1,7 @@
 #include "inputbox.hpp"
 
-InputBox::InputBox(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, std::string textConst, sf::Font *font, Palette* palette)
-    : Button(coord, width, height, sizeText, thickness, view, keepActive, textConst, font, palette)
+InputBox::InputBox(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, int print_type, std::string textConst, sf::Font *font, Palette* palette)
+    : Button(coord, width, height, sizeText, thickness, view, keepActive, print_type, textConst, font, palette)
 {
     this->active = false;
     this->wordInput = "";

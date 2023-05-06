@@ -18,7 +18,7 @@ State::~State()
 
 void State::InitAllButton()
 {
-    int cntCategory = 5;
+    int cntCategory = 7;
     std::vector<std::string> strCategory;
     std::vector<std::vector<std::string>> listStrManipulate;
     std::vector<std::vector<std::vector<std::string>>> listStrSubManipulate;
@@ -26,10 +26,12 @@ void State::InitAllButton()
     std::vector<std::string> strAnimation;
     std::vector<std::vector<std::vector<std::vector<std::string>>>> listStrStep;
 
-    strCategory = {"Static Array", "Dynamic Array", "Linked List", "Stack", "Queue"};
+    strCategory = {"Static Array", "Dynamic Array", "Simply Linked List", "Doubly Linked List", "Circular Linked List", "Stack", "Queue"};
     listStrManipulate = {
         {"Initialize", "Insert", "Remove", "Update", "Access & Search"},
         {"Initialize", "Insert", "Remove", "Update & Allocate", "Access & Search"},
+        {"Initialize", "Insert", "Remove", "Update", "Search"},
+        {"Initialize", "Insert", "Remove", "Update", "Search"},
         {"Initialize", "Insert", "Remove", "Update", "Search"},
         {"Initialize", "Push", "Pop", "Peek", "Clear"},
         {"Initialize", "Enqueue", "Dequeue", "Clear"}
@@ -58,6 +60,20 @@ void State::InitAllButton()
         },
         {
             {"Empty", "Random", "Manual", "File"},
+            {"First", "Last", "Middle"},
+            {"First", "Last", "Middle"},
+            {"Update"},
+            {"Search"}
+        },
+        {
+            {"Empty", "Random", "Manual", "File"},
+            {"First", "Last", "Middle"},
+            {"First", "Last", "Middle"},
+            {"Update"},
+            {"Search"}
+        },
+        {
+            {"Empty", "Random", "Manual", "File"},
             {"Push"},
             {"Pop"},
             {"Peek"},
@@ -75,6 +91,8 @@ void State::InitAllButton()
         {"Filename = ", "Array = ", "Pos = ", "Value = ", "Size allocate = "},
         {"Filename = ", "Array = ", "Pos = ", "Value = "},
         {"Filename = ", "Array = ", "Pos = ", "Value = "},
+        {"Filename = ", "Array = ", "Pos = ", "Value = "},
+        {"Filename = ", "Array = ", "Pos = ", "Value = "},
         {"Filename = ", "Array = ", "Pos = ", "Value = "}
     };
     strAnimation = {
@@ -88,21 +106,21 @@ void State::InitAllButton()
             {
                 {
                     "if (N == fixedSize) return",
-                    "for(int i = N - 1; i >= 0; i--)",
-                    "   elements[i + 1] = elements[i]"
-                    "N++"
+                    "N++",
+                    "for(int i = N - 2; i >= 0; i--)",
+                    "   elements[i + 1] = elements[i]",
                     "elements[0] = value"
                 },
                 {
                     "if (N == fixedSize) return",
-                    "N++"
+                    "N++",
                     "elements[N - 1] = value"
                 },
                 {
                     "if (N == fixedSize) return",
+                    "N++",
                     "for(int i = pos - 1; i >= 0; i--)",
-                    "   elements[i + 1] = elements[i]"
-                    "N++"
+                    "   elements[i + 1] = elements[i]",
                     "elements[pos] = value"
                 }
             },
@@ -146,17 +164,74 @@ void State::InitAllButton()
                 {}, {}, {}, {}
             },
             {
-                {}, {}, {}
+                {
+                    "int *newarray = new int[++N]",
+                    "for(int i = 0, j = 0; i < N - 1; i++, j++)",
+                    "   if (j == 0) j++",
+                    "   newarray[j] = array[i]",
+                    "newarray[0] = value",
+                    "delete [] array",
+                    "array = newarray"
+                }, 
+                {
+                    "int *newarray = new int[++N]",
+                    "for(int i = 0, j = 0; i < N - 1; i++, j++)",
+                    "   if (j == N - 2) j++",
+                    "   newarray[j] = array[i]",
+                    "newarray[0] = value",
+                    "delete [] array",
+                    "array = newarray"
+                }, 
+                {
+                    "int *newarray = new int[++N]",
+                    "for(int i = 0, j = 0; i < N - 1; i++, j++)",
+                    "   if (j == pos) j++",
+                    "   newarray[j] = array[i]",
+                    "newarray[0] = value",
+                    "delete [] array",
+                    "array = newarray"
+                }
             },
             {
-                {}, {}, {}
+                {
+                    "if (N == 0) return",
+                    "int *newarray = new int[--N]",
+                    "for(int i = 0, j = 0; j < N; i++, j++)",
+                    "   if (i == 0) i++",
+                    "   newarray[j] = array[i]",
+                    "delete [] array",
+                    "array = newarray"
+                },
+                {
+                    "if (N == 0) return",
+                    "int *newarray = new int[--N]",
+                    "for(int i = 0, j = 0; j < N; i++, j++)",
+                    "   if (i == N - 1) i++",
+                    "   newarray[j] = array[i]",
+                    "delete [] array",
+                    "array = newarray"
+                },
+                {
+                    "if (N == 0) return",
+                    "int *newarray = new int[--N]",
+                    "for(int i = 0, j = 0; j < N; i++, j++)",
+                    "   if (i == pos) i++",
+                    "   newarray[j] = array[i]",
+                    "delete [] array",
+                    "array = newarray"
+                }
             },
             
             {
                 {
                     "elements[pos] = value"
                 },
-                {}
+                {
+                    "if (array != nullptr) delete [] array",
+                    "array = new int[N = size_allocate]",
+                    "for(int i = 0; i < N; i++)",
+                    "   array[i] = value"
+                }
             },
             {
                 {
@@ -175,8 +250,146 @@ void State::InitAllButton()
                 {}, {}, {}, {}
             },
             {
-                {"Node* cur = new Node(value)", "cur->next = head", "head = cur"}, 
-                {"Node* cur = new Node(value)", "tail->next = cur", "tail = cur"}, 
+                {
+                    "Node* cur = new Node(value)", 
+                    "cur->next = head", 
+                    "head = cur"
+                }, 
+                {
+                    "Node* cur = new Node(value)", 
+                    "tail->next = cur", 
+                    "tail = cur"
+                },
+                {
+                    "Node* pre = head",
+                    "for (int i = 0; i < pos - 1; i++)",
+                    "   pre = pre->next",
+                    "Node* cur = new Node(value)",
+                    "cur->next = pre->next",
+                    "pre->next = cur"
+                }
+            },
+            {
+                {
+                    "if (head == nullptr) return",
+                    "Node* cur = head",
+                    "head = cur->next",
+                    "delete cur"
+                }, 
+                {
+                    "if (head == nullptr) return",
+                    "Node* pre = nullptr, *cur = head",
+                    "while (cur != tail)",
+                    "   pre = cur, cur = cur->next",
+                    "if (pre) pre->next = nullptr",
+                    "delete cur"
+                }, 
+                {
+                    "Node* pre = head",
+                    "for(int i = 0; i < pos - 1; i++)",
+                    "   pre = pre->next",
+                    "Node* tmp = pre->next",
+                    "pre->next = tmp->next",
+                    "delete tmp"
+                }
+            },
+            {
+                {
+                    "Node* cur = head",
+                    "for(int i = 0; i < pos; i++)",
+                    "   cur = cur->next",
+                    "cur->value = value"
+                }
+            },
+            {
+                {
+                    "Node* cur = head",
+                    "while (cur != nullptr && cur->value != value)",
+                    "   cur = cur->next",
+                    "if (tmp == nullptr) return NOT_FOUND",
+                    "return cur"
+                }
+            }
+        },{
+            {
+                {}, {}, {}, {}
+            },
+            {
+                {
+                    "Node* cur = new Node(value)", 
+                    "cur->next = head", 
+                    "head = cur"
+                }, 
+                {
+                    "Node* cur = new Node(value)", 
+                    "tail->next = cur", 
+                    "tail = cur"
+                },
+                {
+                    "Node* pre = head",
+                    "for (int i = 0; i < pos - 1; i++)",
+                    "   pre = pre->next",
+                    "Node* cur = new Node(value)",
+                    "cur->next = pre->next",
+                    "pre->next = cur"
+                }
+            },
+            {
+                {
+                    "if (head == nullptr) return",
+                    "Node* cur = head",
+                    "head = cur->next",
+                    "delete cur"
+                }, 
+                {
+                    "if (head == nullptr) return",
+                    "Node* pre = nullptr, *cur = head",
+                    "while (cur != tail)",
+                    "   pre = cur, cur = cur->next",
+                    "if (pre) pre->next = nullptr",
+                    "delete cur"
+                }, 
+                {
+                    "Node* pre = head",
+                    "for(int i = 0; i < pos - 1; i++)",
+                    "   pre = pre->next",
+                    "Node* tmp = pre->next",
+                    "pre->next = tmp->next",
+                    "delete tmp"
+                }
+            },
+            {
+                {
+                    "Node* cur = head",
+                    "for(int i = 0; i < pos; i++)",
+                    "   cur = cur->next",
+                    "cur->value = value"
+                }
+            },
+            {
+                {
+                    "Node* cur = head",
+                    "while (cur != nullptr && cur->value != value)",
+                    "   cur = cur->next",
+                    "if (tmp == nullptr) return NOT_FOUND",
+                    "return cur"
+                }
+            }
+        },{
+            {
+                {}, {}, {}, {}
+            },
+            {
+                {
+                    "Node* cur = new Node(value)", 
+                    "cur->next = head", 
+                    "head = cur"
+                }, 
+                {
+                    "Node* cur = new Node(value)", 
+                    "tail->next = cur", 
+                    "tail = cur"
+                },
                 {
                     "Node* pre = head",
                     "for (int i = 0; i < pos - 1; i++)",
@@ -233,13 +446,17 @@ void State::InitAllButton()
                 {}, {}, {}, {}
             },
             {
-                {"Node* cur = new Node(value)", "cur->next = head", "head = cur"}, 
+                {
+                    "Node* cur = new Node(value)", 
+                    "cur->next = head", 
+                    "head = cur"
+                }, 
             },
             {
                 {
-                    "if (head == nullptr) return",
+		            "if (head == nullptr) return",
                     "Node* cur = head",
-                    "head = head->next",
+                    "head = cur->next",
                     "delete cur"
                 }
             },
@@ -254,7 +471,7 @@ void State::InitAllButton()
                     "while (head != nullptr)",
                     "   Node* tmp = head",
                     "   head = head->next",
-                    "   delete cur"
+                    "   delete tmp"
                 }   
             }
         },
@@ -264,16 +481,17 @@ void State::InitAllButton()
             },
             {
                 {
-                    "if (head == nullptr) return",
-                    "Node* cur = head",
-                    "head = head->next",
-                    "delete cur"
+                    "Node* cur = new Node(value)",
+                    "tail->next = cur",
+                    "tail = cur"
                 }
             },
             {
                 {
-                    "if (tail == nullptr) return NOT_FOUND",
-                    "return tail"
+                    "if (head == nullptr) return",
+                    "Node* tmp = head",
+                    "head = head->next",
+                    "delete tmp"
                 }
             },
             {
@@ -281,29 +499,30 @@ void State::InitAllButton()
                     "while (head != nullptr)",
                     "   Node* tmp = head",
                     "   head = head->next",
-                    "   delete cur"
+                    "   delete tmp"
                 }   
             }
         }
     };
 
-    sf::Vector2f coord, velocity, sizeRec;
-    coord = sf::Vector2f(300, 650);
-    velocity = sf::Vector2f(45, 0);
-    sizeRec = sf::Vector2f(velocity.x - 5, 35);
-    
     for(int i = 0; i < cntCategory; i++)
     {
         sCategory.push_back(StateCategory(window, theme, font, i, strCategory, listStrManipulate[i], listStrSubManipulate[i], listStrInputBox[i]));
     }
+
+    sf::Vector2f coord, velocity, sizeRec;
+    coord = sf::Vector2f(516, 650);
+    velocity = sf::Vector2f(39, 0);
+    sizeRec = sf::Vector2f(velocity.x - 2, 35);
+    
     for(std::string strname : strAnimation) {
-        btnAnimation.push_back(Button(coord, sizeRec.x, sizeRec.y, 12, 2, true, false, strname, this->font, this->theme->getButtonDS()));
+        btnAnimation.push_back(Button(coord, sizeRec.x, sizeRec.y, 12, 2, true, false, 0, strname, this->font, this->theme->getButtonDS()));
         coord += velocity;
     }
 
     this->typeCategory = 0;
-    btnTheme.push_back(Button(sf::Vector2f(5, 635), 80, 40, 11, 2, true, true, "Light Mode", this->font, this->theme->getButtonDS()));
-    btnTheme.push_back(Button(sf::Vector2f(85, 635), 80, 40, 11, 2, true, true, "Dark Mode", this->font, this->theme->getButtonDS()));
+    btnTheme.push_back(Button(sf::Vector2f(4, 650), 100, 35, 11, 2, true, true, 0, "Light Mode", this->font, this->theme->getButtonDS()));
+    btnTheme.push_back(Button(sf::Vector2f(104, 650), 100, 35, 11, 2, true, true, 0, "Dark Mode", this->font, this->theme->getButtonDS()));
     btnTheme[0].setStatus(3);
 
     sBtnSpeed = new ButtonSpeed(window, theme, font, settings->getSpeed());

@@ -14,7 +14,7 @@ ButtonStep::ButtonStep(sf::RenderWindow *window, Themes *theme, sf::Font *font, 
 
     for (int i = 0; i < 7; i++)
     {
-        listBtn.push_back(Button(coord, sizeRec.x, sizeRec.y, 12, 0, true, false, "", this->font, this->theme->getButtonStep()));
+        listBtn.push_back(Button(coord, sizeRec.x, sizeRec.y, 12, 0, true, false, 1, "", this->font, this->theme->getButtonStep()));
         coord += velocity;
     }
 }

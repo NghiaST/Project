@@ -111,7 +111,7 @@ void StructQueue::Animation_Initialize(int way)
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
         nodeAnimation[i].addStep(NOD_APPEAR);
         if (i < count_arrowPrint) {
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
             arrowAnimation[i].addStep(AR_CREATE);
         }
     }
@@ -146,11 +146,11 @@ void StructQueue::Animation_Enqueue()
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < pos - 1) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         }
         else if (i == pos - 1) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
         }
         else if (i == pos) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
@@ -224,7 +224,7 @@ void StructQueue::Animation_Dequeue()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
 
     // step 1
@@ -284,6 +284,14 @@ void StructQueue::Animation_Clear()
     Manipulate = 3; subManipulate = 0;
     startAnimationDS();
 
+    if (preSize == 0)
+    {
+        listStep.push_back(0);
+        this->totaltime = 0;
+        this->step_total = 0;
+        return;
+    }
+
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
     std::vector<sf::Vector2f> pEnd = getPosition(count_arrowPrint);
@@ -295,7 +303,7 @@ void StructQueue::Animation_Clear()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
 
     // step 1

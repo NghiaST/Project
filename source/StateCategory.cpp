@@ -12,11 +12,11 @@ StateCategory::StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* 
     sf::Vector2f coord, velocity, sizeRec;
     // category
     coord = sf::Vector2f(5, 450);
-    velocity = sf::Vector2f(0, 35);
-    sizeRec = sf::Vector2f(110, velocity.y - 5);
+    velocity = sf::Vector2f(0, 25);
+    sizeRec = sf::Vector2f(150, velocity.y - 5);
 
     for(std::string strname : strCategory) {
-        buttonCategory.push_back(Button(coord, sizeRec.x, sizeRec.y, 13, 2, true, true, strname, this->font, this->theme->getButtonDS()));
+        buttonCategory.push_back(Button(coord, sizeRec.x, sizeRec.y, 13, 2, true, true, 0, strname, this->font, this->theme->getButtonDS()));
         coord += velocity;
     }
 
@@ -24,35 +24,35 @@ StateCategory::StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* 
     buttonCategory[this->typeCategory].setStatus(2);
     buttonsubManipulate.resize(cntManipulate);
 
-    coord = sf::Vector2f(120, 450);
+    coord = sf::Vector2f(160, 450);
     velocity = sf::Vector2f(0, 35);
     sizeRec = sf::Vector2f(110, velocity.y - 5);
     for(std::string strname : strManipulate) 
     {
-        buttonManipulate.push_back(Button(coord, sizeRec.x, sizeRec.y, 12, 2, true, false, strname, this->font, this->theme->getButtonManipulate()));
+        buttonManipulate.push_back(Button(coord, sizeRec.x, sizeRec.y, 12, 2, true, false, 0, strname, this->font, this->theme->getButtonManipulate()));
         coord += velocity;
     }
 
     // update submanipulate: create_empty, create_random, etc
-    coord = sf::Vector2f(240, 452);
+    coord = sf::Vector2f(280, 452);
     velocity = sf::Vector2f(70, 35);
     sizeRec = sf::Vector2f(velocity.x - 5, 26);
     for(int i = 0; i < this->cntManipulate; i++)
     {
         sf::Vector2f coord2 = coord;
         for(std::string strname : strsubManipulate[i]) {
-            buttonsubManipulate[i].push_back(Button(coord2, sizeRec.x, sizeRec.y, 11, 2, true, false, strname, this->font, this->theme->getButtonSubmanipulate()));
+            buttonsubManipulate[i].push_back(Button(coord2, sizeRec.x, sizeRec.y, 11, 2, true, false, 0, strname, this->font, this->theme->getButtonSubmanipulate()));
             coord2.x += velocity.x;
         }
         coord.y += velocity.y;
     }
     
     // update inputBox
-    velocity = sf::Vector2f(200, 35);
+    velocity = sf::Vector2f(240, 30);
     sizeRec = sf::Vector2f(200, velocity.y - 7);
     coord = sf::Vector2f(600, 540 - velocity.y * strInputBox.size() / 2);
     for(std::string strname : strInputBox) {
-        listBox.push_back(InputBox(coord, sizeRec.x, sizeRec.y, 11, 2, true, false, strname, this->font, this->theme->getButtonInputbox()));
+        listBox.push_back(InputBox(coord, sizeRec.x, sizeRec.y, 11, 2, true, false, 1, strname, this->font, this->theme->getButtonInputbox()));
         coord.y += velocity.y;
     }
 }
@@ -130,8 +130,6 @@ sf::Vector2i StateCategory::update(MOUSE mouseType, KEYBOARD keyboardType, sf::V
         this->typesubManipulate = ret.y;
     }
     else if (200 <= ret.x && ret.x < 300) {
-        for(Button& btn : buttonsubManipulate[ret.x - 200])
-            btn.swapView();
         ret = sf::Vector2i(-1, -1);
     }
     return ret;

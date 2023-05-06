@@ -1,7 +1,7 @@
 #include "button.hpp"
 #include <iostream>
 
-Button::Button(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, std::string word, sf::Font *font, Palette* palette)
+Button::Button(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, int print_type, std::string word, sf::Font *font, Palette* palette)
     : Style(coord, sizeText, thickness, word, font, palette)
 {
     this->view = view;
@@ -9,6 +9,8 @@ Button::Button(sf::Vector2f coord, float width, float height, float sizeText, fl
 
     this->width = width;
     this->height = height;
+
+    this->print_type = print_type;
     
     refreshrender();
 }
@@ -70,14 +72,24 @@ void Button::refreshrender()
     this->shape.setPosition(this->coord);
     this->shape.setSize(sf::Vector2f(this->width, this->height));
     this->shape.setOutlineThickness(this->thickness);
+
     this->text.setFont(*this->font);
     this->text.setString(this->word.c_str());
     this->text.setCharacterSize(this->sizeText);
-    this->text.setPosition(
-        this->coord.x + this->width / 2.f - this->text.getGlobalBounds().width / 2.f,
-        this->coord.y + this->height / 2.f - this->text.getGlobalBounds().height / 2.f - 2
-    );
 
+    if (print_type == 0)
+    {
+        this->text.setPosition(
+            this->coord.x + this->width / 2.f - this->text.getGlobalBounds().width / 2.f,
+            this->coord.y + this->height / 2.f - this->text.getGlobalBounds().height / 2.f - 2
+        );
+    }
+    else {
+        this->text.setPosition(
+            this->coord.x + this->sizeText,
+            this->coord.y + this->height / 2.f - this->text.getGlobalBounds().height / 2.f - 2
+        );
+    }
     palette->getColor(this->status).Coloring(this->shape, this->text);
 }
 

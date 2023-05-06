@@ -59,7 +59,7 @@ void StructDataStructure::stopAnimationDS()
         nodeAnimation[i].clearStep();
     }
     for(int i = 0; i < this->count_arrowPrint; i++) {
-        listArrow[i].setStatusAnimation(0);
+        listArrow[i].setStatusAnimation(AR_NORMAL);
         arrowAnimation[i].clearStep();
     }
     this->count_nodePrint = this->sizearray;

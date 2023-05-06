@@ -15,12 +15,12 @@ struct Manipulate_Animation_Node {
 private:
     sf::Vector2f startPoint;
     sf::Vector2f endPoint;
-    int statusAnimation;
+    NODE_ANIMATION statusAnimation;
     int preStatus;
     int status;
     std::string word;
 public:
-    Manipulate_Animation_Node(int statusAnimation, int preStatus, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word);
+    Manipulate_Animation_Node(NODE_ANIMATION statusAnimation, int preStatus, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word);
     void build(Node* node);
 };
 
@@ -28,7 +28,7 @@ struct Manipulate_Animation_ArrayNode {
 private:
     Node* node;
     sf::Vector2f presentPoint;
-    int statusAnimation;
+    NODE_ANIMATION statusAnimation;
     int preStatus;
     int status;
     std::string word;
@@ -47,12 +47,12 @@ public:
     void setNode(std::unique_ptr<Node>* node);
     void setWord(int number);
     void setWord(std::string word);
-    void setStatusAnimation(int statusAnimation);
+    void setStatusAnimation(NODE_ANIMATION statusAnimation);
     void setPresentPoint(sf::Vector2f presentPoint);
 
-    void addStep(int statusAnimation);
-    void addStep(int statusAnimation, sf::Vector2f nextPoint);
-    void addStep(int statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint);
+    void addStep(NODE_ANIMATION statusAnimation);
+    void addStep(NODE_ANIMATION statusAnimation, sf::Vector2f nextPoint);
+    void addStep(NODE_ANIMATION statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint);
     void skipMultiStep(int count);
 
     void runTime(double time);
@@ -65,13 +65,14 @@ public:
 
 struct Manipulate_Animation_Arrow {
 private:
-    int statusAnimation;
+    ARROW_TYPE arrow_type;
+    ARROW_ANIMATION statusAnimation;
     sf::Vector2f startPoint;
     sf::Vector2f endPoint;
     sf::Vector2f nextStartPoint;
     sf::Vector2f nextEndPoint;
 public:
-    Manipulate_Animation_Arrow(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
+    Manipulate_Animation_Arrow(ARROW_TYPE arrow_type, ARROW_ANIMATION statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
     void build(ArrowNode* arrow);
 };
 
@@ -79,7 +80,8 @@ struct Manipulate_Animation_ArrayArrow {
 private:
     ArrowNode* arrow;
     sf::Vector2f startPoint, endPoint;
-    int statusAnimation;
+    ARROW_TYPE arrow_type;
+    ARROW_ANIMATION statusAnimation;
 
     double delay = Delay;
     double fulltime = Fulltime;
@@ -90,14 +92,15 @@ private:
 
 public:
     //Manipulate_Animation_ArrayArrow() {}
-    void setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view);
+    void setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view, ARROW_TYPE arrow_type);
     void setArrow(ArrowNode* arrow);
-    void setStatusAnimation(int statusAnimation);
+    void setArrowType(ARROW_TYPE arrow_type);
+    void setStatusAnimation(ARROW_ANIMATION statusAnimation);
     void setPoint(sf::Vector2f startPoint, sf::Vector2f endPoint);
 
-    void addStep(int statusAnimation);
-    void addStep(int statusAnimation, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
-    void addStep(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
+    void addStep(ARROW_ANIMATION statusAnimation);
+    void addStep(ARROW_ANIMATION statusAnimation, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
+    void addStep(ARROW_ANIMATION statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint);
     void skipMultiStep(int count);
 
     void runTime(double time);

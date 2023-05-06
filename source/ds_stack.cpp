@@ -120,7 +120,7 @@ void StructStack::Animation_Initialize(int way)
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
         nodeAnimation[i].addStep(NOD_APPEAR);
         if (i < count_arrowPrint) {
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
             arrowAnimation[i].addStep(AR_CREATE);
         }
     }
@@ -155,12 +155,12 @@ void StructStack::Animation_Push()
         if (i == 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
             if (i < count_arrowPrint)
-                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
         }
         else if (i > 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             if (i < count_arrowPrint)
-                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         }
     }
     for(int i = 0; i < count_nodePrint; i++)
@@ -230,7 +230,7 @@ void StructStack::Animation_Pop()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
 
     // step 1
@@ -284,7 +284,7 @@ void StructStack::Animation_Pop()
 void StructStack::Animation_Peek()
 {
     this->printElements = this->elements;
-    int pos = sizearray - 1;
+    int pos = 0;
     count_nodePrint = this->sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 3; subManipulate = 0;
@@ -305,7 +305,7 @@ void StructStack::Animation_Peek()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
 
 
@@ -339,6 +339,14 @@ void StructStack::Animation_Clear()
     Manipulate = 4; subManipulate = 0;
     startAnimationDS();
 
+    if (preSize == 0)
+    {
+        listStep.push_back(0);
+        this->totaltime = 0;
+        this->step_total = 0;
+        return;
+    }
+
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
     std::vector<sf::Vector2f> pEnd = getPosition(count_arrowPrint);
@@ -350,7 +358,7 @@ void StructStack::Animation_Clear()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
 
     // step 1

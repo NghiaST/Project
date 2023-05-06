@@ -1,6 +1,6 @@
-#include "ds_linkedlist.hpp"
+#include "ds_doublylinkedlist.hpp"
 
-StructLinkedList::StructLinkedList(VisualizationSettings* settings, bool active) 
+StructDoublyLinkedList::StructDoublyLinkedList(VisualizationSettings* settings, bool active) 
     : StructDataStructure(settings, active)
 {
     this->maxsize = 15;
@@ -23,11 +23,11 @@ StructLinkedList::StructLinkedList(VisualizationSettings* settings, bool active)
     if (this->active)
         turn_on();
 }
-StructLinkedList::~StructLinkedList()
+StructDoublyLinkedList::~StructDoublyLinkedList()
 {
 }
 
-void StructLinkedList::refreshAnimation()
+void StructDoublyLinkedList::refreshAnimation()
 {
     std::vector<sf::Vector2f> listP = this->getPosition(this->sizearray);
     count_nodePrint = this->sizearray;
@@ -39,14 +39,14 @@ void StructLinkedList::refreshAnimation()
     for(int i = 0; i < this->count_arrowPrint; i++)
         this->listArrow[i].setPoint(listP[i], listP[i + 1]);
 }
-void StructLinkedList::run(int manipulate, int way, std::vector<std::string> vecStr)
+void StructDoublyLinkedList::run(int manipulate, int way, std::vector<std::string> vecStr)
 {
     if (manipulate == -1) return;
     if (this->running == true && manipulate != -1)
         stopAnimationDS();
 
     if (this->active == false) {
-        std::cout << "Error StructLinkedList::run\n";
+        std::cout << "Error StructDoublyLinkedList::run\n";
         exit(2);
     }
 
@@ -74,7 +74,7 @@ void StructLinkedList::run(int manipulate, int way, std::vector<std::string> vec
     }
 }
 
-void StructLinkedList::Animation_Initialize(int way)
+void StructDoublyLinkedList::Animation_Initialize(int way)
 {
     if (way == 0) this->Initialize_Empty();
     if (way == 1) this->Initialize_Random();
@@ -96,7 +96,7 @@ void StructLinkedList::Animation_Initialize(int way)
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
         nodeAnimation[i].addStep(NOD_APPEAR);
         if (i < count_arrowPrint) {
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_2);
             arrowAnimation[i].addStep(AR_CREATE);
         }
     }
@@ -105,7 +105,7 @@ void StructLinkedList::Animation_Initialize(int way)
     this->step_total = nodeAnimation[0].getTotalstep();
 }
 
-void StructLinkedList::Animation_Insert_First()
+void StructDoublyLinkedList::Animation_Insert_First()
 {
     if (Insert_First(string_to_int(vecStr[3])) == -1)
         return;
@@ -131,12 +131,12 @@ void StructLinkedList::Animation_Insert_First()
         if (i == 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
             if (i < count_arrowPrint)
-                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_2);
         }
         else if (i > 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             if (i < count_arrowPrint)
-                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_2);
         }
     }
     for(int i = 0; i < count_nodePrint; i++)
@@ -177,7 +177,7 @@ void StructLinkedList::Animation_Insert_First()
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
-void StructLinkedList::Animation_Insert_Last()
+void StructDoublyLinkedList::Animation_Insert_Last()
 {
     if (Insert_Last(string_to_int(vecStr[3])) == -1)
         return;
@@ -203,11 +203,11 @@ void StructLinkedList::Animation_Insert_Last()
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < pos - 1) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_2);
         }
         else if (i == pos - 1) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_2);
         }
         else if (i == pos) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
@@ -252,7 +252,7 @@ void StructLinkedList::Animation_Insert_Last()
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
-void StructLinkedList::Animation_Insert_Manual()
+void StructDoublyLinkedList::Animation_Insert_Manual()
 {
     int pos = string_to_int(vecStr[2]);
     if (pos == 0) return void(Animation_Insert_First());
@@ -280,16 +280,16 @@ void StructLinkedList::Animation_Insert_Manual()
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == pos - 1) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 2], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 2], true, ARR_2);
         }
         else if (i == pos) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_2);
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             if (i < count_arrowPrint)
-                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_2);
         }
     }
 
@@ -389,7 +389,7 @@ void StructLinkedList::Animation_Insert_Manual()
     this->step_total = nodeAnimation[0].getTotalstep();
 }
 
-void StructLinkedList::Animation_Del_First()
+void StructDoublyLinkedList::Animation_Del_First()
 {
     this->printElements = this->elements;
     Del_First();    
@@ -417,7 +417,7 @@ void StructLinkedList::Animation_Del_First()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_2);
     }
 
     // step 1
@@ -467,7 +467,7 @@ void StructLinkedList::Animation_Del_First()
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
-void StructLinkedList::Animation_Del_Last()
+void StructDoublyLinkedList::Animation_Del_Last()
 {
     this->printElements = this->elements;
     Del_Last();
@@ -495,7 +495,7 @@ void StructLinkedList::Animation_Del_Last()
     for (int i = 0; i < count_nodePrint; i++)
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
     for (int i = 0; i < count_arrowPrint; i++) 
-        arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+        arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_2);
 
     // step 1
     for(int i = 0; i < count_nodePrint; i++) {
@@ -576,7 +576,7 @@ void StructLinkedList::Animation_Del_Last()
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
-void StructLinkedList::Animation_Del_Manual()
+void StructDoublyLinkedList::Animation_Del_Manual()
 {
     this->printElements = this->elements;
     int pos = string_to_int(vecStr[2]);
@@ -600,7 +600,7 @@ void StructLinkedList::Animation_Del_Manual()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_2);
     }
 
     // step 1
@@ -697,7 +697,7 @@ void StructLinkedList::Animation_Del_Manual()
     this->step_total = nodeAnimation[0].getTotalstep();
 }
 
-void StructLinkedList::Animation_Update()
+void StructDoublyLinkedList::Animation_Update()
 {
     this->printElements = this->elements;
     int pos = string_to_int(vecStr[2]);
@@ -716,7 +716,7 @@ void StructLinkedList::Animation_Update()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_2);
     }
 
     // step 1
@@ -777,10 +777,10 @@ void StructLinkedList::Animation_Update()
     this->step_total = nodeAnimation[0].getTotalstep();
 }
 
-void StructLinkedList::Animation_Search()
+void StructDoublyLinkedList::Animation_Search()
 {
     this->printElements = this->elements;
-    int pos = Search(string_to_int(vecStr[2]));
+    int pos = Search(string_to_int(vecStr[3]));
     count_nodePrint = this->sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 4; subManipulate = 0;
@@ -793,7 +793,7 @@ void StructLinkedList::Animation_Search()
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_2);
     }
 
     // step 1

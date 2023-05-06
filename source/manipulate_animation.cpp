@@ -1,7 +1,7 @@
 #include "manipulate_animation.hpp"
 
 // Manipulate_Animation_Node
-Manipulate_Animation_Node::Manipulate_Animation_Node(int statusAnimation, int preStatus, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word)
+Manipulate_Animation_Node::Manipulate_Animation_Node(NODE_ANIMATION statusAnimation, int preStatus, int status, sf::Vector2f startPoint, sf::Vector2f endPoint, std::string word)
 {
     this->statusAnimation = statusAnimation;
     this->preStatus = preStatus;
@@ -26,9 +26,9 @@ void Manipulate_Animation_ArrayNode::setup(std::unique_ptr<Node>* node, sf::Vect
     setPresentPoint(presentPoint);
     setWord(word);
     if (view)
-        setStatusAnimation(AR_NORMAL);
+        setStatusAnimation(NOD_NORMAL);
     else
-        setStatusAnimation(AR_NOPE);
+        setStatusAnimation(NOD_NOPE);
 }
 void Manipulate_Animation_ArrayNode::setup(std::unique_ptr<Node>* node, sf::Vector2f presentPoint, std::string word, bool view)
 {
@@ -38,9 +38,9 @@ void Manipulate_Animation_ArrayNode::setup(std::unique_ptr<Node>* node, sf::Vect
     setPresentPoint(presentPoint);
     setWord(word);
     if (view)
-        setStatusAnimation(AR_NORMAL);
+        setStatusAnimation(NOD_NORMAL);
     else
-        setStatusAnimation(AR_NOPE);
+        setStatusAnimation(NOD_NOPE);
 }
 void Manipulate_Animation_ArrayNode::setNode(std::unique_ptr<Node>* node)
 {
@@ -54,7 +54,7 @@ void Manipulate_Animation_ArrayNode::setWord(std::string word)
 {
     this->word = word;
 }
-void Manipulate_Animation_ArrayNode::setStatusAnimation(int statusAnimation)
+void Manipulate_Animation_ArrayNode::setStatusAnimation(NODE_ANIMATION statusAnimation)
 {
     preStatus = status;
     switch (statusAnimation)
@@ -96,7 +96,7 @@ void Manipulate_Animation_ArrayNode::setPresentPoint(sf::Vector2f presentPoint)
     this->presentPoint = presentPoint;
 }
 
-void Manipulate_Animation_ArrayNode::addStep(int statusAnimation)
+void Manipulate_Animation_ArrayNode::addStep(NODE_ANIMATION statusAnimation)
 {
     if (statusAnimation == NOD_MOVE) {
         std::cout << "Error manipulatee_animation_arrayNode: NOD_MOVE don't have position\n";
@@ -104,11 +104,11 @@ void Manipulate_Animation_ArrayNode::addStep(int statusAnimation)
     }
     this->addStep(statusAnimation, this->presentPoint, this->presentPoint);
 }
-void Manipulate_Animation_ArrayNode::addStep(int statusAnimation, sf::Vector2f nextPoint)
+void Manipulate_Animation_ArrayNode::addStep(NODE_ANIMATION statusAnimation, sf::Vector2f nextPoint)
 {
     this->addStep(statusAnimation, this->presentPoint, nextPoint);
 }
-void Manipulate_Animation_ArrayNode::addStep(int statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint)
+void Manipulate_Animation_ArrayNode::addStep(NODE_ANIMATION statusAnimation, sf::Vector2f presentPoint, sf::Vector2f nextPoint)
 {
     setStatusAnimation(statusAnimation);
     listStep.push_back(Manipulate_Animation_Node(this->statusAnimation, this->preStatus, this->status, presentPoint, nextPoint, word));
@@ -165,8 +165,9 @@ double Manipulate_Animation_ArrayNode::getTotaltime()
 }
 
 // Manipulate_Animation_Arrow
-Manipulate_Animation_Arrow::Manipulate_Animation_Arrow(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
+Manipulate_Animation_Arrow::Manipulate_Animation_Arrow(ARROW_TYPE arrow_type, ARROW_ANIMATION statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
 {
+    this->arrow_type = arrow_type;
     this->statusAnimation = statusAnimation;
     this->startPoint = startPoint;
     this->endPoint = endPoint;
@@ -177,26 +178,29 @@ Manipulate_Animation_Arrow::Manipulate_Animation_Arrow(int statusAnimation, sf::
 void Manipulate_Animation_Arrow::build(ArrowNode *arrow)
 {
     arrow->setAllPoint(startPoint, endPoint, nextStartPoint, nextEndPoint);
+    arrow->setArrowType(arrow_type);
     arrow->setStatusAnimation(statusAnimation);
 }
 
 // Manipulate_Animation_ArrayArrow
-void Manipulate_Animation_ArrayArrow::setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view)
+void Manipulate_Animation_ArrayArrow::setup(ArrowNode* arrow, sf::Vector2f startPoint, sf::Vector2f endPoint, bool view, ARROW_TYPE arrow_type)
 {
     clearStep();
     setArrow(arrow);
     this->startPoint = startPoint;
     this->endPoint = endPoint;
-    if (view)
-        setStatusAnimation(AR_NORMAL);
-    else 
-        setStatusAnimation(AR_NOPE);
+    setArrowType(arrow_type);
+    setStatusAnimation(view ? AR_NORMAL : AR_NOPE);
 }
 void Manipulate_Animation_ArrayArrow::setArrow(ArrowNode *arrow)
 {
     this->arrow = arrow;
 }
-void Manipulate_Animation_ArrayArrow::setStatusAnimation(int statusAnimation)
+void Manipulate_Animation_ArrayArrow::setArrowType(ARROW_TYPE arrow_type)
+{
+    this->arrow_type = arrow_type;
+}
+void Manipulate_Animation_ArrayArrow::setStatusAnimation(ARROW_ANIMATION statusAnimation)
 {
     if (statusAnimation == AR_SKIP)
     {
@@ -205,10 +209,10 @@ void Manipulate_Animation_ArrayArrow::setStatusAnimation(int statusAnimation)
             case AR_NOPE : case AR_DEL :
                 statusAnimation = AR_NOPE;
                 break;
-            case AR_NORMAL : case AR_NORMALMOVE :
+            case AR_NORMAL :
                 statusAnimation = AR_NORMAL;
                 break; 
-            case AR_ACTIVE : case AR_ACTIVEMOVE : case AR_CREATE : case AR_COLOR_TO :
+            case AR_ACTIVE : case AR_CREATE : case AR_COLOR_TO :
                 statusAnimation = AR_ACTIVE;
                 break;
             default : 
@@ -221,11 +225,11 @@ void Manipulate_Animation_ArrayArrow::setStatusAnimation(int statusAnimation)
     {
         switch (this->statusAnimation)
         {
-            case AR_NORMAL : case AR_NORMALMOVE :
-                statusAnimation = AR_NORMALMOVE;
+            case AR_NORMAL :
+                statusAnimation = AR_NORMAL;
                 break;
-            case AR_ACTIVE : case AR_ACTIVEMOVE : case AR_CREATE : case AR_COLOR_TO :
-                statusAnimation = AR_ACTIVEMOVE;
+            case AR_ACTIVE : case AR_CREATE : case AR_COLOR_TO :
+                statusAnimation = AR_ACTIVE;
                 break;
             case AR_NOPE : case AR_DEL : 
                 statusAnimation = AR_NOPE;
@@ -243,7 +247,7 @@ void Manipulate_Animation_ArrayArrow::setPoint(sf::Vector2f startPoint, sf::Vect
     this->endPoint = endPoint;
 }
 
-void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation)
+void Manipulate_Animation_ArrayArrow::addStep(ARROW_ANIMATION statusAnimation)
 {
     if (statusAnimation == AR_MOVE) {
         std::cout << "manipulate_animation Manipulate_Animation_ArrayArrow : add MOVE without position\n";
@@ -251,14 +255,14 @@ void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation)
     }
     this->addStep(statusAnimation, this->startPoint, this->endPoint, this->startPoint, this->endPoint);
 }
-void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
+void Manipulate_Animation_ArrayArrow::addStep(ARROW_ANIMATION statusAnimation, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
 {
     this->addStep(statusAnimation, this->startPoint, this->endPoint, nextStartPoint, nextEndPoint);
 }
-void Manipulate_Animation_ArrayArrow::addStep(int statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
+void Manipulate_Animation_ArrayArrow::addStep(ARROW_ANIMATION statusAnimation, sf::Vector2f startPoint, sf::Vector2f endPoint, sf::Vector2f nextStartPoint, sf::Vector2f nextEndPoint)
 {
     setStatusAnimation(statusAnimation);
-    listStep.push_back(Manipulate_Animation_Arrow(this->statusAnimation, startPoint, endPoint, nextStartPoint, nextEndPoint));
+    listStep.push_back(Manipulate_Animation_Arrow(this->arrow_type, this->statusAnimation, startPoint, endPoint, nextStartPoint, nextEndPoint));
     this->startPoint = nextStartPoint;
     this->endPoint = nextEndPoint;
 }

@@ -7,12 +7,13 @@
 struct Button : Style {
 protected:
     bool keepActive;
+    int print_type;
 
     int width, height;
     sf::RectangleShape shape;
 
 public:
-    Button(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, std::string word, sf::Font *font, Palette* palette);
+    Button(sf::Vector2f coord, float width, float height, float sizeText, float thickness, bool view, bool keepActive, int print_type, std::string word, sf::Font *font, Palette* palette);
     ~Button();
 
     //Accessors
