@@ -246,18 +246,18 @@ void StructStack::Animation_Pop()
     {
         if (i == 0) {
             nodeAnimation[i].addStep(NOD_SHOW);
-            nodeAnimation[i].skipMultiStep(1);
+            nodeAnimation[i].skipMultiStep(2);
             nodeAnimation[i].addStep(NOD_DEL);
             nodeAnimation[i].skipMultiStep(1);
         }
         else if (i == 1) {
-            nodeAnimation[i].skipMultiStep(1);
+            nodeAnimation[i].skipMultiStep(2);
             nodeAnimation[i].addStep(NOD_SOLVE);
             nodeAnimation[i].skipMultiStep(1);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
         else {
-            nodeAnimation[i].skipMultiStep(3);
+            nodeAnimation[i].skipMultiStep(4);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
     }
@@ -267,16 +267,17 @@ void StructStack::Animation_Pop()
         if (i == 0) {
             arrowAnimation[i].skipMultiStep(1);
             arrowAnimation[i].addStep(AR_COLOR_TO);
+            arrowAnimation[i].skipMultiStep(1);
             arrowAnimation[i].addStep(AR_DEL);
             arrowAnimation[i].skipMultiStep(1);
         }
         else {
-            arrowAnimation[i].skipMultiStep(3);
+            arrowAnimation[i].skipMultiStep(4);
             arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
         }
     }
     
-    this->listStep = std::vector<int>{1, 1, 2, 3, 3};
+    this->listStep = std::vector<int>{1, 1, 2, 2, 3, 3};
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
@@ -378,22 +379,22 @@ void StructStack::Animation_Clear()
         for(int i = 0; i < count_nodePrint; i++)
         {
             if (i < isize) {
-                nodeAnimation[i].skipMultiStep(4);
+                nodeAnimation[i].skipMultiStep(5);
             }
             else if (i == isize) {
                 nodeAnimation[i].addStep(NOD_SHOW);
-                nodeAnimation[i].skipMultiStep(1);
+                nodeAnimation[i].skipMultiStep(2);
                 nodeAnimation[i].addStep(NOD_DEL);
                 nodeAnimation[i].skipMultiStep(1);
             }
             else if (i == isize + 1) {
-                nodeAnimation[i].skipMultiStep(1);
+                nodeAnimation[i].skipMultiStep(2);
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
             }
             else {
-                nodeAnimation[i].skipMultiStep(3);
+                nodeAnimation[i].skipMultiStep(4);
                 nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
             }
         }
@@ -402,20 +403,22 @@ void StructStack::Animation_Clear()
         {
             if (i < isize)
             {
-                arrowAnimation[i].skipMultiStep(4);
+                arrowAnimation[i].skipMultiStep(5);
             }
             else if (i == isize) {
                 arrowAnimation[i].skipMultiStep(1);
                 arrowAnimation[i].addStep(AR_COLOR_TO);
+                arrowAnimation[i].skipMultiStep(1);
                 arrowAnimation[i].addStep(AR_DEL);
                 arrowAnimation[i].skipMultiStep(1);
             }
             else {
-                arrowAnimation[i].skipMultiStep(3);
+                arrowAnimation[i].skipMultiStep(4);
                 arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
             }
         }
         listStep.push_back(1);
+        listStep.push_back(2);
         listStep.push_back(2);
         listStep.push_back(3);
         listStep.push_back(3);

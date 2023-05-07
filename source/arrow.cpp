@@ -6,6 +6,20 @@
 //-------------------------------------------------------
 //----------------------ArrowShape-----------------------
 
+ArrowShape::ArrowShape(sf::Vector2f Point1, sf::Vector2f Point2, bool isTriangle)
+{
+    sf::Vector2f diff = Point2 - Point1;
+    length = sqrt(diff.x * diff.x + diff.y * diff.y);
+    double rad = atan2(diff.y, diff.x);
+
+    line.setPosition(Point1);
+    line.setRotation(rad * 180 / PI);
+
+    line.setOutlineThickness(thickness);
+    triangle.setOutlineThickness(0);
+    setRatio(1);
+}
+
 ArrowShape::ArrowShape(sf::Vector2f Point1, sf::Vector2f Point2)
 {
     sf::Vector2f diff = Point2 - Point1;
@@ -49,11 +63,57 @@ void ArrowShape::setColor(Palette* palette, int status)
     palette->getColor(status).Coloring(triangle);
 }
 
+int ArrowShape::getLength()
+{
+    return this->length;
+}
+
 void ArrowShape::render(sf::RenderWindow* window)
 {
     window->draw(line);
     if (ratio > 0.98) window->draw(triangle);
 }
+
+//-------------------------------------------------------
+//----------------------PolyArrow------------------------
+
+PolyArrow::PolyArrow(std::vector<sf::Vector2f> junction)
+{
+    for(int i = 0; i < (int) junction.size() - 2; i++)
+        listArrowShape.push_back(ArrowShape(junction[i], junction[i + 1], 0));
+    for(int i = (int) junction.size() - 2; i < (int) junction.size() - 1; i++)
+        listArrowShape.push_back(ArrowShape(junction[i], junction[i + 1]));
+    length = 0;
+    for(ArrowShape& arrShape : listArrowShape)
+        length += arrShape.getLength();
+    setRatio(1);
+}
+
+void PolyArrow::setRatio(double ratio)
+{
+    this->ratio = ratio;
+    double tmp_length = length * ratio;
+    for(ArrowShape& arrShape : listArrowShape)
+    {
+        double arrLength = arrShape.getLength();
+        double length_i = std::min(arrLength, tmp_length);
+        tmp_length -= length_i;
+        arrShape.setRatio(length_i / arrLength);
+    }
+}
+
+void PolyArrow::setColor(Palette *palette, int status)
+{
+    for(ArrowShape& arrShape : listArrowShape)
+        arrShape.setColor(palette, status);
+}
+
+void PolyArrow::render(sf::RenderWindow *window)
+{
+    for(ArrowShape& arrShape : listArrowShape)
+        arrShape.render(window);
+}
+
 
 //-------------------------------------------------------
 //--------------------Arrow_Control----------------------
@@ -246,6 +306,20 @@ void ArrowNode::render_Arr2(sf::RenderWindow* window)
             break;
         case AR_COLOR_TO :
             listArrowShape.push_back(listArrowShape[0]);
+            listArrowShape[0].setColor(palette, 0);
+            listArrowShape[1].setColor(palette, 0);
+            listArrowShape[2].setColor(palette, 1);
+            listArrowShape[2].setRatio(ratio);
+            break;
+        case AR_COLOR_REV :
+            listArrowShape.push_back(listArrowShape[1]);
+            listArrowShape[0].setColor(palette, 0);
+            listArrowShape[1].setColor(palette, 0);
+            listArrowShape[2].setColor(palette, 1);
+            listArrowShape[2].setRatio(ratio);
+            break;
+        case AR_COLOR :
+            listArrowShape.push_back(listArrowShape[0]);
             listArrowShape.push_back(listArrowShape[1]);
             listArrowShape[0].setColor(palette, 0);
             listArrowShape[1].setColor(palette, 0);
@@ -285,37 +359,38 @@ void ArrowNode::render_ArrLoop(sf::RenderWindow* window)
     /// calculate position arrow
 
     std::vector<sf::Vector2f> junction;
-    junction.push_back(presentStartPoint);
-    junction.push_back(junction.back() + sf::Vector2f(30, 0));
+    junction.push_back(presentStartPoint + sf::Vector2f(radiusNode, 0));
+    junction.push_back(junction.back() + sf::Vector2f(radiusNode * 2, 0));
     junction.push_back(sf::Vector2f(junction.back().x, 100));
-    junction.push_back(sf::Vector2f(presentEndPoint.x - 30, junction.back().y));
+    junction.push_back(sf::Vector2f(presentEndPoint.x - radiusNode * 3, junction.back().y));
     junction.push_back(sf::Vector2f(junction.back().x, presentEndPoint.y));
-    junction.push_back(presentEndPoint);
+    junction.push_back(presentEndPoint - sf::Vector2f(radiusNode, 0));
 
-    std::vector<ArrowShape> listArrowShape;
-    for(int i = 0; i < 5; i++)
-        listArrowShape.push_back(ArrowShape(junction[i], junction[i + 1]));
+    std::vector<PolyArrow> polyArrow;
+    polyArrow.push_back(PolyArrow(junction));
 
-    for(int i = 0; i < 5; i++)
     switch (this->statusAnimation)
     {
         // int present_ratio = listArrowShape[i].push_back(i);
         case AR_NORMAL :
-            listArrowShape[i].setColor(palette, 0);
+            polyArrow[0].setColor(palette, 0);
             break;
         case AR_ACTIVE :
-            listArrowShape[0].setColor(palette, 1);
+            polyArrow[0].setColor(palette, 1);
             break;
         case AR_CREATE :
-            listArrowShape[i].setColor(palette, 1);
+            polyArrow[0].setColor(palette, 1);
+            polyArrow[0].setRatio(ratio);
             break;
         case AR_COLOR_TO :
-            listArrowShape.push_back(listArrowShape[i]);
-            listArrowShape[i].setColor(palette, 0);
-            listArrowShape[i + 5].setColor(palette, 1);
+            polyArrow.push_back(PolyArrow(junction));
+            polyArrow[0].setColor(palette, 0);
+            polyArrow[1].setColor(palette, 1);
+            polyArrow[1].setRatio(ratio);
             break;
         case AR_DEL :
-            listArrowShape[i].setColor(palette, 1);
+            polyArrow[0].setColor(palette, 0);
+            polyArrow[0].setRatio(1 - ratio);
             break;
         case AR_MOVE :
             exit(1);
@@ -325,8 +400,8 @@ void ArrowNode::render_ArrLoop(sf::RenderWindow* window)
             exit(5);
             break;
     }
-    for(ArrowShape& arrShape : listArrowShape)
-        arrShape.render(window);
+    for(PolyArrow& arrow_i : polyArrow)
+        arrow_i.render(window);
 }
 
 void ArrowNode::render(sf::RenderWindow* window)

@@ -212,7 +212,7 @@ void Manipulate_Animation_ArrayArrow::setStatusAnimation(ARROW_ANIMATION statusA
             case AR_NORMAL :
                 statusAnimation = AR_NORMAL;
                 break; 
-            case AR_ACTIVE : case AR_CREATE : case AR_COLOR_TO :
+            case AR_ACTIVE : case AR_CREATE : case AR_COLOR_TO : case AR_COLOR_REV : case AR_COLOR :
                 statusAnimation = AR_ACTIVE;
                 break;
             default : 
@@ -228,7 +228,7 @@ void Manipulate_Animation_ArrayArrow::setStatusAnimation(ARROW_ANIMATION statusA
             case AR_NORMAL :
                 statusAnimation = AR_NORMAL;
                 break;
-            case AR_ACTIVE : case AR_CREATE : case AR_COLOR_TO :
+            case AR_ACTIVE : case AR_CREATE : case AR_COLOR_TO : case AR_COLOR_REV : case AR_COLOR :
                 statusAnimation = AR_ACTIVE;
                 break;
             case AR_NOPE : case AR_DEL : 

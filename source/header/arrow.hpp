@@ -5,7 +5,7 @@
 
 const double PI = 3.141592653589793238462643383279502;
 
-enum ARROW_ANIMATION{AR_NOPE = -1, AR_NORMAL, AR_ACTIVE, AR_CREATE, AR_COLOR_TO, AR_DEL, AR_SKIP, AR_MOVE};
+enum ARROW_ANIMATION{AR_NOPE = -1, AR_NORMAL, AR_ACTIVE, AR_CREATE, AR_COLOR_TO, AR_DEL, AR_SKIP, AR_MOVE, AR_COLOR_REV, AR_COLOR};
 enum ARROW_TYPE{ARR_1 = 0, ARR_2, ARR_LOOP};
 
 struct ArrowShape {
@@ -16,8 +16,21 @@ private:
     sf::RectangleShape line;
     sf::ConvexShape triangle;
 public:
+    ArrowShape(sf::Vector2f Point1, sf::Vector2f Point2, bool isTriangle);
     ArrowShape(sf::Vector2f Point1, sf::Vector2f Point2);
     ArrowShape& operator = (const ArrowShape& other);
+    void setRatio(double ratio);
+    void setColor(Palette* palette, int status);
+    int getLength();
+    void render(sf::RenderWindow* window);
+};
+
+struct PolyArrow {
+private:
+    double length, ratio;
+    std::vector<ArrowShape> listArrowShape;
+public:
+    PolyArrow(std::vector<sf::Vector2f> junction);
     void setRatio(double ratio);
     void setColor(Palette* palette, int status);
     void render(sf::RenderWindow* window);

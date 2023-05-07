@@ -138,10 +138,10 @@ void StructCircularLinkedList::Animation_Insert_First()
         }
         else if (i > 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-            if (i < count_arrowPrint)
+            if (i < count_arrowPrint - 1)
                 arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
             else
-                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[0], true, ARR_LOOP);
+                arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[1 % count_nodePrint], true, ARR_LOOP);
         }
     }
     for(int i = 0; i < count_nodePrint; i++)
@@ -168,9 +168,14 @@ void StructCircularLinkedList::Animation_Insert_First()
     for(int i = 0; i < count_arrowPrint; i++)
     {
         if (i == 0) {
-            arrowAnimation[i].addStep(AR_NOPE);
+            arrowAnimation[i].skipMultiStep(1);
             arrowAnimation[i].addStep(AR_CREATE);
-            arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
+            arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[(i + 1) % sizearray]);
+        }
+        else if (i == count_nodePrint - 1) {
+            arrowAnimation[i].skipMultiStep(1);
+            arrowAnimation[i].addStep(AR_NORMAL, pStart[i], pStart[0]);
+            arrowAnimation[i].addStep(AR_NORMAL, pEnd[i], pEnd[0]);
         }
         else {
             arrowAnimation[i].skipMultiStep(2);
@@ -214,9 +219,13 @@ void StructCircularLinkedList::Animation_Insert_Last()
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
         }
-        else if (i == pos) {
+        else if (i == pos && i > 0) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
-            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[0], false, ARR_LOOP);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i - 1], pStart[0], true, ARR_LOOP);
+        }
+        else {
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
+            arrowAnimation[i].setup(&listArrow[i], pStart[0], pStart[0], false, ARR_LOOP);
         }
     }
 
@@ -225,17 +234,17 @@ void StructCircularLinkedList::Animation_Insert_Last()
     {
         if (i == pos) {
             nodeAnimation[i].addStep(NOD_APPEAR);
-            nodeAnimation[i].addStep(NOD_SKIP);
+            nodeAnimation[i].skipMultiStep(1);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
         else if (i == pos - 1) {
             nodeAnimation[i].addStep(NOD_SHOW);
-            nodeAnimation[i].addStep(NOD_SKIP);
+            nodeAnimation[i].skipMultiStep(1);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
         else {
             nodeAnimation[i].addStep(NOD_NORMAL);
-            nodeAnimation[i].addStep(NOD_SKIP);
+            nodeAnimation[i].skipMultiStep(1);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
     }
@@ -243,13 +252,20 @@ void StructCircularLinkedList::Animation_Insert_Last()
     for(int i = 0; i < count_arrowPrint; i++)
     {
         if (i == pos - 1) {
-            arrowAnimation[i].addStep(AR_NOPE);
+            arrowAnimation[i].skipMultiStep(1);
             arrowAnimation[i].addStep(AR_CREATE);
             arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
         }
+        else if (i == pos) {
+            arrowAnimation[i].skipMultiStep(1);
+            if (i == 0) 
+                arrowAnimation[i].addStep(AR_CREATE);
+            else 
+                arrowAnimation[i].addStep(AR_MOVE, pStart[i], pStart[0]);
+            arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[0]);
+        }
         else {
-            arrowAnimation[i].addStep(AR_NORMAL);
-            arrowAnimation[i].addStep(AR_SKIP);
+            arrowAnimation[i].skipMultiStep(2);
             arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
         }   
     }
@@ -291,6 +307,10 @@ void StructCircularLinkedList::Animation_Insert_Manual()
         else if (i == pos) {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
+        }
+        else if (i < count_nodePrint - 1) {
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+            arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
@@ -379,7 +399,7 @@ void StructCircularLinkedList::Animation_Insert_Manual()
         }
         else {
             arrowAnimation[i].skipMultiStep(4);
-            arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
+            arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[(i + 1) % count_nodePrint]);
         }
     }
 
@@ -413,7 +433,7 @@ void StructCircularLinkedList::Animation_Del_First()
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
-    std::vector<sf::Vector2f> pEnd = getPosition(count_arrowPrint);
+    std::vector<sf::Vector2f> pEnd = getPosition(count_nodePrint - 1);
 
     sf::Vector2f newPosition = pStart[0];
     pEnd.insert(pEnd.begin(), newPosition);
@@ -421,7 +441,7 @@ void StructCircularLinkedList::Animation_Del_First()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
-        if (i < count_arrowPrint)
+        if (i < count_arrowPrint - 1)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         else 
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[0], true, ARR_LOOP);
@@ -431,46 +451,67 @@ void StructCircularLinkedList::Animation_Del_First()
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == 0) nodeAnimation[i].addStep(NOD_ACTIVE);
         else nodeAnimation[i].skipMultiStep(1);
-
-        if (i < count_arrowPrint)
-            arrowAnimation[i].skipMultiStep(1);
+        arrowAnimation[i].skipMultiStep(1);
     }
 
     for(int i = 0; i < count_nodePrint; i++)
     {
         if (i == 0) {
             nodeAnimation[i].addStep(NOD_SHOW);
-            nodeAnimation[i].skipMultiStep(1);
+            nodeAnimation[i].skipMultiStep(3);
             nodeAnimation[i].addStep(NOD_DEL);
             nodeAnimation[i].skipMultiStep(1);
         }
         else if (i == 1) {
-            nodeAnimation[i].skipMultiStep(1);
+            nodeAnimation[i].skipMultiStep(2);
             nodeAnimation[i].addStep(NOD_SOLVE);
-            nodeAnimation[i].skipMultiStep(1);
+            nodeAnimation[i].skipMultiStep(2);
+            nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
+        }
+        else if (i == count_arrowPrint - 1) {
+            nodeAnimation[i].skipMultiStep(2);
+            nodeAnimation[i].addStep(NOD_SOLVE);
+            nodeAnimation[i].skipMultiStep(2);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
         else {
-            nodeAnimation[i].skipMultiStep(3);
+            nodeAnimation[i].skipMultiStep(5);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
     }
 
     for(int i = 0; i < count_arrowPrint; i++)
     {
-        if (i == 0) {
+        if (i == count_arrowPrint - 1) {
+            if (i == 0) {
+                arrowAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].addStep(AR_ACTIVE);
+                arrowAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].addStep(AR_DEL);
+                arrowAnimation[i].skipMultiStep(2);
+            }
+            else {
+                arrowAnimation[i].skipMultiStep(2);
+                arrowAnimation[i].addStep(AR_ACTIVE);
+                arrowAnimation[i].addStep(AR_MOVE, pStart[i], pStart[1]);
+                arrowAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[1]);
+            }
+        }
+        else if (i == 0) {
             arrowAnimation[i].skipMultiStep(1);
             arrowAnimation[i].addStep(AR_COLOR_TO);
-            arrowAnimation[i].addStep(AR_DEL);
             arrowAnimation[i].skipMultiStep(1);
+            arrowAnimation[i].addStep(AR_DEL);
+            arrowAnimation[i].skipMultiStep(2);
         }
         else {
-            arrowAnimation[i].skipMultiStep(3);
+            arrowAnimation[i].skipMultiStep(5);
             arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
         }
     }
     
-    this->listStep = std::vector<int>{1, 1, 2, 3, 3};
+    this->listStep = std::vector<int>{1, 1, 2, 2, 3, 4, 4};
     this->totaltime = nodeAnimation[0].getTotaltime();
     this->step_total = nodeAnimation[0].getTotalstep();
 }
@@ -492,8 +533,9 @@ void StructCircularLinkedList::Animation_Del_Last()
     }
 
     // setup position
+    // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
-    std::vector<sf::Vector2f> pEnd = getPosition(count_arrowPrint);
+    std::vector<sf::Vector2f> pEnd = getPosition(count_nodePrint - 1);
 
     sf::Vector2f newPosition = pStart.back();
     pEnd.push_back(newPosition);
@@ -502,22 +544,21 @@ void StructCircularLinkedList::Animation_Del_Last()
     for (int i = 0; i < count_nodePrint; i++)
         nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
     for (int i = 0; i < count_arrowPrint; i++) {
-        if (i < count_nodePrint - 1)
+        if (i < count_arrowPrint - 1)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         else
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[0], true, ARR_LOOP);
     }
+    
     // step 1
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == 0) nodeAnimation[i].addStep(NOD_ACTIVE);
         else nodeAnimation[i].skipMultiStep(1);
-
-        if (i < count_arrowPrint)
-            arrowAnimation[i].skipMultiStep(1);
+        arrowAnimation[i].skipMultiStep(1);
     }
     listStep.push_back(1);
 
-    int pos = count_arrowPrint;
+    int pos = count_nodePrint - 1;
     for(int ipos = 0; ipos < pos; ipos++)
     {
         for(int i = 0; i < count_nodePrint; i++)
@@ -539,8 +580,7 @@ void StructCircularLinkedList::Animation_Del_Last()
             }
             else {
                 nodeAnimation[i].skipMultiStep(2);
-                if (i < count_arrowPrint)
-                    arrowAnimation[i].skipMultiStep(2);
+                arrowAnimation[i].skipMultiStep(2);
             }
         }
         listStep.push_back(2);
@@ -550,36 +590,58 @@ void StructCircularLinkedList::Animation_Del_Last()
     for(int i = 0; i < count_nodePrint; i++)
     {
         if (i == pos) {
+            nodeAnimation[i].addStep(NOD_SHOW);
             nodeAnimation[i].addStep(NOD_ACTIVE);
             nodeAnimation[i].skipMultiStep(1);
             nodeAnimation[i].addStep(NOD_DEL);
             nodeAnimation[i].skipMultiStep(1);
         }
         else if (i == pos - 1) {
-            nodeAnimation[i].addStep(NOD_SHOW);
-            nodeAnimation[i].skipMultiStep(1);
             nodeAnimation[i].addStep(NOD_SOLVE);
+            nodeAnimation[i].skipMultiStep(3);
+            nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
+        }
+        else if (i == 0) {
+            nodeAnimation[i].skipMultiStep(1);
+            nodeAnimation[i].addStep(NOD_SHOW);
+            nodeAnimation[i].skipMultiStep(2);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
         else {
-            nodeAnimation[i].skipMultiStep(3);
+            nodeAnimation[i].skipMultiStep(4);
             nodeAnimation[i].addStep(NOD_MOVE, pEnd[i]);
         }
     }
     for(int i = 0; i < count_arrowPrint; i++)
     {
         if (i == pos - 1) {
-            arrowAnimation[i].skipMultiStep(1);
+            arrowAnimation[i].skipMultiStep(2);
             arrowAnimation[i].addStep(AR_DEL);
             arrowAnimation[i].skipMultiStep(2);
         }
+        else if (i == pos) {
+            if (i == 0) {
+                arrowAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].addStep(AR_ACTIVE);
+                arrowAnimation[i].addStep(AR_DEL);
+                arrowAnimation[i].skipMultiStep(2);
+            }
+            else {
+                arrowAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].addStep(AR_ACTIVE);
+                arrowAnimation[i].addStep(AR_MOVE, pStart[i - 1], pStart[0]);
+                arrowAnimation[i].skipMultiStep(1);
+                arrowAnimation[i].addStep(AR_MOVE, pEnd[i - 1], pEnd[0]);
+            }
+        }
         else {
-            arrowAnimation[i].skipMultiStep(3);
+            arrowAnimation[i].skipMultiStep(4);
             arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
         }
     }
     
-    this->listStep.push_back(3);
+    this->listStep.push_back(2);
+    this->listStep.push_back(4);
     this->listStep.push_back(4);
     this->listStep.push_back(5);
     this->listStep.push_back(5);
@@ -601,7 +663,7 @@ void StructCircularLinkedList::Animation_Del_Manual()
 
     // setup position
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
-    std::vector<sf::Vector2f> pEnd = getPosition(count_arrowPrint);
+    std::vector<sf::Vector2f> pEnd = getPosition(count_nodePrint - 1);
 
     sf::Vector2f newPosition = pStart[pos] + sf::Vector2f(0, 200);
     pEnd.insert(pEnd.begin() + pos, newPosition);
@@ -619,9 +681,7 @@ void StructCircularLinkedList::Animation_Del_Manual()
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == 0) nodeAnimation[i].addStep(NOD_ACTIVE);
         else nodeAnimation[i].skipMultiStep(1);
-
-        if (i < count_arrowPrint)
-            arrowAnimation[i].skipMultiStep(1);
+        arrowAnimation[i].skipMultiStep(1);
     }
     listStep.push_back(0);
 
@@ -639,8 +699,7 @@ void StructCircularLinkedList::Animation_Del_Manual()
             }
             else {
                 nodeAnimation[i].skipMultiStep(2);
-                if (i < count_arrowPrint)
-                    arrowAnimation[i].skipMultiStep(2);
+                arrowAnimation[i].skipMultiStep(2);
             }
         }
         listStep.push_back(1);
@@ -651,20 +710,25 @@ void StructCircularLinkedList::Animation_Del_Manual()
     {
         if (i == pos - 1) {
             nodeAnimation[i].addStep(NOD_SHOW);
+            nodeAnimation[i].skipMultiStep(2);
+            arrowAnimation[i].skipMultiStep(1);
             arrowAnimation[i].addStep(AR_COLOR_TO);
+            arrowAnimation[i].skipMultiStep(1);
         } 
         else if (i == pos) {
+            nodeAnimation[i].skipMultiStep(2);
             nodeAnimation[i].addStep(NOD_ACTIVE);
-            arrowAnimation[i].addStep(AR_COLOR_TO);
+            arrowAnimation[i].skipMultiStep(2);
+            arrowAnimation[i].addStep(AR_ACTIVE);
         }
         else if (i == pos + 1) {
+            nodeAnimation[i].skipMultiStep(2);
             nodeAnimation[i].addStep(NOD_SOLVE);
-            arrowAnimation[i].skipMultiStep(1);
+            arrowAnimation[i].skipMultiStep(3);
         }
         else {
-            nodeAnimation[i].skipMultiStep(1);
-            if (i < count_arrowPrint)
-                arrowAnimation[i].skipMultiStep(1);
+            nodeAnimation[i].skipMultiStep(3);
+            arrowAnimation[i].skipMultiStep(3);
         }
     }
 
@@ -696,10 +760,12 @@ void StructCircularLinkedList::Animation_Del_Manual()
         }
         else {
             arrowAnimation[i].skipMultiStep(3);
-            arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[i + 1]);
+            arrowAnimation[i].addStep(AR_MOVE, pEnd[i], pEnd[(i + 1) % count_arrowPrint]);
         }
     }
     
+    this->listStep.push_back(3);
+    this->listStep.push_back(3);
     this->listStep.push_back(3);
     this->listStep.push_back(3);
     this->listStep.push_back(4);
@@ -737,9 +803,7 @@ void StructCircularLinkedList::Animation_Update()
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == 0) nodeAnimation[i].addStep(NOD_ACTIVE);
         else nodeAnimation[i].skipMultiStep(1);
-
-        if (i < count_arrowPrint)
-            arrowAnimation[i].skipMultiStep(1);
+        arrowAnimation[i].skipMultiStep(1);
     }
     listStep.push_back(0);
 

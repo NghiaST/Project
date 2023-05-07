@@ -253,12 +253,12 @@ void State::InitAllButton()
                 {
                     "Node* cur = new Node(value)", 
                     "cur->next = head", 
-                    "head = cur"
+                    "head = cur; if (!tail) tail = head"
                 }, 
                 {
                     "Node* cur = new Node(value)", 
                     "tail->next = cur", 
-                    "tail = cur"
+                    "tail = cur; if (!head) head = tail"
                 },
                 {
                     "Node* pre = head",
@@ -281,7 +281,7 @@ void State::InitAllButton()
                     "Node* pre = nullptr, *cur = head",
                     "while (cur != tail)",
                     "   pre = cur, cur = cur->next",
-                    "if (pre) pre->next = nullptr",
+                    "tail = pre; if (pre) pre->next = nullptr",
                     "delete cur"
                 }, 
                 {
@@ -310,28 +310,29 @@ void State::InitAllButton()
                     "return cur"
                 }
             }
-        },{
+        },
+        {
             {
                 {}, {}, {}, {}
             },
             {
                 {
                     "Node* cur = new Node(value)", 
-                    "cur->next = head", 
-                    "head = cur"
+                    "cur->next = head; if (head) head->prev = cur",
+                    "head = cur; if (!tail) tail = head"
                 }, 
                 {
                     "Node* cur = new Node(value)", 
-                    "tail->next = cur", 
-                    "tail = cur"
+                    "if (tail) tail->next = cur; cur->prev = tail", 
+                    "tail = cur; if (!head) head = tail"
                 },
                 {
                     "Node* pre = head",
                     "for (int i = 0; i < pos - 1; i++)",
                     "   pre = pre->next",
-                    "Node* cur = new Node(value)",
-                    "cur->next = pre->next",
-                    "pre->next = cur"
+                    "Node* cur = new Node(value), nxt = pre->next",
+                    "cur->next = nxt; if (nxt) nxt->prev = cur",
+                    "pre->next = cur; cur->prev = pre"
                 }
             },
             {
@@ -339,23 +340,24 @@ void State::InitAllButton()
                     "if (head == nullptr) return",
                     "Node* cur = head",
                     "head = cur->next",
+                    "cur->next = nullptr; if (head) head->prev = nullptr"
                     "delete cur"
                 }, 
                 {
                     "if (head == nullptr) return",
-                    "Node* pre = nullptr, *cur = head",
-                    "while (cur != tail)",
-                    "   pre = cur, cur = cur->next",
-                    "if (pre) pre->next = nullptr",
+                    "Node* cur = tail",
+                    "tail = cur->prev",
+                    "cur->prev = nullptr; if (tail) tail->next = nullptr",
                     "delete cur"
                 }, 
                 {
-                    "Node* pre = head",
-                    "for(int i = 0; i < pos - 1; i++)",
-                    "   pre = pre->next",
-                    "Node* tmp = pre->next",
-                    "pre->next = tmp->next",
-                    "delete tmp"
+                    "Node* cur = head",
+                    "for(int i = 0; i < pos; i++)",
+                    "   cur = cur->next",
+                    "Node* pre = cur->prev, nxt = cur->next",
+                    "cur->prev = cur->next = nullptr",
+                    "if (pre) pre->next = nxt; if (nxt) nxt->prev = pre",
+                    "delete cur"
                 }
             },
             {
@@ -375,20 +377,21 @@ void State::InitAllButton()
                     "return cur"
                 }
             }
-        },{
+        },
+        {
             {
                 {}, {}, {}, {}
             },
             {
                 {
                     "Node* cur = new Node(value)", 
-                    "cur->next = head", 
-                    "head = cur"
+                    "cur->next = head; if (tail) tail->next = cur",
+                    "head = cur; if (!tail) tail = head"
                 }, 
                 {
                     "Node* cur = new Node(value)", 
-                    "tail->next = cur", 
-                    "tail = cur"
+                    "tail->next = cur; cur->next = (tail ? tail->next : cur)", 
+                    "tail = cur; if (!head) head = tail"
                 },
                 {
                     "Node* pre = head",
@@ -404,6 +407,7 @@ void State::InitAllButton()
                     "if (head == nullptr) return",
                     "Node* cur = head",
                     "head = cur->next",
+                    "if (tail) tail->next = head",
                     "delete cur"
                 }, 
                 {
@@ -411,9 +415,9 @@ void State::InitAllButton()
                     "Node* pre = nullptr, *cur = head",
                     "while (cur != tail)",
                     "   pre = cur, cur = cur->next",
-                    "if (pre) pre->next = nullptr",
+                    "tail = pre; if (pre) pre->next = head",
                     "delete cur"
-                }, 
+                },
                 {
                     "Node* pre = head",
                     "for(int i = 0; i < pos - 1; i++)",
