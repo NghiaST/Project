@@ -72,11 +72,148 @@ void StructDynamicArray::run(int manipulate, int way, std::vector<std::string> v
     }
 }
 
+// build Initialize
+void StructDynamicArray::Initialize_Empty() 
+{
+    this->sizearray = 0;
+}
+void StructDynamicArray::Initialize_Random()
+{
+    this->sizearray = Rand(2, this->maxsize - 1);
+    for(int i = 0; i < this->sizearray; i++) elements[i] = Rand(0, 999);
+}
+void StructDynamicArray::Initialize_Manual(std::vector<int> arr) 
+{
+    this->sizearray = (arr.size() < this->maxsize ? arr.size() : this->maxsize);
+    for(int i = 0; i < this->sizearray; i++) 
+        this->elements[i] = arr[i];
+}
+int StructDynamicArray::Initialize_ExternalFile(std::string filename) 
+{
+    filename = ".\\fileinput\\" + filename;
+    std::fstream file(filename, std::ios::in);
+    if (!file.is_open()) {
+        std::cout << "Failed Opening File\n";
+        return -1;
+    }
+    std::string content;
+    std::string line;
+
+    while (std::getline(file, line))
+        content += line + ' ';
+    file.close();
+
+    std::vector<int> arr = string_to_array(content);
+    if (arr.size() < 1) {
+        std::cout << "Input is Invalid\n";
+        return -1;
+    }
+    arr.erase(arr.begin());
+    this->Initialize_Manual(arr);
+    return 0;
+}
+
+// build Insert
+int StructDynamicArray::Insert_First(int value) 
+{
+    if (sizearray == maxsize) {
+        std::cout << "Limited Data. Can't add more\n";
+        return -1;
+    }
+    for(int i = sizearray - 1; i >= 0; i--) {
+        elements[i + 1] = elements[i];
+    }
+    elements[0] = value;
+    sizearray++;
+    return 0;
+}
+int StructDynamicArray::Insert_Last(int value)
+{
+    if (sizearray == maxsize) {
+        std::cout << "Limited Data. Can't add more\n";
+        return -1;
+    }
+    elements[sizearray++] = value;
+    return 0;
+}
+int StructDynamicArray::Insert_Manual(int pos, int value) 
+{
+    if (sizearray == maxsize) {
+        std::cout << "Limited Data. Can't add more\n";
+        return -1;
+    }
+    sizearray++;
+    for(int i = sizearray - 2; i >= pos; i--) {
+        elements[i + 1] = elements[i];
+    }
+    elements[pos] = value;
+    return 0;
+}
+
+// build Delete
+void StructDynamicArray::Del_First()
+{
+    if (sizearray == 0) return;
+    std::rotate(elements.begin(), elements.begin() + 1, elements.begin() + sizearray);
+    sizearray--;
+}
+void StructDynamicArray::Del_Last()
+{
+    if (sizearray == 0) return;
+    sizearray--;
+}
+int StructDynamicArray::Del_Manual(int pos)
+{
+    if (sizearray <= pos) return -1;
+    if (sizearray == 0) return 0;
+    std::rotate(elements.begin() + pos, elements.begin() + pos + 1, elements.begin() + sizearray);
+    sizearray--;
+    return 0;
+}
+
+// build Update
+int StructDynamicArray::Update(int pos, int value) 
+{
+    if (pos < 0 || pos >= maxsize)
+    {
+        std::cout << "Input must be in range [0, N - 1]\n";
+        return -1;
+    }
+    this->elements[pos] = value;
+    return 0;
+}
+
+// build Allocate
 void StructDynamicArray::Allocate(int size, int value)
 {
     sizearray = std::min(size, maxsize);
     for(int i = 0; i < sizearray; i++)
         elements[i] = value;
+}
+
+// build Access
+int StructDynamicArray::Access(int pos)
+{
+    if (pos < 0 || pos >= maxsize)
+    {
+        std::cout << "Input must be in range [0, N - 1]\n";
+        return -1;
+    }
+    return 0;
+}
+
+// build Search
+int StructDynamicArray::Search(int value) 
+{
+    for(int i = 0; i < sizearray; i++)
+    {
+        if (this->elements[i] == value)
+        {
+            std::cout << "Find value at element " << i << '\n';
+            return i;
+        }
+    }
+    return sizearray;
 }
 
 void StructDynamicArray::Animation_Initialize(int way)
@@ -88,7 +225,7 @@ void StructDynamicArray::Animation_Initialize(int way)
         if (this->Initialize_ExternalFile(vecStr[0]) == -1)
             return;
     }
-    this->preElements = this->elements;
+    this->printElements = this->elements;
 
     count_nodePrint = sizearray;
     count_arrowPrint = 0;
@@ -98,7 +235,7 @@ void StructDynamicArray::Animation_Initialize(int way)
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
 
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
         nodeAnimation[i].addStep(NOD_APPEAR);
     }
     this->listStep = std::vector<int>{0};
@@ -111,7 +248,7 @@ void StructDynamicArray::Animation_Insert_First()
     if (Insert_First(string_to_int(vecStr[3])) == -1)
         return;
     int pos = 0;
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     count_nodePrint = preSize + sizearray;
     count_arrowPrint = 0;
     Manipulate = 1; subManipulate = 0;
@@ -127,7 +264,7 @@ void StructDynamicArray::Animation_Insert_First()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < preSize) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i + 1], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i + 1], true);
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pNext[i - preSize], "?", false);
@@ -181,7 +318,7 @@ void StructDynamicArray::Animation_Insert_First()
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
-                nodeAnimation[i].setWord(preElements[i - preSize]);
+                nodeAnimation[i].setWord(printElements[i - preSize]);
                 nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
@@ -198,7 +335,7 @@ void StructDynamicArray::Animation_Insert_First()
         if (i == preSize + pos)
         {
             nodeAnimation[i].addStep(NOD_ACTIVE);
-            nodeAnimation[i].setWord(preElements[i - preSize]);
+            nodeAnimation[i].setWord(printElements[i - preSize]);
             nodeAnimation[i].addStep(NOD_APPEAR);
             nodeAnimation[i].addStep(NOD_UNSHOW);
         }
@@ -232,7 +369,7 @@ void StructDynamicArray::Animation_Insert_Last()
     if (Insert_Last(string_to_int(vecStr[3])) == -1)
         return;
     int pos = sizearray - 1;
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     count_nodePrint = preSize + sizearray;
     count_arrowPrint = 0;
     Manipulate = 1; subManipulate = 1;
@@ -248,7 +385,7 @@ void StructDynamicArray::Animation_Insert_Last()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < preSize) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pNext[i - preSize], "?", false);
@@ -302,7 +439,7 @@ void StructDynamicArray::Animation_Insert_Last()
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
-                nodeAnimation[i].setWord(preElements[i - preSize]);
+                nodeAnimation[i].setWord(printElements[i - preSize]);
                 nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
@@ -319,7 +456,7 @@ void StructDynamicArray::Animation_Insert_Last()
         if (i == preSize + pos)
         {
             nodeAnimation[i].addStep(NOD_ACTIVE);
-            nodeAnimation[i].setWord(preElements[i - preSize]);
+            nodeAnimation[i].setWord(printElements[i - preSize]);
             nodeAnimation[i].addStep(NOD_APPEAR);
             nodeAnimation[i].addStep(NOD_UNSHOW);
         }
@@ -355,7 +492,7 @@ void StructDynamicArray::Animation_Insert_Manual()
     if (pos == this->sizearray) return void(Animation_Insert_Last());
     if (Insert_Manual(pos, string_to_int(vecStr[3])) == -1)
         return;
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     count_nodePrint = preSize + sizearray;
     count_arrowPrint = 0;
     Manipulate = 1; subManipulate = 2;
@@ -371,10 +508,10 @@ void StructDynamicArray::Animation_Insert_Manual()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < pos) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         }
         else if (i < preSize) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i + 1], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i + 1], true);
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pNext[i - preSize], "?", false);
@@ -428,7 +565,7 @@ void StructDynamicArray::Animation_Insert_Manual()
             else if (i == preSize + ipos2)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
-                nodeAnimation[i].setWord(preElements[i - preSize]);
+                nodeAnimation[i].setWord(printElements[i - preSize]);
                 nodeAnimation[i].skipMultiStep(1);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
@@ -445,7 +582,7 @@ void StructDynamicArray::Animation_Insert_Manual()
         if (i == preSize + pos)
         {
             nodeAnimation[i].addStep(NOD_ACTIVE);
-            nodeAnimation[i].setWord(preElements[i - preSize]);
+            nodeAnimation[i].setWord(printElements[i - preSize]);
             nodeAnimation[i].addStep(NOD_APPEAR);
             nodeAnimation[i].addStep(NOD_UNSHOW);
         }
@@ -477,7 +614,7 @@ void StructDynamicArray::Animation_Insert_Manual()
 
 void StructDynamicArray::Animation_Del_First()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     Del_First();
     int pos = 0;
     count_nodePrint = preSize + sizearray;
@@ -503,7 +640,7 @@ void StructDynamicArray::Animation_Del_First()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < preSize) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pNext[i - preSize], "?", false);
@@ -590,7 +727,7 @@ void StructDynamicArray::Animation_Del_First()
 }
 void StructDynamicArray::Animation_Del_Last()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     Del_Last();
     int pos = sizearray;
     count_nodePrint = preSize + sizearray;
@@ -616,7 +753,7 @@ void StructDynamicArray::Animation_Del_Last()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < preSize) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pNext[i - preSize], "?", false);
@@ -703,7 +840,7 @@ void StructDynamicArray::Animation_Del_Last()
 }
 void StructDynamicArray::Animation_Del_Manual()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = string_to_int(vecStr[2]);
     if (pos <= 0) return void(Animation_Del_First());
     if (Del_Manual(pos) == -1) 
@@ -727,7 +864,7 @@ void StructDynamicArray::Animation_Del_Manual()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < preSize) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         }
         else {
             nodeAnimation[i].setup(&listNode[i], pNext[i - preSize], "?", false);
@@ -815,7 +952,7 @@ void StructDynamicArray::Animation_Del_Manual()
 
 void StructDynamicArray::Animation_Update()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = string_to_int(vecStr[2]);
     int value = string_to_int(vecStr[3]);
     if (this->Update(pos, value) == -1) 
@@ -830,7 +967,7 @@ void StructDynamicArray::Animation_Update()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < sizearray ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -855,7 +992,7 @@ void StructDynamicArray::Animation_Update()
 
 void StructDynamicArray::Animation_Allocate()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     Allocate(string_to_int(vecStr[4]), string_to_int(vecStr[3]));
     count_nodePrint = preSize + sizearray;
     count_arrowPrint = 0;
@@ -868,7 +1005,7 @@ void StructDynamicArray::Animation_Allocate()
     // setup
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < preSize)
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         else 
             nodeAnimation[i].setup(&listNode[i], pNext[i - preSize], "?", false);
     }
@@ -923,7 +1060,7 @@ void StructDynamicArray::Animation_Allocate()
 
 void StructDynamicArray::Animation_Access()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = string_to_int(vecStr[2]);
     int value = string_to_int(vecStr[3]);
     if (this->Access(pos) == -1) 
@@ -938,7 +1075,7 @@ void StructDynamicArray::Animation_Access()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < sizearray ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -962,7 +1099,7 @@ void StructDynamicArray::Animation_Access()
 
 void StructDynamicArray::Animation_Search()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = Search(string_to_int(vecStr[3]));
     count_nodePrint = this->sizearray;
     count_arrowPrint = 0;
@@ -974,7 +1111,7 @@ void StructDynamicArray::Animation_Search()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < sizearray ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 

@@ -99,9 +99,9 @@ void State::InitAllButton()
         "<<", "<", "||", "Play", ">", ">>"
     };
     listStrStep = {
-        {//0
+        {
             {
-                {}, {}, {}, {}
+                {"Initialize Empty"},{"Initialize Random Value"},{"Initialize Manual Value"},{"Initialize From File"}
             },
             {
                 {
@@ -129,17 +129,17 @@ void State::InitAllButton()
                     "if (N == 0) return",
                     "for(int i = N - 1; i > 0; i--)",
                     "   elements[i - 1] = elements[i]",
-                    "N--"
+                    "elements[N--] = 0"
                 }, 
                 {
                     "if (N == 0) return",
-                    "N--",
+                    "elements[N--] = 0",
                 }, 
                 {
                     "if (N == 0) return",
                     "for(int i = N - 1; i > pos; i--)",
                     "   elements[i - 1] = elements[i]",
-                    "N--"
+                    "elements[N--] = 0"
                 }
             },
             {
@@ -159,9 +159,9 @@ void State::InitAllButton()
                 }
             }
         },
-        {//1
+        {
             {
-                {}, {}, {}, {}
+                {"Initialize Empty"},{"Initialize Random Value"},{"Initialize Manual Value"},{"Initialize From File"}
             },
             {
                 {
@@ -245,9 +245,9 @@ void State::InitAllButton()
                 }
             }
         },
-        {//2
+        {
             {
-                {}, {}, {}, {}
+                {"Initialize Empty"},{"Initialize Random Value"},{"Initialize Manual Value"},{"Initialize From File"}
             },
             {
                 {
@@ -311,9 +311,9 @@ void State::InitAllButton()
                 }
             }
         },
-        {//3
+        {
             {
-                {}, {}, {}, {}
+                {"Initialize Empty"},{"Initialize Random Value"},{"Initialize Manual Value"},{"Initialize From File"}
             },
             {
                 {
@@ -378,22 +378,20 @@ void State::InitAllButton()
                 }
             }
         },
-        {//4
+        {
             {
-                {}, {}, {}, {}
+                {"Initialize Empty"},{"Initialize Random Value"},{"Initialize Manual Value"},{"Initialize From File"}
             },
             {
                 {
-                    "sNode1D* cur = new Node(value)",
-                    "if (!head) head = tail = cur",
-                    "tail->next = cur; cur->next = head",
-                    "head = cur",
+                    "Node* cur = new Node(value)", 
+                    "cur->next = head; if (tail) tail->next = cur",
+                    "head = cur; if (!tail) tail = head"
                 }, 
                 {
-                    "sNode1D* cur = new Node(value)",
-                    "if (!head) head = tail = cur",
-                    "tail->next = cur; cur->next = head",
-                    "tail = cur",
+                    "Node* cur = new Node(value)", 
+                    "tail->next = cur; cur->next = (tail ? tail->next : cur)", 
+                    "tail = cur; if (!head) head = tail"
                 },
                 {
                     "Node* pre = head",
@@ -447,22 +445,22 @@ void State::InitAllButton()
                 }
             }
         },
-        {//5
+        {
             {
-                {}, {}, {}, {}
+                {"Initialize Empty"},{"Initialize Random Value"},{"Initialize Manual Value"},{"Initialize From File"}
             },
             {
                 {
                     "Node* cur = new Node(value)", 
                     "cur->next = head", 
-                    "head = cur; if (!tail) tail = head"
+                    "head = cur"
                 }, 
             },
             {
                 {
 		            "if (head == nullptr) return",
                     "Node* cur = head",
-                    "head = cur->next; if (tail == cur) tail = head",
+                    "head = cur->next",
                     "delete cur"
                 }
             },
@@ -481,9 +479,9 @@ void State::InitAllButton()
                 }   
             }
         },
-        {//6
+        {
             {
-                {}, {}, {}, {}
+                {"Initialize Empty"},{"Initialize Random Value"},{"Initialize Manual Value"},{"Initialize From File"}
             },
             {
                 {

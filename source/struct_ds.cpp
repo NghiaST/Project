@@ -31,7 +31,7 @@ StructDataStructure::~StructDataStructure()
 }
 
 // setup
-void StructDataStructure::turn_on() 
+void StructDataStructure::turn_on()
 {
     this->active = true;
     this->sizearray = 0;
@@ -63,7 +63,7 @@ void StructDataStructure::stopAnimationDS()
         arrowAnimation[i].clearStep();
     }
     this->count_nodePrint = this->sizearray;
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     this->listStep.clear();
     refreshAnimation();
 }
@@ -98,7 +98,7 @@ std::vector<sf::Vector2f> StructDataStructure::getPosition(int size)
     }
     return listP;
 }
-
+/*
 // build Initialize
 void StructDataStructure::Initialize_Empty() 
 {
@@ -118,6 +118,7 @@ void StructDataStructure::Initialize_Manual(std::vector<int> arr)
 int StructDataStructure::Initialize_ExternalFile(std::string filename) 
 {
     // haven't know
+    filename = ".\\fileinput\\" + filename;
     std::fstream file(filename, std::ios::in);
     if (!file.is_open()) {
         std::cout << "Failed Opening File\n";
@@ -228,7 +229,7 @@ int StructDataStructure::Search(int value)
     }
     return sizearray;
 }
-
+*/
 // update
 sf::Vector2i StructDataStructure::updateKBM(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardType)
 {

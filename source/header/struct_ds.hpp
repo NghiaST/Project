@@ -5,6 +5,8 @@
 #include <cstring>
 #include <vector>
 #include <memory>
+#include <fstream>
+#include <algorithm>
 
 #include "node.hpp"
 #include "arrow.hpp"
@@ -12,14 +14,6 @@
 #include "manipulate_animation.hpp"
 #include "settings.hpp"
 #include "mouseKey.hpp"
-
-#include "sStaticArray.hpp"
-#include "sDynamicArray.hpp"
-#include "sSinglyLinkedList.hpp"
-#include "sDoublyLinkedList.hpp"
-#include "sCircularLinkedList.hpp"
-#include "sStack.hpp"
-#include "sQueue.hpp"
 
 enum ANIMATION_TYPE {ANIMATION_PAUSE = 0, ANIMATION_PLAY, ANIMATION_STEP_DOWN, ANIMATION_STEP_UP};
 
@@ -67,7 +61,7 @@ protected:
     sf::Clock clock;
 
     std::vector<sf::Vector2f> listPoint;
-    std::vector<int> preElements;
+    std::vector<int> printElements;
     int count_nodePrint;
     int count_arrowPrint;
 
@@ -86,14 +80,6 @@ protected:
     std::vector<Manipulate_Animation_ArrayNode> nodeAnimation;
     std::vector<Manipulate_Animation_ArrayArrow> arrowAnimation;
 
-    sStaticArray* StaticArrayStoring;
-    sDynamicArray* DynamicArrayStoring;
-    sSinglyLinkedList* SLLStoring;
-    sDoublyLinkedList* DLLStoring;
-    sCircularLinkedList* CLLStoring;
-    sStack* StackStoring;
-    sQueue* QueueStoring;
-
 public:
     StructDataStructure(VisualizationSettings* settings, bool active);
     ~StructDataStructure();
@@ -109,21 +95,6 @@ public:
     int getsubManipulate();
     const bool& isActive() const;
     std::vector<sf::Vector2f> getPosition(int size);
-
-    // manipulate
-    void Initialize_Empty();
-    void Initialize_Random();
-    void Initialize_Manual(std::vector<int> arr);
-    int Initialize_ExternalFile(std::string filename);
-    int Insert_First(int value);
-    int Insert_Last(int value);
-    int Insert_Manual(int pos, int value);
-    void Del_First();
-    void Del_Last();
-    int Del_Manual(int pos);
-    int Update(int pos, int value);
-    int Access(int pos);
-    int Search(int value);
 
     // update
     virtual void refreshAnimation() {}

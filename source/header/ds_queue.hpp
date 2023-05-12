@@ -10,6 +10,10 @@ public:
     void refreshAnimation() override;
     void run(int manipulate, int way, std::vector<std::string> vecStr) override;
 
+    void Initialize_Empty();
+    void Initialize_Random();
+    void Initialize_Manual(std::vector<int> arr);
+    int Initialize_ExternalFile(std::string filename);
     int Enqueue(int value);
     void Dequeue();
     void Clear();

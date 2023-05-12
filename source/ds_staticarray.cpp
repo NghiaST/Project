@@ -72,6 +72,7 @@ void StructStaticArray::run(int manipulate, int way, std::vector<std::string> ve
     }
 }
 
+// build init
 void StructStaticArray::Initialize_Empty_Fixedsize(int size_fixed) 
 {
     this->size_fixed = std::min(size_fixed, maxsize);
@@ -90,15 +91,14 @@ void StructStaticArray::Initialize_Manual_Fixedsize(int size_fixed, std::vector<
     for(int i = 0; i < this->sizearray; i++) 
         this->elements[i] = arr[i];
 }
-int StructStaticArray::Initialize_ExternalFile_Fixedsize(int size_fixed, std::string filename)
+int StructStaticArray::Initialize_ExternalFile_Fixedsize(std::string filename)
 {
-    // haven't know
+    filename = ".\\fileinput\\" + filename;
     std::fstream file(filename, std::ios::in);
     if (!file.is_open()) {
         std::cout << "Failed Opening File\n";
         return -1;
     }
-    this->size_fixed = size_fixed;
     std::string content;
     std::string line;
 
@@ -106,8 +106,112 @@ int StructStaticArray::Initialize_ExternalFile_Fixedsize(int size_fixed, std::st
         content += line + ' ';
     file.close();
 
-    this->Initialize_Manual(string_to_array(content));
+    std::vector<int> arr = string_to_array(content);
+    if (arr.size() < 2) {
+        std::cout << "Input is Invalid\n";
+        return -1;
+    }
+    int size_fixed = arr[0];
+    arr.erase(arr.begin());
+    arr.erase(arr.begin());
+    this->Initialize_Manual_Fixedsize(size_fixed, arr);
+    for(int i : arr) std::cout << i << ' '; std::cout << '\n';
     return 0;
+}
+
+// build insert
+int StructStaticArray::Insert_First(int value) 
+{
+    if (sizearray == maxsize) {
+        std::cout << "Limited Data. Can't add more\n";
+        return -1;
+    }
+    for(int i = sizearray - 1; i >= 0; i--) {
+        elements[i + 1] = elements[i];
+    }
+    elements[0] = value;
+    sizearray++;
+    return 0;
+}
+int StructStaticArray::Insert_Last(int value)
+{
+    if (sizearray == maxsize) {
+        std::cout << "Limited Data. Can't add more\n";
+        return -1;
+    }
+    elements[sizearray++] = value;
+    return 0;
+}
+int StructStaticArray::Insert_Manual(int pos, int value) 
+{
+    if (sizearray == maxsize) {
+        std::cout << "Limited Data. Can't add more\n";
+        return -1;
+    }
+    sizearray++;
+    for(int i = sizearray - 2; i >= pos; i--) {
+        elements[i + 1] = elements[i];
+    }
+    elements[pos] = value;
+    return 0;
+}
+
+// build Delete
+void StructStaticArray::Del_First()
+{
+    if (sizearray == 0) return;
+    std::rotate(elements.begin(), elements.begin() + 1, elements.begin() + sizearray);
+    sizearray--;
+}
+void StructStaticArray::Del_Last()
+{
+    if (sizearray == 0) return;
+    sizearray--;
+}
+int StructStaticArray::Del_Manual(int pos)
+{
+    if (sizearray <= pos) return -1;
+    if (sizearray == 0) return 0;
+    std::rotate(elements.begin() + pos, elements.begin() + pos + 1, elements.begin() + sizearray);
+    sizearray--;
+    return 0;
+}
+
+// build Update
+int StructStaticArray::Update(int pos, int value) 
+{
+    if (pos < 0 || pos >= maxsize)
+    {
+        std::cout << "Input must be in range [0, N - 1]\n";
+        return -1;
+    }
+    this->elements[pos] = value;
+    return 0;
+}
+
+// build Access
+int StructStaticArray::Access(int pos)
+{
+    if (pos < 0 || pos >= maxsize)
+    {
+        std::cout << "Input must be in range [0, N - 1]\n";
+        return -1;
+    }
+    return 0;
+}
+
+// build Search
+int StructStaticArray::Search(int value) 
+{
+    for(int i = 0; i < sizearray; i++)
+    {
+        if (this->elements[i] == value)
+        {
+            std::cout << "Find value at element " << i << '\n';
+            return i;
+        }
+    }
+    return sizearray;
 }
 
 void StructStaticArray::Animation_Initialize(int way)
@@ -116,10 +220,10 @@ void StructStaticArray::Animation_Initialize(int way)
     if (way == 1) this->Initialize_Random_Unfixedsize();
     if (way == 2) this->Initialize_Manual_Fixedsize(string_to_int(vecStr[0]), string_to_array(vecStr[2]));
     if (way == 3) {
-        if (this->Initialize_ExternalFile_Fixedsize(string_to_int(vecStr[0]), vecStr[1]) == -1)
+        if (this->Initialize_ExternalFile_Fixedsize(vecStr[1]) == -1)
             return;
     }
-    this->preElements = this->elements;
+    this->printElements = this->elements;
 
     count_nodePrint = size_fixed;
     count_arrowPrint = 0;
@@ -129,7 +233,7 @@ void StructStaticArray::Animation_Initialize(int way)
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
 
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < sizearray ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, false);
         nodeAnimation[i].addStep(NOD_APPEAR);
     }
@@ -142,7 +246,7 @@ void StructStaticArray::Animation_Insert_First()
 {
     if (sizearray == size_fixed || Insert_First(string_to_int(vecStr[4])) == -1)
         return;
-    this->preElements = this->elements;
+    this->printElements = this->elements;
 
     count_nodePrint = size_fixed;
     count_arrowPrint = 0;
@@ -154,7 +258,7 @@ void StructStaticArray::Animation_Insert_First()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < preSize ? std::to_string(preElements[i + 1]) : "?");
+        std::string word = (i < preSize ? std::to_string(printElements[i + 1]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -188,7 +292,7 @@ void StructStaticArray::Animation_Insert_First()
             else if (i == ipos + 1)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
-                nodeAnimation[i].setWord(preElements[i]);
+                nodeAnimation[i].setWord(printElements[i]);
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
@@ -205,7 +309,7 @@ void StructStaticArray::Animation_Insert_First()
         if (i == 0)
         {
             nodeAnimation[i].addStep(NOD_ACTIVE);
-            nodeAnimation[i].setWord(preElements[i]);
+            nodeAnimation[i].setWord(printElements[i]);
             nodeAnimation[i].addStep(NOD_APPEAR);
         }
         else {
@@ -222,7 +326,7 @@ void StructStaticArray::Animation_Insert_Last()
 {
     if (sizearray == size_fixed || Insert_Last(string_to_int(vecStr[4])) == -1)
         return;
-    this->preElements = this->elements;
+    this->printElements = this->elements;
 
     count_nodePrint = size_fixed;
     count_arrowPrint = 0;
@@ -234,7 +338,7 @@ void StructStaticArray::Animation_Insert_Last()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < preSize ? std::to_string(preElements[i + 1]) : "?");
+        std::string word = (i < preSize ? std::to_string(printElements[i + 1]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
     
@@ -243,7 +347,7 @@ void StructStaticArray::Animation_Insert_Last()
         if (i == preSize)
         {
             nodeAnimation[i].addStep(NOD_SOLVE);
-            nodeAnimation[i].setWord(preElements[i]);
+            nodeAnimation[i].setWord(printElements[i]);
             nodeAnimation[i].addStep(NOD_APPEAR);
         }
         else {
@@ -263,7 +367,7 @@ void StructStaticArray::Animation_Insert_Manual()
     if (sizearray == size_fixed || Insert_Manual(pos, string_to_int(vecStr[4])) == -1)
         return;
 
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     count_nodePrint = size_fixed;
     count_arrowPrint = 0;
     Manipulate = 1; subManipulate = 2;
@@ -274,7 +378,7 @@ void StructStaticArray::Animation_Insert_Manual()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < preSize ? i < pos ? std::to_string(preElements[i]) : std::to_string(preElements[i + 1]) : "?");
+        std::string word = (i < preSize ? i < pos ? std::to_string(printElements[i]) : std::to_string(printElements[i + 1]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -310,7 +414,7 @@ void StructStaticArray::Animation_Insert_Manual()
             else if (i == ipos + 1)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
-                nodeAnimation[i].setWord(preElements[i]);
+                nodeAnimation[i].setWord(printElements[i]);
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
@@ -327,7 +431,7 @@ void StructStaticArray::Animation_Insert_Manual()
         if (i == pos)
         {
             nodeAnimation[i].addStep(NOD_SOLVE);
-            nodeAnimation[i].setWord(preElements[i]);
+            nodeAnimation[i].setWord(printElements[i]);
             nodeAnimation[i].addStep(NOD_APPEAR);
         }
         else {
@@ -343,7 +447,7 @@ void StructStaticArray::Animation_Insert_Manual()
 
 void StructStaticArray::Animation_Del_First()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     Del_First();    
     count_nodePrint = size_fixed;
     count_arrowPrint = 0;
@@ -363,7 +467,7 @@ void StructStaticArray::Animation_Del_First()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < preSize ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < preSize ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -374,7 +478,7 @@ void StructStaticArray::Animation_Del_First()
             if (i == ipos - 1)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
-                nodeAnimation[i].setWord(preElements[i + 1]);
+                nodeAnimation[i].setWord(printElements[i + 1]);
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
@@ -412,7 +516,7 @@ void StructStaticArray::Animation_Del_First()
 }
 void StructStaticArray::Animation_Del_Last()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     Del_Last();
 
     count_nodePrint = size_fixed;
@@ -433,7 +537,7 @@ void StructStaticArray::Animation_Del_Last()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < preSize ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < preSize ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -457,7 +561,7 @@ void StructStaticArray::Animation_Del_Last()
 }
 void StructStaticArray::Animation_Del_Manual()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = string_to_int(vecStr[3]);
     if (pos <= 0) return void(Animation_Del_First());
     if (Del_Manual(pos) == -1) 
@@ -481,7 +585,7 @@ void StructStaticArray::Animation_Del_Manual()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < preSize ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < preSize ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -492,7 +596,7 @@ void StructStaticArray::Animation_Del_Manual()
             if (i == ipos - 1)
             {
                 nodeAnimation[i].addStep(NOD_SOLVE);
-                nodeAnimation[i].setWord(preElements[i + 1]);
+                nodeAnimation[i].setWord(printElements[i + 1]);
                 nodeAnimation[i].addStep(NOD_SOLVE);
                 nodeAnimation[i].addStep(NOD_UNSHOW);
             }
@@ -532,7 +636,7 @@ void StructStaticArray::Animation_Del_Manual()
 
 void StructStaticArray::Animation_Update()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = string_to_int(vecStr[3]);
     int value = string_to_int(vecStr[4]);
     if (this->Update(pos, value) == -1) 
@@ -547,7 +651,7 @@ void StructStaticArray::Animation_Update()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < sizearray ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -572,7 +676,7 @@ void StructStaticArray::Animation_Update()
 
 void StructStaticArray::Animation_Access()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = string_to_int(vecStr[3]);
     int value = string_to_int(vecStr[4]);
     if (this->Access(pos) == -1) 
@@ -587,7 +691,7 @@ void StructStaticArray::Animation_Access()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < sizearray ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 
@@ -611,7 +715,7 @@ void StructStaticArray::Animation_Access()
 
 void StructStaticArray::Animation_Search()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = Search(string_to_int(vecStr[4]));
     count_nodePrint = size_fixed;
     count_arrowPrint = 0;
@@ -623,7 +727,7 @@ void StructStaticArray::Animation_Search()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        std::string word = (i < sizearray ? std::to_string(preElements[i]) : "?");
+        std::string word = (i < sizearray ? std::to_string(printElements[i]) : "?");
         nodeAnimation[i].setup(&listNode[i], pStart[i], word, true);
     }
 

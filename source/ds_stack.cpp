@@ -70,6 +70,47 @@ void StructStack::run(int manipulate, int way, std::vector<std::string> vecStr)
     }
 }
 
+// build Initialize
+void StructStack::Initialize_Empty() 
+{
+    this->sizearray = 0;
+}
+void StructStack::Initialize_Random()
+{
+    this->sizearray = Rand(2, this->maxsize - 1);
+    for(int i = 0; i < this->sizearray; i++) elements[i] = Rand(0, 999);
+}
+void StructStack::Initialize_Manual(std::vector<int> arr) 
+{
+    this->sizearray = (arr.size() < this->maxsize ? arr.size() : this->maxsize);
+    for(int i = 0; i < this->sizearray; i++) 
+        this->elements[i] = arr[i];
+}
+int StructStack::Initialize_ExternalFile(std::string filename) 
+{
+    filename = ".\\fileinput\\" + filename;
+    std::fstream file(filename, std::ios::in);
+    if (!file.is_open()) {
+        std::cout << "Failed Opening File\n";
+        return -1;
+    }
+    std::string content;
+    std::string line;
+
+    while (std::getline(file, line))
+        content += line + ' ';
+    file.close();
+
+    std::vector<int> arr = string_to_array(content);
+    if (arr.size() < 1) {
+        std::cout << "Input is Invalid\n";
+        return -1;
+    }
+    arr.erase(arr.begin());
+    this->Initialize_Manual(arr);
+    return 0;
+}
+
 int StructStack::Push(int value)
 {
     if (this->sizearray == this->maxsize)
@@ -107,7 +148,7 @@ void StructStack::Animation_Initialize(int way)
         if (this->Initialize_ExternalFile(vecStr[0]) == -1)
             return;
     }
-    this->preElements = this->elements;
+    this->printElements = this->elements;
 
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
@@ -117,7 +158,7 @@ void StructStack::Animation_Initialize(int way)
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
 
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
         nodeAnimation[i].addStep(NOD_APPEAR);
         if (i < count_arrowPrint) {
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
@@ -133,7 +174,7 @@ void StructStack::Animation_Push()
 {
     if (Push(string_to_int(vecStr[2])) == -1)
         return;
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 1; subManipulate = 0;
@@ -153,12 +194,12 @@ void StructStack::Animation_Push()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == 0) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
             if (i < count_arrowPrint)
                 arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
         }
         else if (i > 0) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
             if (i < count_arrowPrint)
                 arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         }
@@ -204,7 +245,7 @@ void StructStack::Animation_Push()
 
 void StructStack::Animation_Pop()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     Pop();  
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
@@ -228,7 +269,7 @@ void StructStack::Animation_Pop()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
@@ -284,7 +325,7 @@ void StructStack::Animation_Pop()
 
 void StructStack::Animation_Peek()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     int pos = 0;
     count_nodePrint = this->sizearray;
     count_arrowPrint = count_nodePrint - 1;
@@ -304,7 +345,7 @@ void StructStack::Animation_Peek()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
@@ -333,7 +374,7 @@ void StructStack::Animation_Peek()
 
 void StructStack::Animation_Clear()
 {
-    this->preElements = this->elements;
+    this->printElements = this->elements;
     Clear();
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
@@ -357,7 +398,7 @@ void StructStack::Animation_Clear()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
