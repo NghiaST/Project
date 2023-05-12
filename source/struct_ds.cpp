@@ -31,7 +31,7 @@ StructDataStructure::~StructDataStructure()
 }
 
 // setup
-void StructDataStructure::turn_on()
+void StructDataStructure::turn_on() 
 {
     this->active = true;
     this->sizearray = 0;
@@ -63,7 +63,7 @@ void StructDataStructure::stopAnimationDS()
         arrowAnimation[i].clearStep();
     }
     this->count_nodePrint = this->sizearray;
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     this->listStep.clear();
     refreshAnimation();
 }

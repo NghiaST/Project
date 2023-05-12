@@ -13,6 +13,14 @@
 #include "settings.hpp"
 #include "mouseKey.hpp"
 
+#include "sStaticArray.hpp"
+#include "sDynamicArray.hpp"
+#include "sSinglyLinkedList.hpp"
+#include "sDoublyLinkedList.hpp"
+#include "sCircularLinkedList.hpp"
+#include "sStack.hpp"
+#include "sQueue.hpp"
+
 enum ANIMATION_TYPE {ANIMATION_PAUSE = 0, ANIMATION_PLAY, ANIMATION_STEP_DOWN, ANIMATION_STEP_UP};
 
 struct StructDataStructure {
@@ -59,7 +67,7 @@ protected:
     sf::Clock clock;
 
     std::vector<sf::Vector2f> listPoint;
-    std::vector<int> printElements;
+    std::vector<int> preElements;
     int count_nodePrint;
     int count_arrowPrint;
 
@@ -77,6 +85,14 @@ protected:
     std::vector<ArrowNode> listArrow;
     std::vector<Manipulate_Animation_ArrayNode> nodeAnimation;
     std::vector<Manipulate_Animation_ArrayArrow> arrowAnimation;
+
+    sStaticArray* StaticArrayStoring;
+    sDynamicArray* DynamicArrayStoring;
+    sSinglyLinkedList* SLLStoring;
+    sDoublyLinkedList* DLLStoring;
+    sCircularLinkedList* CLLStoring;
+    sStack* StackStoring;
+    sQueue* QueueStoring;
 
 public:
     StructDataStructure(VisualizationSettings* settings, bool active);

@@ -99,7 +99,7 @@ void State::InitAllButton()
         "<<", "<", "||", "Play", ">", ">>"
     };
     listStrStep = {
-        {
+        {//0
             {
                 {}, {}, {}, {}
             },
@@ -159,7 +159,7 @@ void State::InitAllButton()
                 }
             }
         },
-        {
+        {//1
             {
                 {}, {}, {}, {}
             },
@@ -245,7 +245,7 @@ void State::InitAllButton()
                 }
             }
         },
-        {
+        {//2
             {
                 {}, {}, {}, {}
             },
@@ -311,7 +311,7 @@ void State::InitAllButton()
                 }
             }
         },
-        {
+        {//3
             {
                 {}, {}, {}, {}
             },
@@ -378,20 +378,22 @@ void State::InitAllButton()
                 }
             }
         },
-        {
+        {//4
             {
                 {}, {}, {}, {}
             },
             {
                 {
-                    "Node* cur = new Node(value)", 
-                    "cur->next = head; if (tail) tail->next = cur",
-                    "head = cur; if (!tail) tail = head"
+                    "sNode1D* cur = new Node(value)",
+                    "if (!head) head = tail = cur",
+                    "tail->next = cur; cur->next = head",
+                    "head = cur",
                 }, 
                 {
-                    "Node* cur = new Node(value)", 
-                    "tail->next = cur; cur->next = (tail ? tail->next : cur)", 
-                    "tail = cur; if (!head) head = tail"
+                    "sNode1D* cur = new Node(value)",
+                    "if (!head) head = tail = cur",
+                    "tail->next = cur; cur->next = head",
+                    "tail = cur",
                 },
                 {
                     "Node* pre = head",
@@ -445,7 +447,7 @@ void State::InitAllButton()
                 }
             }
         },
-        {
+        {//5
             {
                 {}, {}, {}, {}
             },
@@ -453,14 +455,14 @@ void State::InitAllButton()
                 {
                     "Node* cur = new Node(value)", 
                     "cur->next = head", 
-                    "head = cur"
+                    "head = cur; if (!tail) tail = head"
                 }, 
             },
             {
                 {
 		            "if (head == nullptr) return",
                     "Node* cur = head",
-                    "head = cur->next",
+                    "head = cur->next; if (tail == cur) tail = head",
                     "delete cur"
                 }
             },
@@ -479,7 +481,7 @@ void State::InitAllButton()
                 }   
             }
         },
-        {
+        {//6
             {
                 {}, {}, {}, {}
             },

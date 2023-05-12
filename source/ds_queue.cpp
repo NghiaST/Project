@@ -98,7 +98,7 @@ void StructQueue::Animation_Initialize(int way)
         if (this->Initialize_ExternalFile(vecStr[0]) == -1)
             return;
     }
-    this->printElements = this->elements;
+    this->preElements = this->elements;
 
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
@@ -108,7 +108,7 @@ void StructQueue::Animation_Initialize(int way)
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
 
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
         nodeAnimation[i].addStep(NOD_APPEAR);
         if (i < count_arrowPrint) {
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
@@ -124,7 +124,7 @@ void StructQueue::Animation_Enqueue()
 {
     if (Enqueue(string_to_int(vecStr[2])) == -1)
         return;
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
     startAnimationDS();
@@ -145,15 +145,15 @@ void StructQueue::Animation_Enqueue()
     int pos = count_arrowPrint;
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < pos - 1) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         }
         else if (i == pos - 1) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
         }
         else if (i == pos) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
         }
     }
 
@@ -198,7 +198,7 @@ void StructQueue::Animation_Enqueue()
 
 void StructQueue::Animation_Dequeue()
 {
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     Dequeue();
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
@@ -222,7 +222,7 @@ void StructQueue::Animation_Dequeue()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
@@ -278,7 +278,7 @@ void StructQueue::Animation_Dequeue()
 
 void StructQueue::Animation_Clear()
 {
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     Clear();
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
@@ -302,7 +302,7 @@ void StructQueue::Animation_Clear()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }

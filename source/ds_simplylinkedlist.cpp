@@ -83,7 +83,7 @@ void StructSimplyLinkedList::Animation_Initialize(int way)
         if (this->Initialize_ExternalFile(vecStr[0]) == -1)
             return;
     }
-    this->printElements = this->elements;
+    this->preElements = this->elements;
 
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
@@ -93,7 +93,7 @@ void StructSimplyLinkedList::Animation_Initialize(int way)
     std::vector<sf::Vector2f> pStart = getPosition(count_nodePrint);
 
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
         nodeAnimation[i].addStep(NOD_APPEAR);
         if (i < count_arrowPrint) {
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
@@ -109,7 +109,7 @@ void StructSimplyLinkedList::Animation_Insert_First()
 {
     if (Insert_First(string_to_int(vecStr[3])) == -1)
         return;
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 1; subManipulate = 0;
@@ -129,12 +129,12 @@ void StructSimplyLinkedList::Animation_Insert_First()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == 0) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
             if (i < count_arrowPrint)
                 arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
         }
         else if (i > 0) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
             if (i < count_arrowPrint)
                 arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         }
@@ -181,7 +181,7 @@ void StructSimplyLinkedList::Animation_Insert_Last()
 {
     if (Insert_Last(string_to_int(vecStr[3])) == -1)
         return;
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 1; subManipulate = 1;
@@ -202,15 +202,15 @@ void StructSimplyLinkedList::Animation_Insert_Last()
     int pos = count_arrowPrint;
     for(int i = 0; i < count_nodePrint; i++) {
         if (i < pos - 1) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         }
         else if (i == pos - 1) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
         }
         else if (i == pos) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
         }
     }
 
@@ -259,7 +259,7 @@ void StructSimplyLinkedList::Animation_Insert_Manual()
     if (pos == this->sizearray) return void(Animation_Insert_Last());
     if (Insert_Manual(pos, string_to_int(vecStr[3])) == -1)
         return;
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     count_nodePrint = sizearray;
     count_arrowPrint = count_nodePrint - 1;
     Manipulate = 1; subManipulate = 2;
@@ -279,15 +279,15 @@ void StructSimplyLinkedList::Animation_Insert_Manual()
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
         if (i == pos - 1) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 2], true, ARR_1);
         }
         else if (i == pos) {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], false);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], false);
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], false, ARR_1);
         }
         else {
-            nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+            nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
             if (i < count_arrowPrint)
                 arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
         }
@@ -391,7 +391,7 @@ void StructSimplyLinkedList::Animation_Insert_Manual()
 
 void StructSimplyLinkedList::Animation_Del_First()
 {
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     Del_First();    
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
@@ -415,7 +415,7 @@ void StructSimplyLinkedList::Animation_Del_First()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
@@ -470,7 +470,7 @@ void StructSimplyLinkedList::Animation_Del_First()
 }
 void StructSimplyLinkedList::Animation_Del_Last()
 {
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     Del_Last();
     count_nodePrint = preSize;
     count_arrowPrint = count_nodePrint - 1;
@@ -494,7 +494,7 @@ void StructSimplyLinkedList::Animation_Del_Last()
 
     // build step
     for (int i = 0; i < count_nodePrint; i++)
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
     for (int i = 0; i < count_arrowPrint; i++) 
         arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
 
@@ -580,7 +580,7 @@ void StructSimplyLinkedList::Animation_Del_Last()
 }
 void StructSimplyLinkedList::Animation_Del_Manual()
 {
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     int pos = string_to_int(vecStr[2]);
     if (pos == 0) return void(Animation_Del_First());
     if (Del_Manual(pos) == -1) 
@@ -600,7 +600,7 @@ void StructSimplyLinkedList::Animation_Del_Manual()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
@@ -708,7 +708,7 @@ void StructSimplyLinkedList::Animation_Del_Manual()
 
 void StructSimplyLinkedList::Animation_Update()
 {
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     int pos = string_to_int(vecStr[2]);
     int value = string_to_int(vecStr[3]);
     if (this->Update(pos, value) == -1) 
@@ -723,7 +723,7 @@ void StructSimplyLinkedList::Animation_Update()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
@@ -788,7 +788,7 @@ void StructSimplyLinkedList::Animation_Update()
 
 void StructSimplyLinkedList::Animation_Search()
 {
-    this->printElements = this->elements;
+    this->preElements = this->elements;
     int pos = Search(string_to_int(vecStr[3]));
     count_nodePrint = this->sizearray;
     count_arrowPrint = count_nodePrint - 1;
@@ -800,7 +800,7 @@ void StructSimplyLinkedList::Animation_Search()
 
     // build step
     for(int i = 0; i < count_nodePrint; i++) {
-        nodeAnimation[i].setup(&listNode[i], pStart[i], printElements[i], true);
+        nodeAnimation[i].setup(&listNode[i], pStart[i], preElements[i], true);
         if (i < count_arrowPrint)
             arrowAnimation[i].setup(&listArrow[i], pStart[i], pStart[i + 1], true, ARR_1);
     }
