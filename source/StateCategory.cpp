@@ -1,6 +1,6 @@
 #include "StateCategory.hpp"
 
-StateCategory::StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::string> strInputBox)
+StateCategory::StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::string> strInputBox, std::vector<std::vector<int>> listShow)
 {
     this->window = window;
     this->font = font;
@@ -8,6 +8,7 @@ StateCategory::StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* 
     this->typeCategory = typeCategory;
     this->cntCategory = strCategory.size();
     this->cntManipulate = strManipulate.size();
+    this->listShow = listShow;
 
     sf::Vector2f coord, velocity, sizeRec;
     // category
@@ -80,6 +81,8 @@ void StateCategory::Clean()
 sf::Vector2i StateCategory::update(MOUSE mouseType, KEYBOARD keyboardType, sf::Vector2f mousePosView)
 {
     sf::Vector2i ret = sf::Vector2i(-1, -1);
+    for(InputBox& box : listBox)
+        box.update(mousePosView, mouseType, keyboardType);
     int cnt = 0;
     for(Button& btn : this->buttonCategory) {
         if (btn.updateCheckClick(mousePosView, mouseType)) {
@@ -107,11 +110,13 @@ sf::Vector2i StateCategory::update(MOUSE mouseType, KEYBOARD keyboardType, sf::V
                 ret.x = i + cnt;
                 ret.y = cnt2;
             }
+            else if (btn.getStatus() == 1) {
+                for(int z = 0; z < listBox.size(); z++)
+                    listBox[z].setStatus(((listShow[i][cnt2] >> z) & 1) * 4);
+            }
             cnt2++;
         }
     }
-    for(InputBox& box : listBox)
-        box.update(mousePosView, mouseType, keyboardType);
     
     // update state of button
     if (mouseType != MSE_LEFTCLICK) ret = sf::Vector2i(-1, -1);

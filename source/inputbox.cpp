@@ -44,7 +44,7 @@ void InputBox::update(sf::Vector2f mousePos, MOUSE mouseType, KEYBOARD keyboardT
 
     switch (this->status)
     {
-        case 0 : 
+        case 0 : case 4 :
             this->status = isMouseInside;
             break;
         case 1 :

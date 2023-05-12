@@ -218,9 +218,9 @@ void StructStaticArray::Animation_Initialize(int way)
 {
     if (way == 0) this->Initialize_Empty_Fixedsize(string_to_int(vecStr[0]));
     if (way == 1) this->Initialize_Random_Unfixedsize();
-    if (way == 2) this->Initialize_Manual_Fixedsize(string_to_int(vecStr[0]), string_to_array(vecStr[2]));
+    if (way == 2) this->Initialize_Manual_Fixedsize(string_to_int(vecStr[0]), string_to_array(vecStr[1]));
     if (way == 3) {
-        if (this->Initialize_ExternalFile_Fixedsize(vecStr[1]) == -1)
+        if (this->Initialize_ExternalFile_Fixedsize(vecStr[2]) == -1)
             return;
     }
     this->printElements = this->elements;

@@ -25,6 +25,7 @@ void State::InitAllButton()
     std::vector<std::vector<std::string>> listStrInputBox;
     std::vector<std::string> strAnimation;
     std::vector<std::vector<std::vector<std::vector<std::string>>>> listStrStep;
+    std::vector<std::vector<std::vector<int>>> listShow;
 
     strCategory = {"Static Array", "Dynamic Array", "Simply Linked List", "Doubly Linked List", "Circular Linked List", "Stack", "Queue"};
     listStrManipulate = {
@@ -87,7 +88,7 @@ void State::InitAllButton()
         }
     };
     listStrInputBox = {
-        {"Fixed size = ", "Filename = ", "Array = ", "Pos = ", "Value = "},
+        {"Fixed size = ", "Array = ", "Filename = ", "Pos = ", "Value = "},
         {"Filename = ", "Array = ", "Pos = ", "Value = ", "Size allocate = "},
         {"Filename = ", "Array = ", "Pos = ", "Value = "},
         {"Filename = ", "Array = ", "Pos = ", "Value = "},
@@ -508,10 +509,60 @@ void State::InitAllButton()
             }
         }
     };
+    listShow = {
+        {// 0
+            {1, 0, 1 + 2, 4},
+            {16, 16, 8 + 16},
+            {0, 0, 8},
+            {8 + 16},
+            {8, 16}
+        },
+        {
+            {0, 0, 2, 1},
+            {8, 8, 4 + 8},
+            {0, 0, 4},
+            {4 + 8, 8 + 16},
+            {4, 8}
+        },
+        {
+            {0, 0, 2, 1},
+            {8, 8, 4 + 8},
+            {0, 0, 4},
+            {4 + 8},
+            {8}
+        },
+        {
+            {0, 0, 2, 1},
+            {8, 8, 4 + 8},
+            {0, 0, 4},
+            {4 + 8},
+            {8}
+        },
+        {
+            {0, 0, 2, 1},
+            {8, 8, 4 + 8},
+            {0, 0, 4},
+            {4 + 8},
+            {8}
+        },
+        {
+            {0, 0, 2, 1},
+            {8},
+            {0},
+            {0},
+            {0}
+        },
+        {
+            {0, 0, 2, 1},
+            {8},
+            {0},
+            {0}
+        }
+    };
 
     for(int i = 0; i < cntCategory; i++)
     {
-        sCategory.push_back(StateCategory(window, theme, font, i, strCategory, listStrManipulate[i], listStrSubManipulate[i], listStrInputBox[i]));
+        sCategory.push_back(StateCategory(window, theme, font, i, strCategory, listStrManipulate[i], listStrSubManipulate[i], listStrInputBox[i], listShow[i]));
     }
 
     sf::Vector2f coord, velocity, sizeRec;
