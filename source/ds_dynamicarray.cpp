@@ -90,6 +90,7 @@ void StructDynamicArray::Initialize_Manual(std::vector<int> arr)
 }
 int StructDynamicArray::Initialize_ExternalFile(std::string filename) 
 {
+    filename = ".\\fileinput\\" + filename;
     std::fstream file(filename, std::ios::in);
     if (!file.is_open()) {
         std::cout << "Failed Opening File\n";

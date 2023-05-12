@@ -26,6 +26,7 @@ private :
     std::vector<std::vector<Button>> buttonsubManipulate;
     std::vector<InputBox> listBox;
     std::vector<std::vector<int>> listShow;
+    std::vector<Button> buttonRand;
 
 public :
     StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::string> strInputBox, std::vector<std::vector<int>> listShow);

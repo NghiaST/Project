@@ -1,4 +1,5 @@
 #include "StateCategory.hpp"
+#include "support_function.hpp"
 
 StateCategory::StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* font, int typeCategory, std::vector<std::string> strCategory, std::vector<std::string> strManipulate, std::vector<std::vector<std::string>> strsubManipulate, std::vector<std::string> strInputBox, std::vector<std::vector<int>> listShow)
 {
@@ -56,6 +57,16 @@ StateCategory::StateCategory(sf::RenderWindow* window, Themes* theme, sf::Font* 
         listBox.push_back(InputBox(coord, sizeRec.x, sizeRec.y, 11, 2, true, false, 1, strname, this->font, this->theme->getButtonInputbox()));
         coord.y += velocity.y;
     }
+
+    // update buttonRand
+    velocity = sf::Vector2f(240, 30);
+    sizeRec = sf::Vector2f(40, velocity.y - 7);
+    coord = sf::Vector2f(805, 540 - velocity.y * strInputBox.size() / 2);
+    for(int i = 0; i < strInputBox.size(); i++) 
+    {
+        buttonRand.push_back(Button(coord, sizeRec.x, sizeRec.y, 12, 2, true, false, 0, "?", this->font, this->theme->getButtonManipulate()));
+        coord.y += velocity.y;
+    }
 }
 
 StateCategory::~StateCategory()
@@ -81,6 +92,26 @@ void StateCategory::Clean()
 sf::Vector2i StateCategory::update(MOUSE mouseType, KEYBOARD keyboardType, sf::Vector2f mousePosView)
 {
     sf::Vector2i ret = sf::Vector2i(-1, -1);
+    for(int i = 0; i < listBox.size(); i++) 
+    {
+        if (buttonRand[i].updateCheckClick(mousePosView, mouseType)) {
+            if (i == 1)
+                listBox[i].setWordInput(Rand_Array());
+            else
+            {
+                std::string str;
+                if (i == 2 && typeCategory == 0) str = "StaticArray.txt";
+                else if (i == 0 && typeCategory == 1) str = "DynamicArray.txt";
+                else if (i == 0 && typeCategory == 2) str = "SimplyLinkedList.txt";
+                else if (i == 0 && typeCategory == 3) str = "DoublyLinkedList.txt";
+                else if (i == 0 && typeCategory == 4) str = "CircularLinkedList.txt";
+                else if (i == 0 && typeCategory == 5) str = "Stack.txt";
+                else if (i == 0 && typeCategory == 6) str = "Queue.txt";
+                else str = std::to_string(Rand(1, 4));
+                listBox[i].setWordInput(str);
+            }
+        }
+    }
     for(InputBox& box : listBox)
         box.update(mousePosView, mouseType, keyboardType);
     int cnt = 0;
@@ -178,4 +209,6 @@ void StateCategory::render()
     }
     for(InputBox& box : listBox)
         box.render(window);
+    for(Button& butt : buttonRand)
+        butt.render(window);
 }

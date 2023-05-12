@@ -13,4 +13,6 @@ int Rand(int l, int r);
 int string_to_int(std::string str); 
 std::vector<int> string_to_array(std::string str);
 
+std::string Rand_Array();
+
 #endif

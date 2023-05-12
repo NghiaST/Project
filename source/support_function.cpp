@@ -78,3 +78,15 @@ std::vector<int> string_to_array(std::string str)
         arr.push_back(number);
     return arr;
 }
+
+std::string Rand_Array()
+{
+    int size = Rand(2, 8);
+    std::string str;
+    while (size--)
+    {
+        str += std::to_string(Rand(1, 99));
+        if (size) str += ",";
+    }
+    return str;
+}
